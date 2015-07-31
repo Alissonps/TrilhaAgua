@@ -1832,73 +1832,130 @@ def Atribuir_Conquistas(request, usu):
     pesquisa_amigos = Amigos.objects.filter(dono=u)
     qtd_amigos = len(pesquisa_amigos)  
 
-    try:
+    try: #Conquista 1 - Feito
         
-        i = Insignia.objects.filter(nome='Conquista 8').get()
+        i = Insignia.objects.filter(nome='Conquista 1').get()
         conq = Conquista.objects.filter(insignia=i, usuario=u).get()
      
     except:
         
-        if(qtd_amigos >= 3):
-            i = Insignia.objects.filter(nome='Conquista 8').get()
-            conquista = Conquista(insignia = i, usuario = u)
-            conquista.save
-            
-    try:
-        
-        i = Insignia.objects.filter(nome='Conquista 1').get()
-        conq = Conquista.objects.filter(insignia=i, usuario=u).get()
-        
-    except:
-    
         if(u.pontos >= 40):
+                
+                conquista = Conquista(insignia=i, usuario=u)
+                conquista.save()
+        
             
-            i = Insignia.objects.filter(nome='Conquista 1').get()
-            conquista = Conquista(insignia=i, usuario=u)
-            conquista.save()
+        try:    #Conquista 2 - Feito
+            
+            i = Insignia.objects.filter(nome='Conquista 8').get()
+            conq = Conquista.objects.filter(insignia=i, usuario=u).get()
+            
+        except:
         
-    if(u.pontos >= 4000):
-        i = Insignia.objects.filter(nome='Conquista 2').get()
-        conquista = Conquista(insignia=i, usuario=u)
-        conquista.save
-    
-    # mudar condição da conquista para a correta
-    if(u.pontos >= 4000):
-        i = Insignia.objects.filter(nome='Conquista 3').get()
-        conquista = Conquista(insignia=i, usuario=u)
-        conquista.save 
+            if(qtd_amigos >= 300):
+                conquista = Conquista(insignia = i, usuario = u)
+                conquista.save()
+            
+            try:    #Conquista 3
+            
+                i = Insignia.objects.filter(nome='Conquista 8').get()
+                conq = Conquista.objects.filter(insignia=i, usuario=u).get()
+            
+            except:
         
-    if(u.pontos >= 80):
-        i = Insignia.objects.filter(nome='Conquista 4').get()
-        conquista = Conquista(insignia=i, usuario=u)
-        conquista.save
-    
-    # mudar condição da conquista para a correta
-    if(u.pontos >= 4000):
-        i = Insignia.objects.filter(nome='Conquista 5').get()
-        conquista = Conquista(insignia=i, usuario=u)
-        conquista.save
+                if(qtd_amigos >= 3):
+                    conquista = Conquista(insignia = i, usuario = u)
+                    conquista.save()
+                    
+                try:    #Conquista 4 - Feito
+            
+                    i = Insignia.objects.filter(nome='Conquista 4').get()
+                    conq = Conquista.objects.filter(insignia=i, usuario=u).get()
+            
+                except:
         
-    # mudar condição da conquista para a correta
-    if(u.pontos >= 4000):
-        i = Insignia.objects.filter(nome='Conquista 6').get()
-        conquista = Conquista(insignia=i, usuario=u)
-        conquista.save
-    
-    # mudar condição da conquista para a correta
-    if(u.pontos >= 40000):
-        i = Insignia.objects.filter(nome='Conquista 7').get()
-        conquista = Conquista(insignia=i, usuario=u)
-        conquista.save
-    
-    
+                    if(u.pontos >= 80): 
+                        conquista = Conquista(insignia=i, usuario=u)
+                        conquista.save()
+                    
+                    try:    #Conquista 5
+            
+                        i = Insignia.objects.filter(nome='Conquista 8').get()
+                        conq = Conquista.objects.filter(insignia=i, usuario=u).get()
+                        
+                    except:
+                    
+                        if(qtd_amigos >= 3):
+                            conquista = Conquista(insignia = i, usuario = u)
+                            conquista.save()
+                        
+                        try:    #Conquista 6
+            
+                            i = Insignia.objects.filter(nome='Conquista 8').get()
+                            conq = Conquista.objects.filter(insignia=i, usuario=u).get()
+                            
+                        except:
+                        
+                            if(qtd_amigos >= 3):
+                                conquista = Conquista(insignia = i, usuario = u)
+                                conquista.save()
+                        
+                            try:    #Conquista 7
+                
+                                i = Insignia.objects.filter(nome='Conquista 8').get()
+                                conq = Conquista.objects.filter(insignia=i, usuario=u).get()
+                                
+                            except:
+                            
+                                if(qtd_amigos >= 3):
+                                    conquista = Conquista(insignia = i, usuario = u)
+                                    conquista.save()
+                                    
+                            try:    #Conquista 8
+            
+                                i = Insignia.objects.filter(nome='Conquista 8').get()
+                                conq = Conquista.objects.filter(insignia=i, usuario=u).get()
+                                
+                            except:
+                            
+                                if(qtd_amigos >= 3):
+                                    conquista = Conquista(insignia = i, usuario = u)
+                                    conquista.save()
+                                
+                                try:    #Conquista 9 - Feito
+            
+                                    i = Insignia.objects.filter(nome='Conquista 9').get()
+                                    conq = Conquista.objects.filter(insignia=i, usuario=u).get()
+            
+                                except:
         
-    if(u.pontos >= 120):
-        i = Insignia.objects.filter(nome='Conquista 9').get()
-        conquista = Conquista(insignia=i, usuario=u)
-        conquista.save
+                                    if(u.pontos >= 120):
+                                        conquista = Conquista(insignia = i, usuario = u)
+                                        conquista.save() 
+                                    
+                                    try:    #Conquista 10
+            
+                                        i = Insignia.objects.filter(nome='Conquista 8').get()
+                                        conq = Conquista.objects.filter(insignia=i, usuario=u).get()
+                                            
+                                    except:
+                                        
+                                        if(qtd_amigos >= 3):
+                                            conquista = Conquista(insignia = i, usuario = u)
+                                            conquista.save()
+                                            
+                                        try:    #Conquista 11
+            
+                                            i = Insignia.objects.filter(nome='Conquista 8').get()
+                                            conq = Conquista.objects.filter(insignia=i, usuario=u).get()
+            
+                                        except:
         
-    return Timeline(request)  
+                                            if(qtd_amigos >= 3):
+                                                conquista = Conquista(insignia = i, usuario = u)
+                                                conquista.save()
+                                                                                    
+                                            return Timeline(request)  
 
 @csrf_exempt
 def Usuarios_curtiram (request):
