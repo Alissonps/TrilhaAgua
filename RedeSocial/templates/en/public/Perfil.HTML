@@ -1,0 +1,84 @@
+{% extends "en/public/Base.HTML" %}
+
+{% block contents %}
+<meta charset="utf-8">
+<div id="containerAmigos" style="margin-top: 30px;">
+	<form method="post" action="editarPerfil">
+		{% csrf_token %}
+		<fieldset>
+			<legend>Dados pessoais:</legend>
+			
+			<div id="imgMeuPerfil">
+				{% if e.foto.url != '/media/False' %} 
+					<img	src="{{Usuario.foto.url}}"/> 
+				{% endif %}
+				
+				
+				<input type="submit" id="btnEditarPerfil" value="Editar"
+					class="btn btn-primary btn-second">
+			
+			</div>
+			
+			<div id="informacoesPerfil">
+				<table>
+					<tr>
+						<td width="50">
+							<div id="formatacaoForm">Nome:</div>
+						</td>
+	
+						<td><div id="formInformacoes">{{Usuario.nome}}</div></td>
+					</tr>
+				</table>
+	
+				<table>
+					<tr>
+						<td width="50">
+							<div id="formatacaoForm">Idade:</div>
+						</td>
+	
+						<td><div id="formInformacoes">{{Usuario.idade}}</div></td>
+					</tr>
+				</table>
+	
+				<table>
+					<tr>
+						<td width="50">
+							<div id="formatacaoForm">Série:</div>
+						</td>
+	
+						<td><div id="formInformacoes">{{Usuario.turma}}</div></td>
+					</tr>
+				</table>
+	
+				<table>
+					<tr>
+						<td width="50">
+							<div id="formatacaoForm">Sexo:</div>
+						</td>
+	
+						<td><div id="formInformacoes">{{Usuario.sexo}}</div></td>
+					</tr>
+				</table>
+	
+				<table>
+					<tr>
+						<td width="50">
+							<div id="formatacaoForm">Descrição:</div>
+						</td>
+					</tr>
+				</table>
+	
+				<table>
+					<tr>
+						<td>
+							<div id="containerTexto">{{Usuario.descricao}}</div>
+						</td>
+					</tr>
+				</table>
+			</div>
+			
+		</fieldset>
+
+	</form>
+</div>
+{% endblock contents %}

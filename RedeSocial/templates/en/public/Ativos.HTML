@@ -1,0 +1,54 @@
+{% extends "en/public/Base.HTML" %} {% block contents %}
+<meta charset="utf-8">
+<div id="containerAmigos" style="margin-top: 30px;">
+	<div id="containerSolicitacao">
+		<p>{{msg_erro}}</p>		
+		
+				
+		{% if qtd_d_ativos_desafiados > 0 %}
+		<fieldset>
+			<legend>Desafios Ativos</legend>
+			{% csrf_token %} {% for a in d_ativos_desafiado %}
+				<ul>
+					<div style="background: ; width: 79%; float: left;">						
+						<li>
+							<img src="{{a.usuario_desafiante.foto.url}}" id="imgAmigos">
+						</li>
+						
+						
+						<li style="margin: 7px 15px 15px 15px;">
+							<form name="form" action="buscaPerfilUsuario" method="post">
+								{% csrf_token %} <input type="submit" value="{{a.usuario_desafiante.nome}}"
+									class="meulink"> <input type="hidden" name="cUsuario"
+									value="{{a.usuario_desafiante.id}}">
+							</form>
+							<div class="form-ano">
+								{{a.usuario_desafiante.turma}}
+							</div>
+						</li>
+						
+						<li style="margin: 19px 0px 0px 0px; float: right;"
+						class="form-ano">
+							{{a.desafio.nome}}: {{a.desafio.pontuacao}} pontos					
+						</li>						
+					</div>
+			
+					<form action="cumprir_desafio" method="post">					
+						<button type="submit" value="aceitar"
+							class="btn btn-success btn-lg" title="Aceitar solicitação">
+	
+							<input type="hidden" name="id_desafio_ativo" value={{a.id}} /> <span
+								class="glyphicon glyphicon-ok"></span> Cumprir
+						</button>
+					</form>
+				</ul>
+				
+				{% endfor %}
+		
+		</fieldset>
+		{% endif %}
+	
+	
+	</div>
+</div>
+{% endblock contents %}

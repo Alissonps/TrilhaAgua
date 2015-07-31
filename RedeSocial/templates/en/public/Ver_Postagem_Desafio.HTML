@@ -1,0 +1,69 @@
+{% extends "en/public/Base.HTML" %} {% block contents %}
+<meta charset="utf-8">
+<div id="containerFeed1">
+	<div id="containerPost">
+		<form method="post" action="postar" enctype="multipart/form-data">
+			{%csrf_token%}
+
+			<center>
+				<textarea name="mensagem" placeholder=" Digite sua mensagem."></textarea>
+			</center>
+
+			<hr style="margin: 0px 15px 2px 15px; border: 0; height: 0; border-top: 1px solid rgba(0, 0, 0, 0.1); border-bottom: 1px solid rgba(255, 255, 255, 0.3);">
+			<div id="ferramentaFeed">
+				<table>
+					<td width="499">
+						<div class="inputFile btn btn-primary">
+							<span><img src="../static/imagens/iconCamera.png"
+								width="28" /></span> <input type="file" name="arquivo" id="arquivo" />
+						</div>
+					</td>
+
+
+					<td><input type="hidden" name="enviar" value="send" /> <input
+						type="submit" name="Enviar" value="Publicar"
+						class="btn btn-primary" /></td>
+				</table>
+			</div>
+		</form>
+	</div>
+	
+	<div id="containerFeed2">
+
+		{% block content %}
+		
+		<div id="containerPostagem" style="padding-bottom: 30px;">
+
+			<form name="form" action="buscaPerfilUsuario" method="post">
+				{% csrf_token %} <input type="submit"
+					value="{{entries.usuario.nome}}" class="meulink"> <input
+					type="hidden" name="cUsuario" value="{{entries.usuario.id}}">
+				<div id="containerData">{{entries.date}}</div>
+			</form>
+
+			<div id="containerTexto">
+				{{entries.text}} {% if entries.foto != False %}
+
+				<center>
+					<img src="{{entries.foto.url}}" width="450" height="390"
+						style="margin-top: 15px;" />
+				</center>	
+						
+				{% endif %}
+			</div>
+			
+			<hr style="margin: 0px 15px 5px 15px; border: 0; height: 0; border-top: 1px solid rgba(0, 0, 0, 0.1); border-bottom: 1px solid rgba(255, 255, 255, 0.3);">	
+				
+				<div id="enviarPost">
+					<form action="lancar_desafio" method="post">
+						{% csrf_token %} <input type="hidden" name="cId"
+							value={{entries.id}} /> <input type="hidden" name="cId_desafio"
+							value={{id_desafio}} /> <input type="submit" name="Enviar"
+							value="Lançar" class="btn btn-primary"/>
+					</form>
+				</div>			
+		</div>
+		{% endblock %}
+	</div>
+</div>
+{% endblock contents %}

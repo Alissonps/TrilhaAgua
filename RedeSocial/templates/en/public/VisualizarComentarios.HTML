@@ -1,0 +1,76 @@
+{% extends "en/public/Base.HTML" %}
+<meta charset="utf-8">
+{% block contents %}
+<div id="containerFeed1">
+	<div class="containerPostagem" style="padding-bottom: 30px;">
+		<form name="form" action="buscaPerfilUsuario" method="post" style="margin-top: 3px;">
+			{% csrf_token %} <input type="submit"
+				value="{{Postagem.usuario.nome}}" class="meulink"> <input
+				type="hidden" name="cUsuario" value="{{Postagem.usuario.id}}">
+			<div id="containerData">{{Postagem.date}}</div>
+		</form>
+
+
+
+		<div id="containerTexto">
+			{{Postagem.text}} {% if Postagem.foto.url != '/media/False' %}
+
+			<center>
+				<img src="{{Postagem.foto.url}}" width="450" height="390"
+					style="margin-top: 15px;" />
+			</center>
+			{% endif %}
+		</div>
+
+
+		<form action="postarComentarios2" method="post">
+			{% csrf_token %}
+			
+			<hr style="margin: 0px 15px 0px 15px; border: 0; height: 0; border-top: 1px solid rgba(0, 0, 0, 0.1); border-bottom: 1px solid rgba(255, 255, 255, 0.3);">
+			
+			<center>
+				<textarea cols="78" rows="2" name="cComentario" class="formTextAreaTimeLine"
+					placeholder="Escreva um comentário..."></textarea>
+			</center>
+
+			<div id="enviarPost">
+				<input type="hidden" name="cId" value="{{Postagem.id}}" /> <input
+					type="submit" name="Enviar" value="Enviar" class="btn btn-primary" />
+			</div>
+		</form>
+	</div>
+</div>
+
+<div id="containerFeed2">
+
+	{% block content %} {% for e in Coment %}
+	<div class="containerPostagem">
+		
+		{% if e.usuario == Usuario %}
+		<form action="apagar_comentario" id="ajax_form" method="post"> {% csrf_token %}
+			<input type="hidden" name = "id" value={{e.pk}}>
+			<input type="hidden" name = "id_postagem" value={{Postagem.id}}>
+			<button type="submit" value="excluir" style="background: transparent; border: none; float: right;">
+				<span class="glyphicon glyphicon-remove remove-feed" style="top: 4px;"></span>
+			</button>
+		</form>
+		
+		{% endif %}	
+		<form name="form" action="buscaPerfilUsuario" method="post" style="margin-top: 3px;">
+			{% csrf_token %} 
+			
+			<input type="submit" value="{{e.usuario.nome}}" class="meulink"> 
+			
+			<input type="hidden" name="cUsuario" value="{{e.usuario.id}}">
+
+			<div id="containerData">{{e.date}}</div>
+		</form>
+
+
+		<div id="containerTexto">{{e.text}}</div>
+
+	</div>
+	{% endfor %} {% endblock %}
+
+</div>
+{% endblock contents %}

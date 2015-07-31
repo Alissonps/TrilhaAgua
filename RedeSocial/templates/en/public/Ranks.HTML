@@ -1,0 +1,38 @@
+<div id="containerSolicitacao">
+		<fieldset>
+			<legend>Ranking Geral</legend>
+
+			<table width="100%" border="0" cellpadding="4" cellspacing="1">
+				<tbody>
+					<tr bgcolor="#004080" class="form-ranking">
+						<td width="10%" align="center">Rank</td>
+						<td width="55%" align="center">Aluno</td>
+						<td width="15%" align="center">Turma</td>
+						<td width="15%" align="center">Pontos</td>
+					</tr>
+					{% for e in ranking %}
+
+					<tr bgcolor="#F0FFFF">
+						<td align="center" class="form-ranking-td">
+							{{ forloop.counter }}
+						</td>
+
+						<td style="font-size: 10pt;">
+							<form name="form" action="buscaPerfilUsuario" method="post">
+								{% csrf_token %} <input type="submit" value="{{e.nome}}"
+									class="meulink"> <input type="hidden" name="cUsuario"
+									value="{{e.id}}">
+							</form>
+						</td>
+
+						<td align="center" class="form-ranking-td">{{e.turma}}</td>
+
+						<td align="center" class="form-ranking-td">{{e.pontos}}</td>
+						
+						{% endfor %}
+					</tr>
+
+				</tbody>
+			</table>
+		</fieldset>
+</div>

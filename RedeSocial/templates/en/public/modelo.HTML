@@ -1,0 +1,115 @@
+<!DOCTYPE HTML>
+{% load staticfiles %}
+<html>
+<head>
+<link rel="stylesheet" type="text/css" href="{% static "css/estilorede.css" %}">
+<meta charset="utf-8">
+<title>Trilha da Água</title>
+</head>
+<body>
+	<header>
+		<nav class="menuHeader menuHeader-fixo">
+			<div id="formNav">
+				<ul>
+					<li class="nomeTrilha"><a href="timeline">Trilha da Água</a></li>
+
+					<li class="formSair"><a href="logout">Sair</a></li>
+
+					<!-- <li class="nomesNav"><a href="inicio">Contato</a></li> -->
+				</ul>
+			</div>
+		</nav>
+	</header>
+
+	<div id="wrap">
+
+		<div id="containerNotificacaoGeral">
+			<div id="containerNotificacao">
+				<ul id="notificacao-ul">
+					<li><div class="tituloMenu">Notificações</div></li>
+					<li>+3 Solicitação de amizade</li>
+					<hr>
+					<li><center>
+							<a href="amigos" class="meulink">Ver amigos...</a></li>
+					</center>
+				</ul>
+			</div>
+
+			<div id="containerDesafios">
+				<ul id="notificacao-ul">
+					<li><div class="tituloMenu">Desafios Ativos</div></li>
+					<li>+ Desafio 1: 35pt</li>
+					<li>+ Desafio 2: 15pt</li>
+					<li>+ Desafio 3: 10pt</li>
+					<hr>
+					<li>+7 Desafios pendentes</li>
+					<hr>
+					<li><center>
+							<a href="desafios" class="meulink">Ver desafios...</a></li>
+					</center>
+				</ul>
+			</div>
+
+			<div id="containerClassificacao">
+				<ul id="notificacao-ul">
+					<li><div class="tituloMenu">Classificação</div></li>
+					<li>+ Meus pontos: 3500pt</li>
+					<li>+ Turma: 3º pos.</li>
+					<li>+ Geral: 53º pos.</li>
+					<hr>
+					<li><center>
+							<a href="rankings" class="meulink">Ver ranking...</a></li>
+					</center>
+				</ul>
+			</div>
+		</div>
+
+		<section>
+			<div id="containerFeedGeral">
+				<div id="construcao">
+				<center>
+					testandooooooooooooooooooooooooooooooooooooooooooo
+					<img src="{% static "imagens/construcao.png" %}"/>
+				</center>
+				</div>
+			</div>
+		</section>
+
+
+		<aside>
+			<div id="sideBar">
+				<center>
+					<div id="containerPerfil">
+						{% if e.foto.url != '/media/False' %} 
+						<img	src="{{Usuario.foto.url}}" width="100" height="100" /> 
+						{% endif %}
+
+						<p>{{Usuario.nome}}</p>
+						<!-- <p>{{Usuario.turma}}</p> -->
+					</div>
+					<div id="containerMenu1">
+						<ul id="menu-ul">
+							<div class="tituloMenu">Principal</div>
+							<li><a href="timeline">Home</a></li>
+							<li><a href="perfil">Perfil</a></li>
+							<li><a href="amigos">Amigos</a></li>
+						</ul>
+					</div>
+
+					<div id="containerMenu2">
+						<ul id="menu-ul">
+							<div class="tituloMenu">Menu</div>
+							<li><a href="desafios">Desafios</a></li>
+							<li><a href="rankings">Rankings</a></li>
+							<li><a href="campeoes">Campeões</a></li>
+							<li><a href="conquistas">Conquistas</a></li>
+						</ul>
+					</div>
+				</center>
+			</div>
+		</aside>
+
+
+	</div>
+</body>
+</html>

@@ -1,0 +1,33 @@
+{% extends "en/public/Base.HTML" %} {% block contents %}
+<div id="containerFeed1">
+<div id="containerPost">
+	<form method="post" action="postar_desafio"
+		enctype="multipart/form-data">
+		{%csrf_token%}
+		<center>
+			<textarea name="mensagem" placeholder=" Digite sua mensagem."></textarea>
+		</center>
+		
+		<hr style="margin: 0px 15px 2px 15px; border: 0; height: 0; border-top: 1px solid rgba(0, 0, 0, 0.1); border-bottom: 1px solid rgba(255, 255, 255, 0.3);">
+		
+		<div id="ferramentaFeed">
+			<table>
+				<td width="499">
+					<div class="inputFile btn btn-primary">
+						<span><img src="../static/imagens/iconCamera.png" width="28" /></span> <input type="file"
+							name="arquivo" id="arquivo" />
+					</div>
+				</td>
+
+				<input type="hidden" name="cDesafio_Ativo"
+					value={{desafio_atual.id}} />
+				<td><input type="hidden" name="enviar" value="send" /> <input
+					type="submit" name="Enviar" value="Publicar"
+					class="btn btn-primary" /></td>
+
+			</table>
+		</div>
+	</form>
+</div>
+</div>
+{% endblock contents %}

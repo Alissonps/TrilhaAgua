@@ -1,0 +1,83 @@
+<!DOCTYPE HTML>
+{% load staticfiles %}
+<html>
+<head>
+<link rel="stylesheet" type="text/css" href="{% static "css/estilo.css" %}">
+<title>Recuperação</title>
+<meta charset="utf-8">
+</head>
+<body>
+	<header>
+		<nav class="menuHeader menuHeader-fixo">
+			<div id="formNav">
+				<ul>
+					<li class="nomeTrilha"><a href="login">Trilha da Água</a></li>
+
+					<li class="nomesNav"><a href="inicio">Sobre</a></li>
+
+					<li class="nomesNav"><a href="inicio">Contato</a></li>
+				</ul>
+			</div>
+		</nav>
+	</header>
+
+	<section>
+		<div id="containerRecuperacao">
+			<form method="post" action="verificarPergunta">
+				{% csrf_token %}
+				<fieldset>
+					<legend>Recuperar senha:</legend>
+					<div>
+						<table>
+							<tr>
+								<td width="130"><label for="tLogin">Login:</label></td>
+
+								<td><input type="text" name="cLogin" id="tLogin" size="15"
+									maxlength="30" placeholder="" class="form-control-cadastro"></td>
+							</tr>
+						</table>
+					</div>
+
+					<div>
+						<table>
+							<tr>
+								<td width="130"><label for="cPergunta">Pergunta
+										secreta:</label></td>
+
+								<td><select name="cPergunta" class="form-control-cadastro">
+										<optgroup label="Perguntas">
+											<option selected>Minha cor preferida</option>
+											<option>Nome do primeiro animal de estimacao</option>
+											<option>Primeira escola onde estudou</option>
+										</optgroup>
+								</select></td>
+							</tr>
+						</table>
+					</div>
+
+					<div>
+						<table>
+							<tr>
+								<td width="130"><label for="cResposta">Resposta
+										secreta:</label></td>
+
+								<td width="0"><name="cPergunta"> <input type="text"
+										name="cResposta" id="tResposta" min="0" max="30"
+										class="form-control-cadastro"></td>
+							</tr>
+						</table>
+					</div>
+
+					<center>
+						<input type="submit" value="Recuperar"
+							class="btn btn-primary btn-second">
+					</center>
+					<center>
+						<font color="red">{{msg}}</font>
+					</center>
+				</fieldset>
+			</form>
+		</div>
+	</section>
+</body>
+</html>

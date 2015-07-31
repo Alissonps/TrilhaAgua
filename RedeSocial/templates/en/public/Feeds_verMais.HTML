@@ -1,0 +1,486 @@
+<meta charset="utf-8"/>
+
+<div id="containerFeed1">
+	<div id="containerPost">
+		<form method="post" action="postar" id="idpostar" enctype="multipart/form-data">
+		{% csrf_token %}
+			<center>
+				<textarea name="mensagem" placeholder=" Digite sua mensagem."></textarea>
+			</center>
+			<hr
+				style="margin: -2px 15px; border: 0; height: 0; border-top: 1px solid rgba(0, 0, 0, 0.1); border-bottom: 1px solid rgba(255, 255, 255, 0.3);">
+			<div id="ferramentaFeed">
+				<table>
+					<tr>
+					<td width="499">
+						<div class="inputFile btn btn-primary">
+							<span><img src="../static/imagens/iconCamera.png" width="28" /></span> <input type="file" name="arquivo" id="arquivo" onchange="PreviewImage();"/>
+						</div>
+					</td>
+
+
+					<td><input type="hidden" name="enviar" value="send" /> <input
+						type="submit" name="Enviar" value="Publicar"
+						class="btn btn-primary" /></td>
+						
+					<!-- <td>
+						<img id="uploadPreview" style="width: 100px; height: 100px;" /> 
+					</td> -->
+				</table>
+			</div>
+			
+			<script type="text/javascript">
+							
+				$( '#idpostar' ).live("submit", function( e ) {
+				    $.ajax( {
+				      url: 'postar',
+				      type: 'POST',
+				      data: new FormData( this ),
+				      processData: false,
+				      contentType: false,
+				      success: function(data)
+			           {
+			               // show response from the php script.
+			               $("#containerFeedGeral").load("feed");
+			           }
+				    } );
+				    e.preventDefault();
+				  } );
+											
+			</script>
+			<script type="text/javascript">
+
+    function PreviewImage() { 
+        var oFReader = new FileReader(); 
+        oFReader.readAsDataURL(document.getElementById("arquivo").files[0]);
+
+        oFReader.onload = function (oFREvent) { 
+            document.getElementById("uploadPreview").src = oFREvent.target.result; 
+        }; 
+    };
+
+		</script>
+		</form>
+		
+		
+		
+		
+	</div>
+</div>
+<center style="margin-top: 10px;">
+	<nav class="menuHeaderDesafio menuHeader-fixo-Desafio">
+		<div id="formNavDesafio">
+			<ul id="menu-time">
+				<li class="nomesNavDesafio"><a href="timeline" id="geral">Geral</a></li>
+				<li class="nomesNavDesafio"><a href="time_amigos"id="amigos">Amigos</a></li>
+				<li class="nomesNavDesafio"><a href="time_turma" id="turma">Turma</a></li>				
+			</ul>
+		</div>
+	</nav>
+</center>
+
+<script type="text/javascript" src="../static/js/menuNavTimeline.js"></script>
+
+<div id="containerFeed2">	
+	
+		
+{% block content %} {% for e in entries %} {% if e.desafio == False %}
+	
+<!-- ############################ Postagem normal #################################### -->
+	
+	<div class="containerPostagem" id="feed-{{e.id}}">
+	{% if e.usuario == Usuario %}
+	<form id="idapagar{{ forloop.counter }}" action="apagar_postagem" method="post"> {% csrf_token %}
+		<input type="hidden" name = "id" value={{e.id}}>
+		<button type="submit" value="excluir" class="remover" title="Remover" 
+		style="background: transparent; border: none; float: right;">
+			<span class="glyphicon glyphicon-remove remove-feed" style="top: 4px;"></span>
+		</button>
+		
+		<script type="text/javascript">
+							
+				$("#idapagar{{ forloop.counter }}").submit(function() {
+	
+				    var url = "apagar_postagem"; // the script where you handle the form input.
+	
+				    $.ajax({
+				           type: "POST",
+				           url: url,
+				           data: $("#idapagar{{ forloop.counter }}").serialize(), // serializes the form's elements.
+				           success: function(data)
+				           {
+				               // show response from the php script.
+				               $("#containerFeedGeral").load("feed");
+				           }
+				         });
+	
+				    return false; // avoid to execute the actual submit of the form.
+				});							
+							
+		</script>
+	</form>
+	
+	
+	
+	{% endif %}
+		<form name="form" action="buscaPerfilUsuario" method="post" style="margin-top: 2px;">
+			{% csrf_token %} <input type="submit" value="{{e.usuario.nome}}"
+				class="meulink"> <input type="hidden" name="cUsuario"
+				value="{{e.usuario.id}}"> <font id="containerData">{{e.date|date:"D d M Y"}}</font> 
+		</form>
+
+		<div id="containerTextoPostagem">
+			{{e.text}} {% if e.foto.url != '/media/False' %}
+			<center>
+				<img src="{{e.foto.url}}" width="500" height="390" style="margin-top: 15px;" />
+			</center>
+			{% endif %}
+		</div>
+		<table cellpadding="0" cellspacing="0">
+				<tr>
+					<td style="background:  ; padding-left: 42px;">			
+					  {% if e.curtiu == True %}					   		
+						<form action="despingo" id="form_despingo{{e.id}}" method="post">{% csrf_token %}
+
+						   <button type="submit" value="excluir" class="descurtir" title="Descurtir" 
+							style="background: transparent; border: none; float: right;">
+								<img alt="descurtir" src="../static/imagens/pingo.png" width="10" height="13" style="margin-top: 3px;">
+							</button> 
+							
+							<input type="hidden" name="cID_post" value="{{e.id}}">
+						  
+						</form>
+						
+						<script type="text/javascript">
+						$(document).ready(function(){
+								$("#form_despingo{{e.id}}").live("submit", function() {
+									
+								    var url = "despingo"; // the script where you handle the form input.
+					
+								    $.ajax({
+								           type: "POST",
+								           url: url,
+								           data: $("#form_despingo{{e.id}}").serialize(), // serializes the form's elements.
+								           success: function(data)
+								           {
+								               // show response from the php script.
+								        	   
+								               $("#form_despingo{{e.id}}").css("display", "none");
+								               $("#form_pingo{{e.id}}").css("display", "block");
+								           }
+								         });
+					
+								    return false; // avoid to execute the actual submit of the form.
+								});
+							});
+											
+							</script>
+					   
+				      {% elif e.curtiu == False %}
+				      	
+					  	<form action="pingo" id="form_pingo{{e.id}}" method="post">{% csrf_token %} 
+					  	
+					       <button type="submit" value="excluir" class="curtir" title="Curtir" 
+							style="background: transparent; border: none; float: right;">
+								<img alt="curtir" src="../static/imagens/despingo.png" width="10" height="13" style="margin-top: 3px;">
+							</button>  
+							
+							<input type="hidden" name="cID_post" value="{{e.id}}">  
+						
+						</form>
+						
+						<script type="text/javascript">
+						$(document).ready(function(){
+								$("#form_pingo{{e.id}}").live("submit", function() {
+									
+								    var url = "pingo"; // the script where you handle the form input.
+					
+								    $.ajax({
+								           type: "POST",
+								           url: url,
+								           data: $("#form_pingo{{e.id}}").serialize(), // serializes the form's elements.
+								           success: function(data)
+								           {
+								               // show response from the php script.
+								               $("#form_pingo{{e.id}}").css("display", "none");
+								               $("#form_despingo{{e.id}}").css("display", "block");
+								           }
+								         });
+					
+								    return false; // avoid to execute the actual submit of the form.
+								});
+						});
+											
+							</script>
+						
+					
+				      {% endif %}
+				   	</td>
+				   	
+				   	<td style="background:  ;">
+						<form action="usuarios_curtiram" id="u_curtiu" method="post"> {% csrf_token %} 
+							<input type="submit" value="({{e.qtd_pingo}})"	class="linkPostagem">
+							<input type="hidden" name="cID_post" value="{{e.id}}">
+						</form>
+					</td>
+
+		
+				<td style="background: ;">
+					<form action="visualizarComentarios" method="post">
+						{% csrf_token %} <input type="hidden" name="cPost" value="{{e.id}}">
+						<input type="submit" name="comentarios"
+							value="Comentarios ({{e.qtd_coments}})" class="linkPostagem">
+					</form>
+				</td>
+			</tr>
+		</table>
+		<form action="postarComentarios" method="post">
+			{% csrf_token %}
+			<hr
+				style="margin: 5px 15px 0px 15px; border: 0; height: 0; border-top: 1px solid rgba(0, 0, 0, 0.1); border-bottom: 1px solid rgba(255, 255, 255, 0.3);">
+
+			<div id="enviarPost">
+				<table>
+					<tr>
+						<td style="background: ; width: 100%; height: 0px ">
+			
+				<textarea name="cComentario" class="formTextAreaTimeLine"
+					placeholder="Escreva um comentário..."></textarea>		
+
+						</td>
+						
+						<td style="margin-left: 10px; background: ; width: 50px;">
+				<input type="hidden" name="cId" value="{{e.id}}" /> 
+					<button style="float: right;" class="btn btn-enviaComent">
+						<span class="glyphicon glyphicon-share-alt"></span>
+					</button>
+					
+						</td>
+					</tr>
+				</table>
+			</div>
+		</form>
+		
+	</div>
+
+<!-- ############################ Fim - Postagem normal #################################### -->
+	{% elif e.desafio == True %}
+<!-- ############################ Postagem desafio #################################### -->
+	
+	<div id="containerPostagemDesafio">
+    {% if e.usuario == Usuario %}
+    <form id="idapagar{{ forloop.counter }}" action="apagar_postagem" method="post"> {% csrf_token %}
+        <input type="hidden" name = "id" value={{e.id}}>
+        <button type="submit" value="excluir" class="remover" title="Remover" 
+        style="background: transparent; border: none; float: right;">
+            <span class="glyphicon glyphicon-remove remove-feed" style="top: 4px;"></span>
+        </button>
+        
+        <script type="text/javascript">
+                            
+                $("#idapagar{{ forloop.counter }}").submit(function() {
+    
+                    var url = "apagar_postagem"; // the script where you handle the form input.
+    
+                    $.ajax({
+                           type: "POST",
+                           url: url,
+                           data: $("#idapagar{{ forloop.counter }}").serialize(), // serializes the form's elements.
+                           success: function(data)
+                           {
+                               // show response from the php script.
+                               $("#containerFeedGeral").load("feed");
+                           }
+                         });
+    
+                    return false; // avoid to execute the actual submit of the form.
+                });                         
+                            
+    </script>
+    </form>
+    {% endif %}
+
+       <form name="form" action="buscaPerfilUsuario" method="post" style="margin-top: 2px;">
+            {% csrf_token %} <input type="submit" value="{{e.usuario.nome}}"
+                class="meulink"> <input type="hidden" name="cUsuario"
+                value="{{e.usuario.id}}"> 
+
+                <font id="containerData">
+                    {{e.date|date:"D d M Y"}}
+                    
+                    {% if e.nome_desafio != None %}
+                        <font class="meulink" style="margin-left: 55px;"><span class="form-class-nome">Desafio: </span>{{e.nome_desafio}}</font>
+                    {% endif %}
+                </font>
+                 
+        </form>
+
+        <div id="containerTexto">
+            {{e.text}} {% if e.foto.url != '/media/False' %}
+            <center>
+                <img src="{{e.foto.url}}" width="500" height="390" style="margin-top: 15px;" />
+            </center>
+            {% endif %}
+        </div>
+
+        <table cellpadding="0" cellspacing="0">
+                <tr>
+                    <td style="background:  ; padding-left: 42px;">         
+                      {% if e.curtiu == True %}                         
+                        <form action="despingo" id="despingo" id="form_despingo" method="post">{% csrf_token %}
+
+                           <button type="submit" value="excluir" class="descurtir" title="Descurtir" 
+                            style="background: transparent; border: none; float: right;">
+                                <img alt="descurtir" src="../static/imagens/pingo.png" width="10" height="13" style="margin-top: 3px;">
+                            </button> 
+                            
+                            <input type="hidden" name="cID_post" value="{{e.id}}">
+                            
+                            <script type="text/javascript">
+                                                
+                                    $("#form_despingo").submit(function() {
+                        
+                                        var url = "despingo"; // the script where you handle the form input.
+                        
+                                        $.ajax({
+                                               type: "POST",
+                                               url: url,
+                                               data: $("#form_despingo").serialize(), // serializes the form's elements.
+                                               success: function(data)
+                                               {
+                                                   // show response from the php script.
+                                                   $("#containerFeedGeral").load("feed");
+                                               }
+                                             });
+                        
+                                        return false; // avoid to execute the actual submit of the form.
+                                    });                         
+                                                
+                        </script>
+                          
+                        </form>
+                       
+                      {% elif e.curtiu == False %}
+                        
+                        <form action="pingo" id= "pingo" id="form_pingo" method="post">{% csrf_token %} 
+                        
+                           <button type="submit" value="excluir" class="curtir" title="Curtir" 
+                            style="background: transparent; border: none; float: right;">
+                                <img alt="curtir" src="../static/imagens/despingo.png" width="10" height="13" style="margin-top: 3px;">
+                            </button>  
+                            
+                            <input type="hidden" name="cID_post" value="{{e.id}}">  
+                            
+                            <script type="text/javascript">
+                                                
+                                    $("#form_pingo").submit(function() {
+                        
+                                        var url = "pingo"; // the script where you handle the form input.
+                        
+                                        $.ajax({
+                                               type: "POST",
+                                               url: url,
+                                               data: $("#form_pingo").serialize(), // serializes the form's elements.
+                                               success: function(data)
+                                               {
+                                                   // show response from the php script.
+                                                   $("#containerFeedGeral").load("feed");
+                                               }
+                                             });
+                        
+                                        return false; // avoid to execute the actual submit of the form.
+                                    });                         
+                                                
+                        </script>
+                        
+                        </form>
+                        
+                    
+                      {% endif %}
+                    </td>
+                    
+                    <td style="background:  ;">
+                        <form action="usuarios_curtiram" id="u_curtiu" method="post"> {% csrf_token %} 
+                            <input type="submit" value="({{e.qtd_pingo}})"  class="linkPostagem">
+                            <input type="hidden" name="cID_post" value="{{e.id}}">
+                        </form>
+                    </td>
+
+        
+                <td style="background: ;">
+                    <form action="visualizarComentarios" method="post">
+                        {% csrf_token %} <input type="hidden" name="cPost" value="{{e.id}}">
+                        <input type="submit" name="comentarios"
+                            value="Comentarios ({{e.qtd_coments}})" class="linkPostagem">
+                    </form>
+                </td>
+            </tr>
+        </table>
+
+        <form action="postarComentarios" method="post">
+            {% csrf_token %}
+            <hr
+                style="margin: 5px 15px 0px 15px; border: 0; height: 0; border-top: 1px solid rgba(0, 0, 0, 0.1); border-bottom: 1px solid rgba(255, 255, 255, 0.3);">
+
+            <div id="enviarPost">
+                <table>
+                    <tr>
+                        <td style="background: ; width: 100%; height: 0px ">
+            
+                <textarea name="cComentario" class="formTextAreaTimeLine"
+                    placeholder="Escreva um comentário..."></textarea>      
+
+                        </td>
+                        
+                        <td style="margin-left: 10px; background: ; width: 50px;">
+                <input type="hidden" name="cId" value="{{e.id}}" /> 
+                    <button style="float: right;" class="btn btn-enviaComent">
+                        <span class="glyphicon glyphicon-share-alt"></span>
+                    </button>
+                    
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </form>
+
+        
+
+    </div>
+    
+    
+
+    {% endif %} 
+    
+		    {% if forloop.last %}
+		    
+			     <form action="mais_posts" method ="post" id="verMais"> {% csrf_token %}
+			    
+			    	<input type ="hidden" name = "id_ultimo" value = {{e.id}}>
+			    	<button type="submit" id="btnVerMais" class="btn-primary">Ver mais</button>
+				
+				</form>
+				
+		{% endif %}
+			    
+    
+    {% endfor %}
+    
+   <!--  <span class="msgLoad" style="display: none;">Carregando..</span>
+    
+    <hr>
+    
+    <a href="#" class="carregar-mais">Ver mais</a>
+    --> 
+    
+	
+<!-- ############################ Fim - Postagem desafio #################################### -->
+
+	<div class="load" style="display: none;">
+		<center><img src="../static/imagens/loading.gif"></center>
+	</div>	
+
+
+{% endblock %}
+</div>
+			

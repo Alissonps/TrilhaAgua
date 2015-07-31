@@ -1,0 +1,235 @@
+{% extends "en/public/Base.HTML" %} {% block contents %}
+<meta charset="utf-8">
+<script type="text/javascript" src="../static/js/testeNav.js"></script>
+<div id="containerFeed1">
+	<div id="containerPost">
+		<form method="post" action="postar" id="idpostar" enctype="multipart/form-data">
+		{% csrf_token %}			
+			<center>
+				<textarea name="mensagem" placeholder=" Digite sua mensagem."></textarea>
+			</center>
+			<hr
+				style="margin: -2px 15px; border: 0; height: 0; border-top: 1px solid rgba(0, 0, 0, 0.1); border-bottom: 1px solid rgba(255, 255, 255, 0.3);">
+			<div id="ferramentaFeed">
+				<table>
+					<td width="499">
+						<div class="inputFile btn btn-primary">
+							<span><img src="../static/imagens/iconCamera.png"
+								width="28" /></span> <input type="file" name="arquivo" id="arquivo" />
+						</div>
+					</td>
+
+
+					<td><input type="hidden" name="enviar" value="send" /> <input
+						type="submit" name="Enviar" value="Publicar"
+						class="btn btn-primary" /></td>
+				</table>
+			</div>
+			
+			<script type="text/javascript">
+							
+				$( '#idpostar' )
+				  .submit( function( e ) {
+				    $.ajax( {
+				      url: 'postar',
+				      type: 'POST',
+				      data: new FormData( this ),
+				      processData: false,
+				      contentType: false,
+				      success: function(data)
+			           {
+			               // show response from the php script.
+			               $("#containerFeedGeral").load("feed");
+			           }
+				    } );
+				    e.preventDefault();
+				  } );  					
+							
+			</script>
+		</form>
+	</div>
+</div>
+
+<center style="margin-top: 10px;">
+	<nav class="menuHeaderDesafio menuHeader-fixo-Desafio">
+		<div id="formNavDesafio">
+			<ul id="menu-time">
+				<li class="nomesNavDesafio"><a href="timeline" id="geral">Geral</a></li>
+				<li class="nomesNavDesafio"><a href="time_amigos" id="amigos">Amigos</a></li>
+				<li class="nomesNavDesafio"><a href="time_turma" id="turma">Turma</a></li>				
+			</ul>
+		</div>
+	</nav>
+</center>
+
+<div id="containerFeed2">
+{% block content %} {% for e in entries %} {% if e.desafio == False %}
+
+<!-- ############################ Postagem normal #################################### -->
+	<div id="containerPostagem">
+	{% if e.usuario == Usuario %}
+	<form id="idapagar{{ forloop.counter }}" method="post"> {% csrf_token %}
+		<input type="hidden" name = "id" value={{e.id}}>
+		<button type="submit" value="excluir" title="Remover"
+		style="background: transparent; border: none; float: right;">
+			<span class="glyphicon glyphicon-remove remove-feed" style="top: 4px;"></span>
+		</button>
+		
+		<script type="text/javascript">
+							
+				$("#idapagar{{ forloop.counter }}").submit(function() {
+	
+				    var url = "apagar_postagem"; // the script where you handle the form input.
+	
+				    $.ajax({
+				           type: "POST",
+				           url: url,
+				           data: $("#idapagar{{ forloop.counter }}").serialize(), // serializes the form's elements.
+				           success: function(data)
+				           {
+				               // show response from the php script.
+				               $("#containerFeedGeral").load("feed");
+				           }
+				         });
+	
+				    return false; // avoid to execute the actual submit of the form.
+				});							
+							
+		</script>
+	</form>
+	
+	
+	
+	{% endif %}
+		<form name="form" action="buscaPerfilUsuario" method="post">
+			{% csrf_token %} <input type="submit" value="{{e.usuario.nome}}"
+				class="meulink"> <input type="hidden" name="cUsuario"
+				value="{{e.usuario.id}}"><font id="containerData">{{e.date|date:"D d M Y"}}</font>
+			<div id="containerData">
+				
+				
+				 {% if e.nome_desafio != None %}
+				<p>{{e.nome_desafio}}</p>
+				{% endif %}
+
+			</div>
+		</form>
+
+		<div id="containerTexto">
+			{{e.text}} {% if e.foto.url != '/media/False' %}
+			<center>
+				<img src="{{e.foto.url}}" width="450" height="390"
+					style="margin-top: 15px;" />
+			</center>
+			{% endif %}
+		</div>
+
+		<form action="postarComentarios" method="post">
+			{% csrf_token %}
+			<hr
+				style="margin: 0px 15px 0px 15px; border: 0; height: 0; border-top: 1px solid rgba(0, 0, 0, 0.1); border-bottom: 1px solid rgba(255, 255, 255, 0.3);">
+
+			<center>
+				<textarea name="cComentario" class="formTextAreaTimeLine"
+					placeholder="Escreva um comentário..."></textarea>
+			</center>
+
+			<div id="enviarPost">
+				<input type="hidden" name="cId" value="{{e.id}}" /> <input
+					type="submit" name="Enviar" value="Enviar" class="btn btn-primary" />
+			</div>
+		</form>
+
+				  {% if e.curtiu == True %}
+				   
+					    <form action="despingo" id="pingo" method="post">{% csrf_token %} 
+					    	<input type="submit" value="Despingo ({{e.qtd_pingo}})"	class="meulink">
+							<input type="hidden" name="cID_post" value="{{e.id}}">  
+					   </form>
+				   
+			      {% elif e.curtiu == False %}
+			      
+				      <form action="pingo" id="pingo" method="post">{% csrf_token %} 
+					    	<input type="submit" value="Pingo ({{e.qtd_pingo}})"	class="meulink">
+							<input type="hidden" name="cID_post" value="{{e.id}}">  
+					   </form>
+			       
+			      {% endif %}
+			      
+		<form action="visualizarComentarios" method="post">
+			{% csrf_token %} <input type="hidden" name="cPost" value="{{e.id}}">
+			<input type="submit" name="comentarios"
+				value="{{e.qtd_coments}} Comentarios" class="formatacaoComent">
+		</form>
+	</div>
+
+<!-- ############################ Fim - Postagem normal #################################### -->
+	{% elif e.desafio == True %}
+<!-- ############################ Postagem desafio #################################### -->
+	
+	<div id="containerPostagemDesafio">
+	{% if e.usuario == Usuario %}
+	<form action="apagar_postagem" method="post">{% csrf_token %}
+		<input type="hidden" name = "id" value={{e.id}}>
+		<button type="submit" value="excluir" style="background: transparent; border: none; float: right; border: none;">
+			<span class="glyphicon glyphicon-remove remove-feed"></span>
+		</button>
+	</form>
+	{% endif %}
+		<form name="form" action="buscaPerfilUsuario" method="post" style="margin-top: 2px;">
+			{% csrf_token %} <input type="submit" value="{{e.usuario.nome}}"
+				class="meulink"> <input type="hidden" name="cUsuario"
+				value="{{e.usuario.id}}">
+			<div id="containerData">
+				{% if e.nome_desafio != None %}
+					<div style="float: left; margin-right: 100px;">Desafio: {{e.nome_desafio}}</div>
+				{% endif %}
+				
+				{{e.date}}
+			</div>
+		</form>
+
+		<div id="containerTexto">
+			{{e.text}} {% if e.foto.url != '/media/False' %}
+			<center>
+				<img src="{{e.foto.url}}" width="450" height="390"
+					style="margin-top: 15px;" />
+			</center>
+			{% endif %}
+		</div>
+
+		<form action="postarComentarios" method="post">
+			{% csrf_token %}
+			<hr style="margin: 0px 15px 0px 15px; border: 0; height: 0; border-top: 1px solid rgba(0, 0, 0, 0.1); border-bottom: 1px solid rgba(255, 255, 255, 0.3);">
+
+			<center>
+				<textarea name="cComentario" class="formTextAreaTimeLine"
+					placeholder="Escreva um comentário..."></textarea>
+			</center>
+
+			<div id="enviarPost">
+				<input type="hidden" name="cId" value="{{e.id}}" /> <input
+					type="submit" name="Enviar" value="Enviar" class="btn btn-primary" />
+			</div>
+		</form>
+
+		<form action="visualizarComentarios" method="post">
+			{% csrf_token %} <input type="hidden" name="cPost" value="{{e.id}}">
+			<input type="submit" name="comentarios"
+				value="{{e.qtd_coments}} Comentarios" class="formatacaoComent">
+		</form>
+
+	</div>
+
+	{% endif %} {% endfor %}
+	
+<!-- ############################ Fim - Postagem desafio #################################### -->
+
+	<!-- <div class="load">
+		<center><img src="../static/imagens/loading.gif"></center>
+	</div> -->	
+	
+
+{% endblock %}
+</div>
+	{% endblock contents %}

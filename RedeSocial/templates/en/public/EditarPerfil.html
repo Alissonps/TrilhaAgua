@@ -1,0 +1,104 @@
+{% extends "en/public/Base.HTML" %} {% block contents %}
+<meta charset="utf-8">
+<div id="containerAmigos" style="margin-top: 30px;">
+	<form method="post" action="atualizarInformacoes"
+		enctype="multipart/form-data">
+		{% csrf_token %}
+
+		<fieldset>
+			<legend>Dados pessoais:</legend>
+
+			<table>
+				<td width="50">
+					<div id="formatacaoForm">
+						<label for="edFoto">Foto:</label>
+					</div>
+				</td>
+
+				<td width="50">
+					<div>
+						<input type="file" name="arquivo" id="edFoto" size="16" />
+					</div>
+				</td>
+			</table>
+
+			<table>
+				<tr>
+					<td width="50">
+						<div id="formatacaoForm">
+							<label for="edNome">Nome:</label>
+						</div>
+					</td>
+
+					<td><input type="text" name="eNome" value="{{Usuario.nome}}"
+						id="edNome" placeholder="Digite seu novo nome"
+						class="form-control-cadastro"></td>
+				</tr>
+			</table>
+
+			<table>
+				<tr>
+					<td width="50">
+						<div id="formatacaoForm">
+							<label for="edIdade">Idade:</label>
+						</div>
+					</td>
+
+					<td><input type="number" name="eIdade"
+						value="{{Usuario.idade}}" id="edIdade" min="0" max="99"
+						class="form-control-cadastro"></td>
+				</tr>
+			</table>
+
+			<table>
+				<tr>
+					<td width="50">
+						<div id="formatacaoForm">Série:</div>
+					</td>
+
+					<td><select class="form-control-cadastro" name="eTurma">
+							<optgroup label="Ens. Médio">
+								<option selected>{{Usuario.turma}}</option>
+								<option>1º Ano</option>
+								<option>2º Ano</option>
+								<option>3º Ano</option>
+							</optgroup>
+
+							<optgroup label="Ens. Fundamental">
+								<option>5º Ano</option>
+								<option>6º Ano</option>
+								<option>7º Ano</option>
+								<option>8º Ano</option>
+								<option>9º Ano</option>
+							</optgroup>
+					</select></td>
+				</tr>
+			</table>
+
+			<table>
+				<tr>
+					<td width="50">
+						<div id="formatacaoForm">
+							<label for="edDescricao">Descrição:</label>
+						</div>
+					</td>
+				</tr>
+
+				<tr>
+					<td><textarea cols="55" rows="5" name="eDescricao"
+							id="edDescricao" placeholder=" Digite sua mensagem."
+							class="form-control-cadastro" style="margin-left: 65px;">{{Usuario.descricao}}</textarea>
+					</td>
+				</tr>
+			</table>
+
+			<center>
+				<input type="submit" value="Alterar"
+					class="btn btn-primary btn-second">
+			</center>
+
+		</fieldset>
+
+	</form>
+</div>
+{% endblock contents %}

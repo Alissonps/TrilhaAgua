@@ -1,0 +1,63 @@
+{% extends "en/public/Base.HTML" %}
+<meta charset="utf-8">
+{% block contents %}
+
+<div id="containerAmigos" style="margin-top: 30px;">
+	<div id="containerConquistas">
+		<fieldset>
+			<legend>Conquistas</legend>
+				<ul>
+					{% for e in insignias %}
+					
+					
+						{% if e in conquista %}
+						
+						
+								<li>
+									<div id="imgConquistas">
+										<img src="{{e.Imagem.url}}" width="100" height="100"/>
+									</div>
+									
+									<div id="nomeConquistas">
+										{{e.nome}}
+									</div>
+									
+									<div id="descricaoConquistas">
+										{{e.descricao}}
+									</div>
+								</li>
+								<hr class="form-hr">	
+								
+						{% else %}
+						
+								<li>
+									<div id="imgConquistas">
+										<img src="/static/imagens/icon_bloqueio.png" width="100" height="100"/>
+									</div>
+									
+									<div id="nomeConquistas">
+										{{e.nome}}
+									</div>
+									
+									<div id="descricaoConquistas">
+										{{e.descricao}}
+									</div>
+								</li>
+								<hr class="form-hr">	
+						
+						{% endif %}
+					{% endfor %}					
+				</ul>
+		
+<!-- <button type="button" id="button1">Hello Server!</button> -->
+<!-- <button type="button" id="button2">div!</button> -->
+
+
+<!-- <script type="text/javascript" src="../static/js/testeHello.js"></script> -->
+<!-- <script type="text/javascript" src="../static/js/teste.js"></script> -->
+
+
+		</fieldset>
+	</div>
+</div>
+{% endblock contents %}

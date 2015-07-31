@@ -1,0 +1,52 @@
+{% extends "en/public/Base.HTML" %} {% block contents %}
+<meta charset="utf-8">
+<div id="containerFeed2" style="margin-top: 30px;">
+	{% block content %}
+	<div id="containerPostagem" style="padding-bottom: 30px;">
+
+		<form name="form" action="buscaPerfilUsuario" method="post">
+			{% csrf_token %} <input type="submit"
+				value="{{desafio.usuario_desafiado.nome}}" class="meulink">
+			<input type="hidden" name="cUsuario"
+				value="{{desafio.usuario_desafiado.id}}">
+			<div id="containerData">{{desafio.postagem.date}}</div>
+		</form>
+
+		<div id="containerTexto">
+			{{desafio.postagem.text}} 
+							
+			{% if desafio.postagem.foto.url != "/media/False" %}
+				<center>
+					<img src="{{desafio.postagem.foto.url}}" width="450" height="390" style="margin-top: 15px;" />
+				</center>
+			{% endif %}
+		</div>	
+
+		<hr
+			style="margin: 0px 15px 5px 15px; border: 0; height: 0; border-top: 1px solid rgba(0, 0, 0, 0.1); border-bottom: 1px solid rgba(255, 255, 255, 0.3);">
+
+		<div id="enviarPost">
+
+			<form action="atribuir_desafio" method="post">
+				{% csrf_token %} <input type="hidden" name="cId_usuario"
+					value={{desafio.usuario_desafiado.id}} /> <input type="hidden"
+					name="cId_desafio_ativo" value={{desafio.id}} /> <input
+					type="hidden" name="cValor" value=False /> <input type="submit"
+					name="Enviar" value="Recusar" class="btn btn-primary" />
+			</form>
+
+			<form action="atribuir_desafio" method="post">
+				{% csrf_token %} <input type="hidden" name="cId_usuario"
+					value={{desafio.usuario_desafiado.id}} /> <input type="hidden"
+					name="cId_desafio_ativo" value={{desafio.id}} /> <input
+					type="hidden" name="cValor" value=True /> <input type="submit"
+					name="Enviar" value="Atribuir" class="btn btn-primary" />
+			</form>
+
+		</div>
+
+	</div>
+	{% endblock %}
+
+</div>
+{% endblock contents %}

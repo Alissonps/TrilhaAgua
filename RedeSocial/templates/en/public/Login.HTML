@@ -1,0 +1,89 @@
+
+<!DOCTYPE HTML>
+{% load staticfiles %}
+<html>
+<head>
+<link rel="stylesheet" type="text/css" href="{% static "css/estilo.css" %}">
+<title>Bem-vindo ao Trilha da Água</title>
+<meta charset="utf-8">
+<script type="text/javascript" src="../static/js/jquery-2.1.1.min.js"></script>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+<script type="text/javascript" src="../static/js/jquery-1.6.1.min.js"></script>
+</head>
+<body>
+	<header>
+		<nav class="menuHeader menuHeader-fixo">
+			<div id="formNav">
+				<ul>
+					<li class="nomeTrilha"><a href="login">Trilha da Água</a></li>
+					
+					<li class="nomesNav"><a href="sobre">Sobre</a></li>
+
+					<li class="nomesNav"><a href="login">Contato</a></li>
+				</ul>
+			</div>
+		</nav>
+		
+		<div id="logoXV">
+			<center>
+				<img src="{% static "imagens/logo.png" %}" title="Colégio XV" />
+			</center>
+		</div>
+	</header>
+
+	<section>
+		<div id="containerlogin">
+			<form method="post" id="idverificar" action="verificar">
+				{% csrf_token %} <input type="text" name="Login" id="tLogin"
+					class="form-control-login" placeholder="Login" required autofocus>
+
+				<input type="password" name="Senha" id="tSenha" class="form-control-login"
+					placeholder="Senha" required>
+
+				<div class="checkbox">
+					<label> <input type="checkbox" value="remember-me">
+						Lembrar-me
+					</label>
+				</div>
+				<script type="text/javascript">
+				 $(window).load(function(){                                                                                                                  
+					  $('#idverificar').submit(function(e){                                                                                                        
+					            e.preventDefault();                                                                                                             
+					     var request_url = document.getElementById('next').value                                                                             
+					           $.ajax({                                                                                                                           
+					              type:"POST",                                                                                                                    
+					              url: $(this).attr('verificar'),                                                                                                    
+					            data: $('#idverificar').serialize(),                                                                                             
+					              success: function(response){ $('#msg').text(response);                                                                          
+					              console.log(response);                                                                                                          
+					              },                                                                                                                              
+					             error: function(xhr, ajaxOptions, thrownError){ alert( $('#login_error').text('Username already taken. Please select another one.')}, 
+					           });                                                                                                                               
+					      });                                                                                                                                     
+					 }); 
+				</script>
+			
+				<center>
+					<input style="width: 100%" type="submit" value="Entrar" class="btn btn-primary">
+
+					{% if msg == "Dados incorretos!"%}
+						<div class="alert alert-danger" role="alert">{{msg}}</div></center>
+					
+					{% elif msg == "Usuario cadastrado!"%}
+						<div class="alert alert-success" role="alert">{{msg}}</div></center>
+						
+					{% endif %}
+		</div>
+	</section>
+
+	<div id="formMsg">
+		<p>
+			Ainda não possui cadastro? <a href="cadastro">Cadastrar aqui.</a>
+		</p>
+
+		<p>
+			Esqueceu sua senha? <a href="pergunta">Clique aqui.</a>
+		</p>
+	</div>
+</body>
+</html>

@@ -1,0 +1,78 @@
+<!DOCTYPE HTML>
+{% load staticfiles %}
+<html>
+<head>
+<link rel="stylesheet" type="text/css" href="{% static "css/estilo.css" %}">
+<title>Redefinir</title>
+<meta charset="utf-8">
+</head>
+<body>
+	<header>
+		<nav class="menuHeader menuHeader-fixo">
+			<div id="formNav">
+				<ul>
+					<li class="nomeTrilha"><a href="login">Trilha da Água</a></li>
+					
+					<li class="nomesNav"><a href="inicio">Sobre</a></li>
+
+					<li class="nomesNav"><a href="inicio">Contato</a></li>
+				</ul>
+			</div>
+		</nav>
+	</header>
+
+	<section>
+		<div id="containerRecuperacao">
+			<form method="post" action="redefinirsenha">
+
+
+				<fieldset id="Cadastro">
+					<legend>Recuperar senha:</legend>
+					<div>
+						<table>
+							<tr>
+								<td width="135"><label for="tLogin">Login:</label></td>
+
+								<td><input type="text" name="cLogin" id="tLogin" size="15"
+									maxlength="30" placeholder="" class="form-control-cadastro"></td>
+							</tr>
+						</table>
+					</div>
+
+					<div>
+						<table>
+							<tr>
+								<td width="135"><label for="nSenha">Nova senha:</label></td>
+
+								<td><input type="password" name="mSenha" id="tSenha"
+									size="15" maxlenght="15" class="form-control-cadastro"></td>
+							</tr>
+						</table>
+					</div>
+					
+					<div>
+						<table>
+							<tr>		
+								<td width="135"><label for="cnSenha">Confirme a senha:</label></td>
+
+								<td><input type="password" name="cmSenha" id="tSenha"
+									size="15" maxlenght="15" class="form-control-cadastro"></td>
+							</tr>
+						</table>
+					</div>
+					<center>
+						<input type="submit" value="Redefinir" class="btn btn-primary btn-second">				
+						<font color="green">{{msg1}}</font>
+						<font color="red">{{msg2}}</font>
+					</center>
+				</fieldset>
+
+			</form>
+		</div>
+
+		<div id="formMsg">			
+			<p>Faça seu login. <a href="login">Clique aqui.</a></p>			
+		</div>
+	</section>
+</body>
+</html>

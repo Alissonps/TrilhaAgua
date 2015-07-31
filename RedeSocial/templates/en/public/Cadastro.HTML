@@ -1,0 +1,233 @@
+<!DOCTYPE HTML>
+{% load staticfiles %}
+<html>
+<head>
+<link rel="stylesheet" type="text/css" href="{% static "css/estilo.css" %}">
+<title>Cadastro</title>
+<meta charset="utf-8">
+</head>
+<body>
+	<header>
+		<nav class="menuHeader menuHeader-fixo">
+			<div id="formNav">
+				<ul>
+					<li class="nomeTrilha"><a href="login">Trilha da Água</a></li>
+					
+					<li class="nomesNav"><a href="sobre">Sobre</a></li>
+
+					<li class="nomesNav"><a href="login">Contato</a></li>
+				</ul>
+			</div>
+		</nav>
+		<div id="logoNome">
+			</br>
+			<center>
+				<img style="height: 90px;" src="{% static "imagens/cadastro.png" %}"/>
+			</center>
+		</div>
+	</header>
+	<section>
+		<div id="containerCadastro">
+			<form method="post" action="cadastrar">
+
+
+				<fieldset id="Cadastro">
+					<legend>Informação de Login:</legend>					
+					<div>
+						<table>
+							<tr>
+								<td width="51">
+									<div>
+										<label for="tLogin">Login:</label>
+									</div>
+								</td>
+								<td><input type="text" name="cLogin" id="tLogin" size="15"
+									maxlength="30" placeholder="" class="form-control-cadastro" required autofocus> <font color="red">{{ast}}</font></td>
+							</tr>
+						</table>
+					</div>
+
+					<div>
+						<table>
+							<tr>
+								<td width="51">
+									<div>
+										<label for="tSenha">Senha:</label>
+									</div>
+								</td>
+								<td><input type="password" name="cSenha" id="tSenha"
+									size="15" maxlenght="15" class="form-control-cadastro" required></td>
+							</tr>
+						</table>
+					</div>
+				
+				</fieldset></p>
+				<fieldset id="Perfil">
+					<legend>Informação de Perfil:</legend>
+					<div>
+						<table>
+							<tr>
+								<td width="70">
+									<div>
+										<label for="tNome">Nome:</label>
+									</div>
+								</td>
+								<td><input type="text" name="cNome" id="tNome" size="35"
+									maxlength="25" placeholder="Nome e Sobrenome" class="form-control-cadastro" required></td>
+							</tr>
+						</table>
+					</div>
+
+					<div>
+						<table>
+							<tr>
+								<td width="70">
+									<div>
+										<label for="tEmail">Email:</label>
+									</div>
+								</td>
+								<td><input type="email" name="cEmail" id="tEmail" size="35"
+									maxlength="50" placeholder="exemplo@email.com" class="form-control-cadastro" required></td>
+							</tr>
+						</table>
+					</div>
+
+					<div>
+						<table>
+							<tr>
+								<td width="70">
+									<div>
+										<label for="tMatricula">Matrícula:</label>
+									</div>
+								</td>
+								<td><input type="number" name="cMatricula" id="tMatricula"
+									size="17" maxlength="50" placeholder="Número da Matrícula" class="form-control-cadastro" required></td>
+							</tr>
+						</table>
+					</div>
+
+					<div>
+						<table>
+							<tr>
+								<td width="70">
+									<div>
+										<label for="tIdade">Idade:</label>
+									</div>
+								</td>
+								<td><input type="number" name="cIdade" id="tIdade" min="0"
+									max="30" class="form-control-cadastro" required></td>
+							</tr>
+						</table>
+					</div>
+
+					<div>
+						<table>
+							<tr>
+								<td width="70">
+									<div>
+										<label for="cTurma">Turma:</label>
+									</div>
+								</td>
+								
+								<td>
+									<select class="form-control-cadastro" name="cTurma">
+									
+										<optgroup label="Ens. Médio">
+											<option selected>1º Ano</option>
+											<option>2º Ano</option>
+											<option>3º Ano</option>
+										</optgroup>
+
+										<optgroup label="Ens. Fundamental">
+											<option>5º Ano</option>
+											<option>6º Ano</option>
+											<option>7º Ano</option>
+											<option>8º Ano</option>
+											<option>9º Ano</option>
+										</optgroup>
+									</select>
+								</td>								
+							</tr>
+						</table>
+					</div>
+					
+					<div>
+						<table>
+							<tr>
+								<td width="130">	
+									<label for="cPergunta">Pergunta secreta:</label>									
+								</td>
+								
+								<td>
+									<select class="form-control-cadastro" name="cPergunta">										
+										<optgroup label="Perguntas">
+											<option selected>Minha cor preferida</option>
+											<option>Nome do primeiro animal de estimacao</option>
+											<option>Primeira escola onde estudou</option>
+										</optgroup> 
+									</select>								
+								</td>
+							</tr>
+						</table>
+					</div>
+					
+					<div>
+						<table>
+							<tr>
+								<td width="130">																	
+									<label for="cResposta">Resposta secreta:</label>									
+								</td>
+								
+								<td width="0">
+									<name="cPergunta">
+										<input type="text" name="cResposta" id="tResposta"min="0" max="30" class="form-control-cadastro" required>
+								</td>								
+							</tr>						
+						</table>
+					</div>
+
+					<fieldset id="sexo">
+						<legend>Sexo:</legend>
+						<div>
+							<table>
+								<tr>
+									<td>
+										<input type="radio" name="cSexo" id="t0Sexo" value="Masculino">
+										<label for="t0Sexo">Masculino</label></br>
+										<input type="radio" name="cSexo" id="t1Sexo" value="Feminino">
+										<label for="t1Sexo">Feminino</label>
+									</td>
+										
+								</tr>
+							</table>
+							<div>
+								<table>
+									<tr>
+										<input type="hidden" name='cFoto' value="/static/imagens//False.png">
+									</tr>
+								</table>
+							</div>
+						</div>
+					</fieldset>
+					
+					<center>
+						<input type="submit" value="Cadastrar" class="btn btn-primary btn-second">
+					</center>
+					<center>
+					{% if msg2 == "Preencha os campos!" or msg2 == "Login de usuario já existe!" %}	
+						<div class="alert alert-danger" role="alert">{{msg2}}</div>
+					{% elif msg1 == "Usuario cadastrado com sucesso!" %}	
+							<div class="alert alert-success" role="alert">{{msg1}}</div>
+						</center>
+					{% endif %}
+			</form>
+		</div>
+	</section>
+
+	<div id="formMsg">
+		<p>
+			Faça seu login. <a href="login">Clique aqui.</a>
+		</p>
+	</div>
+</body>
+</html>

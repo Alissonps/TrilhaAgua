@@ -1,0 +1,284 @@
+{% extends "en/public/Base.HTML" %} {% block contents %}
+<meta charset="utf-8">
+<div id="containerAmigos" style="margin-top: 30px;">
+	<div id="containerSolicitacao">
+		<p>{{msg_erro}}</p>		
+		
+		{% if soli_desafios > 0 %}
+		<fieldset>
+			<legend>Solicitações de Desafios</legend>
+
+			{% for e in solicit_desafios %}
+			<ul>
+				<div style="background:; width: 79%; float: left;">
+					<li>
+						<img src="{{e.usuario_desafiante.foto.url}}" width="50"	height="50"/>
+					</li>
+					
+					<li style="margin: 7px 15px 15px 15px;">
+						<form name="form" action="buscaPerfilUsuario" method="post">
+							{% csrf_token %} <input type="submit" value="{{e.usuario_desafiante.nome}}"
+								class="meulink"> <input type="hidden" name="cUsuario"
+								value="{{e.usuario_desafiante.id}}">
+						</form>
+						<div class="form-ano">
+							{{e.usuario_desafiante.turma}}
+						</div>
+					</li>
+
+					<li style="margin: 19px 0px 0px 0px; float: right;"
+						class="form-ano">
+						{{e.desafio.nome}}: {{e.desafio.pontuacao}}	pontos					
+					</li>
+				</div>
+
+				<form action="pedido_desafio" method="post">
+					{% csrf_token %} <input type="hidden" name="cPedido_usuario_id"
+						value={{e.usuario_desafiante.id}} /> <input type="hidden"
+						name="cPedido_desafio_id" value={{e.desafio.id}} /> <input
+						type="hidden" name="cPedido_id" value={{e.id}} /> <input
+						type="hidden" name="cPedido_solicitacao" value="False" />
+
+					<button type="submit" value="recusar" class="btn btn-danger btn-lg"
+						title="Recusar solicitação">
+						<span class="glyphicon glyphicon-remove"></span>
+					</button>
+				</form>
+
+				<form action="pedido_desafio" method="post">
+					{% csrf_token %} <input type="hidden" name="cPedido_usuario_id"
+						value={{e.usuario_desafiante.id}} /> <input type="hidden"
+						name="cPedido_desafio_id" value={{e.desafio.id}} /> <input
+						type="hidden" name="cPedido_id" value={{e.id}} /> <input
+						type="hidden" name="cPedido_solicitacao" value=True />
+
+
+
+					<button type="submit" value="aceitar"
+						class="btn btn-success btn-lg" title="Aceitar solicitação">
+						<span class="glyphicon glyphicon-ok"></span>
+					</button>
+				</form>
+			</ul>
+			<hr>
+			{% endfor %}
+		</fieldset>
+		{% endif %}
+		
+		
+		<fieldset>
+			<legend>Desafiar </legend>
+
+			<form action="lancar_desafios" method="post">
+				{% csrf_token %}
+				<table>
+					<tr>
+						<td width="70">
+							<div>
+								<label for="cTurma">Desafios:</label>
+							</div>
+						</td>
+
+						<td>
+							<select class="form-control-cadastro" name="cDesafios">
+								<optgroup label="Desafios">
+
+									{% for a in desafios %}
+										<option value="{{a.id}}">{{a.nome}}</option>
+									{% endfor %}
+									
+								</optgroup>
+							</select>
+						</td>
+					</tr>
+				</table>
+
+				<table>
+					<tr>
+						<td width="70">
+							<div>
+								<label for="cTurma">Amigos:</label>
+							</div>
+						</td>
+
+						<td>
+							<select class="form-control-cadastro" name="cAmigos">
+								<optgroup label="Amigos">
+									{% for a in meus_amigos %}
+									
+									<option value="{{a.amigo.id}}">{{a.amigo.nome}}</option>
+
+									{% endfor %}
+
+								</optgroup>
+							</select>
+						</td>
+					</tr>
+				</table>
+
+				<center>
+					<input type="submit" value="Lançar Desafio"
+						class="btn btn-primary btn-second">
+				</center>
+			</form>
+		</fieldset>
+		
+		
+		
+		{% if qtd_d_ativos_desafiados > 0 %}
+		<fieldset>
+			<legend>Desafios Ativos</legend>
+			{% csrf_token %} {% for a in d_ativos_desafiado %}
+				<ul>
+					<div style="background:; width: 79%; float: left;">						
+						<li>
+							<img src="{{a.usuario_desafiante.foto.url}}" width="50" height="50">
+						</li>
+						
+						
+						<li style="margin: 7px 15px 15px 15px;">
+							<form name="form" action="buscaPerfilUsuario" method="post">
+								{% csrf_token %} <input type="submit" value="{{a.usuario_desafiante.nome}}"
+									class="meulink"> <input type="hidden" name="cUsuario"
+									value="{{a.usuario_desafiante.id}}">
+							</form>
+							<div class="form-ano">
+								{{a.usuario_desafiante.turma}}
+							</div>
+						</li>
+						
+						<li style="margin: 19px 0px 0px 0px; float: right;"
+						class="form-ano">
+							{{a.desafio.nome}}: {{a.desafio.pontuacao}} pontos					
+						</li>						
+					</div>
+			
+					<form action="cumprir_desafio" method="post">					
+						<button type="submit" value="aceitar"
+							class="btn btn-success btn-lg" title="Aceitar solicitação">
+	
+							<input type="hidden" name="id_desafio_ativo" value={{a.id}} /> <span
+								class="glyphicon glyphicon-ok"></span> Cumprir
+						</button>
+					</form>
+				</ul>
+				<hr>
+				{% endfor %}
+		
+		</fieldset>
+		{% endif %}
+		
+		{% if desafios_cumpridos > 0 %}
+		<fieldset>
+
+			<legend>Desafios concluídos</legend>
+				{% csrf_token %} {% for a in d_ativos_desafiante %}
+				<ul>
+					<div style="background:; width: 79%; float: left;">						
+							<li>
+								<img src="{{a.usuario_desafiado.foto.url}}" width="50" height="50">
+							</li>						
+							
+							<li style="margin: 7px 15px 15px 15px;">
+								<form name="form" action="buscaPerfilUsuario" method="post">
+									{% csrf_token %} <input type="submit" value="{{a.usuario_desafiado.nome}}"
+										class="meulink"> <input type="hidden" name="cUsuario"
+										value="{{a.usuario_desafiado.id}}">
+								</form>
+								<div class="form-ano">
+									{{a.usuario_desafiado.turma}}
+								</div>
+							</li>
+							
+							<li style="margin: 19px 0px 0px 0px; float: right;"
+							class="form-ano">
+								{{a.desafio}}						
+							</li>						
+					</div>
+					
+					<form action="verificar_desafio" method="post">				
+						
+						<button type="submit" value="aceitar"
+							class="btn btn-success btn-lg" title="Aceitar solicitação">
+	
+							<input type="hidden" name="id_desafio_ativo" value={{a.id}} /> <span
+								class="glyphicon glyphicon-ok"></span> verificar
+						</button>
+					</form>
+				</ul>
+				<hr>					
+				{% endfor %}							
+		</fieldset>
+		{% endif %}
+		
+		{% if Usuario.professor == True %}
+		
+		<fieldset>
+			<legend>Desafios por Turma </legend>
+
+			<form action="lancar_desafios_turma" method="post">
+				{% csrf_token %}
+				<table>
+					<tr>
+						<td width="70">
+							<div>
+								<label for="cDesafio">Desafios:</label>
+							</div>
+						</td>
+
+						<td>
+							<select class="form-control-cadastro" name="cDesafios">
+								<optgroup label="Desafios">
+
+									{% for a in desafios %}
+										<option value="{{a.id}}">{{a.nome}}</option>
+									{% endfor %}
+									
+								</optgroup>
+							</select>
+						</td>
+					</tr>
+				</table>
+
+				<table>
+					<tr>
+						<td width="70">
+							<div>
+								<label for="cTurma">Turmas:</label>
+							</div>
+						</td>
+
+						<td>
+							<select class="form-control-cadastro" name="cTurma">
+										
+										<optgroup label="Ens. Médio">
+											<option selected>1º Ano</option>
+											<option>2º Ano</option>
+											<option>3º Ano</option>
+										</optgroup>
+
+										<optgroup label="Ens. Fundamental">
+											<option>5º Ano</option>
+											<option>6º Ano</option>
+											<option>7º Ano</option>
+											<option>8º Ano</option>
+											<option>9º Ano</option>
+										</optgroup>
+							</select>
+						</td>
+					</tr>
+				</table>
+
+				<center>
+					<input type="submit" value="Lançar Desafio"
+						class="btn btn-primary btn-second">
+				</center>
+			</form>
+		</fieldset>
+		
+		
+		{% endif %}	
+	
+	</div>
+</div>
+{% endblock contents %}

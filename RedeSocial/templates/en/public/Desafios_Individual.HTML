@@ -1,0 +1,66 @@
+{% extends "en/public/Base.HTML" %} {% block contents %}
+<meta charset="utf-8">
+<div id="containerAmigos" style="margin-top: 30px;">
+	<div id="containerSolicitacao">
+		<p>{{msg_erro}}</p>		
+		
+		<fieldset>
+			<legend>Desafiar</legend>
+
+			<form action="lancar_desafios" method="post">
+				{% csrf_token %}
+				<table>
+					<tr>
+						<td width="70">
+							<div>
+								<label for="cTurma">Desafios:</label>
+							</div>
+						</td>
+
+						<td>
+							<select class="form-control-cadastro" name="cDesafios">
+								<optgroup label="Desafios">
+
+									{% for a in desafios %}
+										<option value="{{a.id}}">{{a.nome}}</option>
+									{% endfor %}
+									
+								</optgroup>
+							</select>
+						</td>
+					</tr>
+				</table>
+
+				<table>
+					<tr>
+						<td width="70">
+							<div>
+								<label for="cTurma">Amigos:</label>
+							</div>
+						</td>
+
+						<td>
+							<select class="form-control-cadastro" name="cAmigos">
+								<optgroup label="Amigos">
+									
+									
+									<option value="{{amigo.id}}">{{amigo.nome}}</option>
+
+		
+
+								</optgroup>
+							</select>
+						</td>
+					</tr>
+				</table>
+
+				<center>
+					<input type="submit" value="Lançar Desafio"
+						class="btn btn-primary btn-second">
+				</center>
+			</form>
+		</fieldset>
+	
+	</div>
+</div>
+{% endblock contents %}

@@ -1,0 +1,63 @@
+{% extends "en/public/Base.HTML" %}
+<meta charset="utf-8">
+{% block contents %}
+<div id="containerAmigos" style="margin-top: 30px;">
+<div id="containerCampeoes">
+<fieldset>
+	<legend>Campões</legend>
+	<ul>
+	
+	{% for e in top1 %}
+	<div id="coroa"><img  src="../static/imagens/oliver.png" width="245" height="200"></div>
+					{% if e.mes == 1 %}
+						<li><div class="form-mes">Janeiro </div></li>
+					{% elif e.mes == 2 %}
+						<li><div class="form-mes">Fevereiro </div></li>
+					{% elif e.mes == 3 %}
+						<li><div class="form-mes">Março </div></li>
+					{% elif e.mes == 4 %}
+						<li><div class="form-mes">Abril </div></li>
+					{% elif e.mes == 5 %}
+						<li><div class="form-mes">Maio </div></li>
+					{% elif e.mes == 6 %}
+						<li><div class="form-mes">Junho </div></li>
+					{% elif e.mes == 7 %}
+						<li><div class="form-mes">Julho </div></li>
+					{% elif e.mes == 8 %}
+						<li><div class="form-mes">Agosto </div></li>
+					{% elif e.mes == 9 %}
+						<li><div class="form-mes">Setembro </div></li>
+					{% elif e.mes == 10 %}
+						<li><div class="form-mes">Outubro </div></li>
+					{% elif e.mes == 11 %}
+						<li><div class="form-mes">Novembro </div></li>
+					{% elif e.mes == 12 %}
+						<li><div class="form-mes">Dezembro </div></li>
+					{% endif %}	
+						
+					<li>
+					
+						<img  src="{{e.usuario.foto.url}}" class="img-thumbnail" width="80" height="80">
+					
+					</li>
+	
+					<li style="margin-top: 50px;">
+						<form name="form" action="buscaPerfilUsuario" method="post">
+							{% csrf_token %} <input type="submit" value="{{e.usuario.nome}}"
+								class="meulink"> <input type="hidden" name="cUsuario"
+								value="{{e.usuario.id}}">						
+						</form>
+					</li>
+						<li><div class="form-ano">{{e.usuario.turma}}</div></li>					
+						<li><div class="form-class-nome">Pontuação: <font class="form-class">{{e.pontuacao}}</font></div></li>
+						
+					
+				<hr class="style-seven">
+				
+	{% endfor %}
+	</ul>
+	
+</fieldset>
+</div>
+</div>
+{% endblock contents %}

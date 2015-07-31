@@ -1,0 +1,157 @@
+<!DOCTYPE HTML>
+{% load staticfiles %}
+<html lang="pt-br">
+<head>
+<link rel="stylesheet" type="text/css" href="{% static "css/estilorede.css" %}">
+<link rel="stylesheet" type="text/css" href="{% static "css/loader.css" %}">
+<meta charset="utf-8">
+
+
+<script type="text/javascript" src="../static/js/jquery-1.11.3.min.js"></script>
+
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+
+<script type="text/javascript" src="../static/js/menuNav.js"></script>
+<script type="text/javascript" src="../static/js/carregar.js"></script>
+<script type="text/javascript" src="../static/js/like.js"></script>
+<script type="text/javascript" src="../static/js/deslike.js"></script>
+<script type="text/javascript" src="../static/js/loaders.css.js"></script>
+
+<link rel="stylesheet" type="text/css" href="../static/css/query-ui.css">
+<script type="text/javascript" src="../static/js/jquery-ui.js"></script>
+
+	
+<title>Trilha da Água</title>
+</head>
+<body>
+	<header>
+		<nav class="menuHeader menuHeader-fixo">
+			
+			<div id="formNav">
+				<ul>
+					<li class="nomeTrilha"><a href="timeline">Trilha da Água</a></li>
+
+					<li class="formSair"><a href="logout">Sair</a></li>
+
+					<!-- <li class="nomesNav"><a href="inicio">Contato</a></li> -->
+				</ul>
+			</div>
+		</nav>
+	</header>
+
+	<div id="wrap">
+		
+		<div id="containerNotificacaoGeral">
+			<div id="containerNotificacao" style="margin-top: 60px">
+				<ul id="notificacao-ul">
+					<li><div class="tituloMenu">Notificações</div></li>
+					<li><span class="badge">{{qtd_solicitacoes}}</span><a href="amigos" class="form-notificacao">Solicitações de amizade</a></li>
+					
+					<hr style="margin: 8px 0px 8px 0px; border: 0; height: 0; border-top: 1px solid rgba(0, 0, 0, 0.1); border-bottom: 1px solid rgba(255, 255, 255, 0.3);">
+					
+					<li><span class="badge">{{qtd_msgs}}</span><a href="mensagens" class="form-notificacao">Mensagens</a></li>
+					
+				</ul>
+			</div>
+			
+			<div id="containerNotificacao">
+				<ul id="notificacao-ul">
+					<li><div class="tituloMenu">Desafios</div></li>
+					
+					
+					<li><span class="badge">{{qtd_d_ativos_desafiado}}</span><a href="ativos" class="form-notificacao">Ativos</a></li>
+					
+					
+					<hr style="margin: 8px 0px 8px 0px; border: 0; height: 0; border-top: 1px solid rgba(0, 0, 0, 0.1); border-bottom: 1px solid rgba(255, 255, 255, 0.3);">
+					
+					<li><span class="badge">{{soli_desafios}}</span><a href="pendentes" class="form-notificacao">Pendentes</a></li>
+					
+					<hr style="margin: 8px 0px 8px 0px; border: 0; height: 0; border-top: 1px solid rgba(0, 0, 0, 0.1); border-bottom: 1px solid rgba(255, 255, 255, 0.3);">
+					
+					<li><span class="badge">{{desafios_cumpridos}}</span><a href="cumpridos" class="form-notificacao">Cumpridos</a></li>
+				
+					
+				</ul>
+			</div>
+			
+			<div id="containerNotificacao">
+				<ul id="notificacao-ul">
+					<li><div class="tituloMenu">Classificação</div></li>
+					
+					<li><span class="form-class-nome">Pontuação: </span><font class="form-class">{{Usuario.pontos}}</font></li>
+					
+					<hr style="margin: 8px 0px 8px 0px; border: 0; height: 0; border-top: 1px solid rgba(0, 0, 0, 0.1); border-bottom: 1px solid rgba(255, 255, 255, 0.3);">
+					<li><span class="form-class-nome"><a href="rankings">Turma:</a></span> <font class="form-class">{{pos_turma}}º </font></li>
+					
+					<hr style="margin: 8px 0px 8px 0px; border: 0; height: 0; border-top: 1px solid rgba(0, 0, 0, 0.1); border-bottom: 1px solid rgba(255, 255, 255, 0.3);">
+					<li><span class="form-class-nome"><a href="rankings">Geral:</a></span> <font class="form-class">{{pos_geral}}º </font></li>
+
+				</ul>
+			</div>					
+		</div>
+		
+		<section>
+			<div id="containerFeedGeral">
+		
+				{% block contents %}
+				
+				{% endblock contents %}
+			</div>
+			
+		</section>
+		
+
+		<aside>
+			<div id="sideBar">
+				<center>
+					<div id="containerPerfil">
+						{% if e.foto.url != '/media/False' %} 
+							<img	src="{{Usuario.foto.url}}" width="100px" height="100px" style="border-radius: 50%;"/> 
+						{% endif %}
+						
+						<p>{{Usuario.nome}}</p>
+						<!-- <p>{{Usuario.turma}}</p> -->
+					</div>
+				</center>
+					<div id="containerMenu1">
+					<script type="text/javascript">
+						$(document).ready(function(){
+							$("#menu-ul li a[href='"+location.href.substring(location.href.lastIndexOf("/")+1,255)+"']").css("border-left","4px solid #F8C51B");
+						});
+					</script>
+						<ul id="menu-ul">
+							<div class="tituloMenu">Principal</div>
+							<li id="desa">
+								<span class="feed"></span><a href="timeline"><font id="nomeMenu">Feed</font></a>
+								<ul id="des">
+									<li style="margin-top: 2px;"><a href="timeline"><font id="nomeSubMenu">Geral</font></a></li>
+									<li><a href="time_amigos"><font id="nomeSubMenu">Amigos</font></a></li>
+									<li style="margin-bottom: 2px;"><a href="time_turma"><font id="nomeSubMenu">Turma</font></a></li>	
+								</ul>	
+							</li>							
+							<li><span class="perfil"></span><a href="perfil"><font id="nomeMenu">Perfil</font></a></li>
+							<li><span class="amigos"></span><a href="amigos"><font id="nomeMenu">Amigos</font></a></li>
+						</ul>
+					</div>
+					<div id="containerMenu2">
+						<div class="tituloMenu">Menu</div>
+						<ul id="menu-ul">							
+							<li id="desa">
+								<span class="desafio"></span><a href="desafiar"><font id="nomeMenu2">Desafios</font></a>
+								<ul id="des">
+									<li style="margin-top: 2px;"><a href="desafiar"><font id="nomeSubMenu">Desafiar</font></a></li>
+									<li><a href="pendentes"><font id="nomeSubMenu">Pendentes</font></a></li>
+									<li><a href="ativos"><font id="nomeSubMenu">Ativos</font></a></li>
+									<li style="margin-bottom: 2px;"><a href="cumpridos"><font id="nomeSubMenu">Cumpridos</font></a></li>
+								</ul>	
+							</li>
+							<li><span class="rank"></span><a href="rankings"><font id="nomeMenu2">Rankings</font></a></li>
+							<li><span class="campeoes"></span><a href="campeoes"><font id="nomeMenu2">Campeões</font></a></li>
+							<li><span class="badge"></span><a href="conquistas"><font id="nomeMenu2">Conquistas</font></a></li>
+						</ul>
+					</div>				
+			</div>
+		</aside>		
+	</div>
+</body>
+</html>
