@@ -1495,6 +1495,7 @@ def Atribuir_Desafio (request):
     
     usu = Usuario.objects.filter(id=id_usuario).get()
     desafio = Desafio_Ativo.objects.filter(id=id_desafio).get()
+    dsf = desafio
     
     if(opc == 'True'):
         usu.pontos = usu.pontos + desafio.desafio.pontuacao
@@ -1511,10 +1512,8 @@ def Atribuir_Desafio (request):
         ucs.qtd_desafios = ucs.qtd_desafios + 1
         ucs.save()
             
-        return Atribuir_Conquistas(request, usu)
+        return Atribuir_Conquistas(request, usu, dsf)
             
-      
-    
     elif(opc == 'False'):
         msg = "Você não conseguiu concluir o desafio %s" % (desafio.desafio.nome)
         not_msg = Mensagens(usuario = desafio.usuario_desafiado, mensagem = msg)
@@ -1850,7 +1849,7 @@ def Despingo_Deslike (request):
     
     return HttpResponse(post.qtd_pingo)
 
-def Atribuir_Conquistas(request, usu):
+def Atribuir_Conquistas(request, usu, dsf):
     
     u = usu   
 
@@ -1911,15 +1910,16 @@ def Atribuir_Conquistas(request, usu):
             conquista = Conquista(insignia=i, usuario=u)
             conquista.save()
                     
-    try:    #Conquista 5
+    try:    #Conquista 5 - Feito
             
-        i = Insignia.objects.filter(nome='Conquista 8').get()
+        i = Insignia.objects.filter(nome='Conquista 5').get()
         conq = Conquista.objects.filter(insignia=i, usuario=u).get()
                         
     except:
                     
-        if(qtd_amigos >= 3):
-            i = Insignia.objects.filter(nome='Conquista 8').get()
+        if(dsf.desafio.nome == "Áquario"): 
+            
+            i = Insignia.objects.filter(nome='Conquista 5').get()
             conquista = Conquista(insignia = i, usuario = u)
             conquista.save()
                         
