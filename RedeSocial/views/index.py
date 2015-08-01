@@ -7,7 +7,7 @@ from _winapi import NULL
 from RedeSocial.models import Usuario, TimeLine, Comentarios, Amigos, \
     Solicitacao, Desafio, Solicitacao_Desafio, Desafio_Ativo, Cont_Postagem,\
     Beta_TimeLine, Mensagens, Competicao, Campeao, hist_pontuacao, Pingo, \
-    Insignia, Conquista, Usu_Comp_Semanal
+    Insignia, Conquista, Usu_Comp_Semanal, LEL, HBG, TS1S2, SS1S2
 from datetime import datetime, date, timedelta
 from django.utils import timezone
 
@@ -366,14 +366,35 @@ def Verificar (request):
             if(LOGIN == u.login and SENHA == u.senha):
                 
                 try:
+                    #lavagem economica e louca limpa na semana
+                    lel = LEL.objects.filter(usuario = u).get()
                     
-                    cs = Usu_Comp_Semanal.objects.filter(usuario = u, ativo = True).get()
+                    data_atual = timezone.now()
+                        
+                    if(lel.data_fim < data_atual):
+                    
+                        lel.data_fim = lel.data_fim + timedelta(days = 7) 
+                        lel.save()
+                        
+                except:
+                    data_atual = timezone.now()
+                     
+                    data_f = data_atual + timedelta(days = 7) 
+                        
+                    lel = LEL(data_inicio = data_atual, data_fim = data_f, usuario = u, lavagem_economica = False, louca_limpa = False)
+                    lel.save() 
                 
+                try:
+                    
+                    #5 desafios por semana 
+                    cs = Usu_Comp_Semanal.objects.filter(usuario = u, ativo = True).get()
+                    
                     data_atual = timezone.now()
                         
                     if(cs.data_fim < data_atual):
                     
                         cs.data_fim = cs.data_fim + timedelta(days = 7) 
+                        cs.qtd_desafios = 0
                         cs.save()
                 
                 except:
@@ -383,7 +404,28 @@ def Verificar (request):
                     data_f = data_atual + timedelta(days = 7) 
                         
                     cs = Usu_Comp_Semanal(data_inicio = data_atual, data_fim = data_f, usuario = u, qtd_desafios = 0, ativo = True)
-                    cs.save()               
+                    cs.save()  
+                
+                #lavagem economica e louca limpa na semana
+                try:
+                    hbg = HBG.objects.filter(usuario = u).get()
+                except:
+                    hbg = HBG(usuario = u, hidrometro = False, banho_gato = False)
+                    hbg.save()
+                    
+                #Torneira fechada supervisor 1 e 2
+                try:
+                    ts1s2 = TS1S2.objects.filter(usuario = u).get()
+                except:
+                    ts1s2 = TS1S2(usuario = u, torneira_fechada = False, supervisor1 = False, supervisor2 = False)
+                    ts1s2.save()
+                    
+                #super encanador supervisor 1 e 2
+                try:
+                    ss1s2 = SS1S2.objects.filter(usuario = u).get()
+                except:
+                    ss1s2 = SS1S2(usuario = u, super_encanador = False, supervisor1 = False, supervisor2 = False)
+                    ss1s2.save()              
                 
                 return Timeline(request)
             
@@ -1511,6 +1553,63 @@ def Atribuir_Desafio (request):
         ucs = Usu_Comp_Semanal.objects.filter(usuario = usu).get()
         ucs.qtd_desafios = ucs.qtd_desafios + 1
         ucs.save()
+        
+        #inicio LEL
+        if(dsf.desafio.nome == 'Lavagem econômica'):
+            lel = LEL.objects.filter(usuario = usu).get()
+            lel.lavagem_economica = True
+            lel.save()
+            
+        elif(dsf.desafio.nome == 'Louça limpa'):
+            lel = LEL.objects.filter(usuario = usu).get()
+            lel.louca_limpa = True
+            lel.save()
+        #fim LEL
+        
+        #inicio HBG    
+        elif(dsf.desafio.nome == 'Hidrômetro'):
+            hbg = HBG.objects.filter(usuario = usu).get()
+            hbg.hidrometro = True
+            hbg.save()
+        
+        elif(dsf.desafio.nome == 'Banho de Gato'):
+            hbg = HBG.objects.filter(usuario = usu).get()
+            hbg.banho_gato = True
+            hbg.save()
+        #fim HBG
+        
+        #inicio TS1S2
+        elif(dsf.desafio.nome == 'Torneira Fechada'):
+            ts1s2 = TS1S2.objects.filter(usuario = usu).get()
+            ts1s2.torneira_fechada = True
+            ts1s2.save()
+        
+        elif(dsf.desafio.nome == 'Supervisor 1'):
+            ts1s2 = TS1S2.objects.filter(usuario = usu).get()
+            ts1s2.supervisor1 = True
+            ts1s2.save()
+            
+            ss1s2 = SS1S2.objects.filter(usuario = usu).get()
+            ss1s2.supervisor1 = True
+            ss1s2.save()
+        
+        elif(dsf.desafio.nome == 'Supervisor 2'):
+            ts1s2 = TS1S2.objects.filter(usuario = usu).get()
+            ts1s2.supervisor2 = True
+            ts1s2.save()
+            
+            ss1s2 = SS1S2.objects.filter(usuario = usu).get()
+            ss1s2.supervisor2 = True
+            ss1s2.save()
+        #fim TS1S2 
+        
+        #inicio SS1S2   
+        elif(dsf.desafio.nome == 'Super Encanador'):
+            ss1s2 = SS1S2.objects.filter(usuario = usu).get()
+            ss1s2.super_encanador = True
+            ss1s2.save()
+        #fim SS1S2
+        
             
         return Atribuir_Conquistas(request, usu, dsf)
             
@@ -1869,19 +1968,8 @@ def Atribuir_Conquistas(request, usu, dsf):
                 conquista = Conquista(insignia = i, usuario=u)
                 conquista.save()
             
+            
     try:    #Conquista 2 - Feito
-            
-        i = Insignia.objects.filter(nome='Conquista 8').get()
-        conq = Conquista.objects.filter(insignia=i, usuario=u).get()
-            
-    except:
-        
-        if(qtd_amigos >= 300):
-            i = Insignia.objects.filter(nome='Conquista 8').get()
-            conquista = Conquista(insignia = i, usuario = u)
-            conquista.save()
-            
-    try:    #Conquista 3 - Feito
             
         i = Insignia.objects.filter(nome='Conquista 2').get()
         conq = Conquista.objects.filter(insignia=i, usuario=u).get()
@@ -1892,12 +1980,26 @@ def Atribuir_Conquistas(request, usu, dsf):
         
         data_atual = timezone.now()
             
-        if(ucs.data_fim < data_atual and ucs.qtd_desafios >= 5):
+        if(ucs.data_fim > data_atual and ucs.qtd_desafios >= 5):
                 
             i = Insignia.objects.filter(nome='Conquista 2').get()
             conquista = Conquista(insignia = i, usuario = u)
             conquista.save()
-                    
+            
+    try:    #Conquista 3 - feito
+            
+        i = Insignia.objects.filter(nome='Conquista 3').get()
+        conq = Conquista.objects.filter(insignia=i, usuario=u).get()
+                                
+    except:
+        
+        lel = LEL.objects.filter(usuario = u).get()
+        
+        if(lel.lavagem_economica == True and lel.louca_limpa == True):
+            i = Insignia.objects.filter(nome='Conquista 3').get()
+            conquista = Conquista(insignia = i, usuario = u)
+            conquista.save()
+                            
     try:    #Conquista 4 - Feito
             
         i = Insignia.objects.filter(nome='Conquista 4').get()
@@ -1923,38 +2025,42 @@ def Atribuir_Conquistas(request, usu, dsf):
             conquista = Conquista(insignia = i, usuario = u)
             conquista.save()
                         
-    try:    #Conquista 6
+    try:    #Conquista 6 - feito
             
-        i = Insignia.objects.filter(nome='Conquista 8').get()
+        i = Insignia.objects.filter(nome='Conquista 6').get()
         conq = Conquista.objects.filter(insignia=i, usuario=u).get()
                             
     except:
                         
-        if(qtd_amigos >= 3):
-            i = Insignia.objects.filter(nome='Conquista 8').get()
+        hbg = HBG.objects.filter(usuario = u).get()
+        
+        if(hbg.hidrometro == True and hbg.banho_gato == True):
+            i = Insignia.objects.filter(nome='Conquista 6').get()
             conquista = Conquista(insignia = i, usuario = u)
             conquista.save()
                         
-    try:    #Conquista 7
+    try:    #Conquista 7 - feito
                 
-        i = Insignia.objects.filter(nome='Conquista 8').get()
+        i = Insignia.objects.filter(nome='Conquista 7').get()
         conq = Conquista.objects.filter(insignia=i, usuario=u).get()
                                 
     except:
                             
-        if(qtd_amigos >= 3):
-            i = Insignia.objects.filter(nome='Conquista 8').get()
+        ts1s2 = TS1S2.objects.filter(usuario = u).get()
+        
+        if(ts1s2.torneira_fechada == True and ts1s2.supervisor1 == True and ts1s2.supervisor2 == True):
+            i = Insignia.objects.filter(nome='Conquista 7').get()
             conquista = Conquista(insignia = i, usuario = u)
             conquista.save()
-                                    
-    try:    #Conquista 8
+            
+    try:    #Conquista 8 - Feito
             
         i = Insignia.objects.filter(nome='Conquista 8').get()
         conq = Conquista.objects.filter(insignia=i, usuario=u).get()
-                                
+            
     except:
-                            
-        if(qtd_amigos >= 3):
+        
+        if(qtd_amigos >= 300):
             i = Insignia.objects.filter(nome='Conquista 8').get()
             conquista = Conquista(insignia = i, usuario = u)
             conquista.save()
@@ -1973,25 +2079,27 @@ def Atribuir_Conquistas(request, usu, dsf):
                                     
     try:    #Conquista 10
             
-        i = Insignia.objects.filter(nome='Conquista 8').get()
+        i = Insignia.objects.filter(nome='Conquista 10').get()
         conq = Conquista.objects.filter(insignia=i, usuario=u).get()
                                             
     except:
                                         
-        if(qtd_amigos >= 3):
-            i = Insignia.objects.filter(nome='Conquista 8').get()
+        if(qtd_amigos >= 1000):
+            i = Insignia.objects.filter(nome='Conquista 10').get()
             conquista = Conquista(insignia = i, usuario = u)
             conquista.save()
                                             
-    try:    #Conquista 11
+    try:    #Conquista 11 - feito
             
-        i = Insignia.objects.filter(nome='Conquista 8').get()
+        i = Insignia.objects.filter(nome='Conquista 11').get()
         conq = Conquista.objects.filter(insignia=i, usuario=u).get()
             
     except:
         
-        if(qtd_amigos >= 3):
-            i = Insignia.objects.filter(nome='Conquista 8').get()
+        ss1s2 = SS1S2.objects.filter(usuario = u).get()
+        
+        if(ss1s2.super_encanador == True and ss1s2.supervisor1 == True and ss1s2.supervisor2 == True):
+            i = Insignia.objects.filter(nome='Conquista 11').get()
             conquista = Conquista(insignia = i, usuario = u)
             conquista.save()
                                                                                     

@@ -192,3 +192,44 @@ class Usu_Comp_Semanal(models.Model):
     def __str__(self):
         
         return "usuario: %s - fim: %s" % (self.usuario, self.data_fim)
+    
+class LEL(models.Model):
+    data_inicio = models.DateTimeField()
+    data_fim = models.DateTimeField()
+    usuario = models.ForeignKey(Usuario)
+    lavagem_economica = models.BooleanField(blank=True, default=False)
+    louca_limpa = models.BooleanField(blank=True, default=False)
+        
+    def __str__(self):
+        
+        return "usuario: %s - fim: %s" % (self.usuario, self.data_fim)
+
+class HBG(models.Model):
+    usuario = models.ForeignKey(Usuario)
+    hidrometro = models.BooleanField(blank=True, default=False)
+    banho_gato = models.BooleanField(blank=True, default=False)
+        
+    def __str__(self):
+        
+        return "usuario: %s" % (self.usuario)
+
+class TS1S2(models.Model):
+    usuario = models.ForeignKey(Usuario)
+    torneira_fechada = models.BooleanField(blank=True, default=False)
+    supervisor1 = models.BooleanField(blank=True, default=False)
+    supervisor2 = models.BooleanField(blank=True, default=False)
+        
+    def __str__(self):
+        
+        return "usuario: %s" % (self.usuario)
+
+class SS1S2(models.Model):
+    usuario = models.ForeignKey(Usuario)
+    super_encanador = models.BooleanField(blank=True, default=False)
+    supervisor1 = models.BooleanField(blank=True, default=False)
+    supervisor2 = models.BooleanField(blank=True, default=False)
+        
+    def __str__(self):
+        
+        return "usuario: %s" % (self.usuario)
+    
