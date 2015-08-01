@@ -7,12 +7,11 @@ from _winapi import NULL
 from RedeSocial.models import Usuario, TimeLine, Comentarios, Amigos, \
     Solicitacao, Desafio, Solicitacao_Desafio, Desafio_Ativo, Cont_Postagem,\
     Beta_TimeLine, Mensagens, Competicao, Campeao, hist_pontuacao, Pingo, \
-    Insignia, Conquista
-from datetime import datetime
+    Insignia, Conquista, Usu_Comp_Semanal
+from datetime import datetime, date, timedelta
 from django.utils import timezone
-from calendar import month
-from time import sleep
-import time
+
+
             
 def hello(request):
     return HttpResponse('Hello World!')
@@ -365,6 +364,26 @@ def Verificar (request):
             u = Usuario.objects.filter(login=request.session['id']).get()
            
             if(LOGIN == u.login and SENHA == u.senha):
+                
+                try:
+                    
+                    cs = Usu_Comp_Semanal.objects.filter(usuario = u, ativo = True).get()
+                
+                    data_atual = timezone.now()
+                        
+                    if(cs.data_fim < data_atual):
+                    
+                        cs.data_fim = cs.data_fim + timedelta(days = 7) 
+                        cs.save()
+                
+                except:
+                    
+                    data_atual = timezone.now()
+                     
+                    data_f = data_atual + timedelta(days = 7) 
+                        
+                    cs = Usu_Comp_Semanal(data_inicio = data_atual, data_fim = data_f, usuario = u, qtd_desafios = 0, ativo = True)
+                    cs.save()               
                 
                 return Timeline(request)
             
@@ -1488,7 +1507,13 @@ def Atribuir_Desafio (request):
         
         desafio.delete()
         
+        ucs = Usu_Comp_Semanal.objects.filter(usuario = usu).get()
+        ucs.qtd_desafios = ucs.qtd_desafios + 1
+        ucs.save()
+            
         return Atribuir_Conquistas(request, usu)
+            
+      
     
     elif(opc == 'False'):
         msg = "Você não conseguiu concluir o desafio %s" % (desafio.desafio.nome)
@@ -1840,8 +1865,9 @@ def Atribuir_Conquistas(request, usu):
     except:
         
         if(u.pontos >= 40):
-                
-                conquista = Conquista(insignia=i, usuario=u)
+            
+                i = Insignia.objects.filter(nome='Conquista 1').get()
+                conquista = Conquista(insignia = i, usuario=u)
                 conquista.save()
             
     try:    #Conquista 2 - Feito
@@ -1852,17 +1878,24 @@ def Atribuir_Conquistas(request, usu):
     except:
         
         if(qtd_amigos >= 300):
+            i = Insignia.objects.filter(nome='Conquista 8').get()
             conquista = Conquista(insignia = i, usuario = u)
             conquista.save()
             
-    try:    #Conquista 3
+    try:    #Conquista 3 - Feito
             
-        i = Insignia.objects.filter(nome='Conquista 8').get()
+        i = Insignia.objects.filter(nome='Conquista 2').get()
         conq = Conquista.objects.filter(insignia=i, usuario=u).get()
             
     except:
         
-        if(qtd_amigos >= 3):
+        ucs = Usu_Comp_Semanal.objects.filter(usuario = u).get()
+        
+        data_atual = timezone.now()
+            
+        if(ucs.data_fim < data_atual and ucs.qtd_desafios >= 5):
+                
+            i = Insignia.objects.filter(nome='Conquista 2').get()
             conquista = Conquista(insignia = i, usuario = u)
             conquista.save()
                     
@@ -1874,6 +1907,7 @@ def Atribuir_Conquistas(request, usu):
     except:
         
         if(u.pontos >= 80): 
+            i = Insignia.objects.filter(nome='Conquista 4').get()
             conquista = Conquista(insignia=i, usuario=u)
             conquista.save()
                     
@@ -1885,6 +1919,7 @@ def Atribuir_Conquistas(request, usu):
     except:
                     
         if(qtd_amigos >= 3):
+            i = Insignia.objects.filter(nome='Conquista 8').get()
             conquista = Conquista(insignia = i, usuario = u)
             conquista.save()
                         
@@ -1896,6 +1931,7 @@ def Atribuir_Conquistas(request, usu):
     except:
                         
         if(qtd_amigos >= 3):
+            i = Insignia.objects.filter(nome='Conquista 8').get()
             conquista = Conquista(insignia = i, usuario = u)
             conquista.save()
                         
@@ -1907,6 +1943,7 @@ def Atribuir_Conquistas(request, usu):
     except:
                             
         if(qtd_amigos >= 3):
+            i = Insignia.objects.filter(nome='Conquista 8').get()
             conquista = Conquista(insignia = i, usuario = u)
             conquista.save()
                                     
@@ -1918,6 +1955,7 @@ def Atribuir_Conquistas(request, usu):
     except:
                             
         if(qtd_amigos >= 3):
+            i = Insignia.objects.filter(nome='Conquista 8').get()
             conquista = Conquista(insignia = i, usuario = u)
             conquista.save()
                                 
@@ -1929,6 +1967,7 @@ def Atribuir_Conquistas(request, usu):
     except:
         
         if(u.pontos >= 120):
+            i = Insignia.objects.filter(nome='Conquista 9').get()
             conquista = Conquista(insignia = i, usuario = u)
             conquista.save() 
                                     
@@ -1940,6 +1979,7 @@ def Atribuir_Conquistas(request, usu):
     except:
                                         
         if(qtd_amigos >= 3):
+            i = Insignia.objects.filter(nome='Conquista 8').get()
             conquista = Conquista(insignia = i, usuario = u)
             conquista.save()
                                             
@@ -1951,6 +1991,7 @@ def Atribuir_Conquistas(request, usu):
     except:
         
         if(qtd_amigos >= 3):
+            i = Insignia.objects.filter(nome='Conquista 8').get()
             conquista = Conquista(insignia = i, usuario = u)
             conquista.save()
                                                                                     

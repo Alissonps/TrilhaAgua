@@ -2,7 +2,7 @@ from django.contrib import admin
 from RedeSocial.models import Usuario, TimeLine, Comentarios, Solicitacao, \
     Amigos, Solicitacao_Desafio, Desafio, Desafio_Ativo, Cont_Postagem, \
     Beta_TimeLine, Mensagens, Competicao, Campeao, hist_pontuacao, Pingo, \
-    Conquista, Insignia
+    Conquista, Insignia, Usu_Comp_Semanal
 
 admin.site.register(Usuario)
 
@@ -25,3 +25,4 @@ admin.site.register(hist_pontuacao)
 admin.site.register(Pingo)
 admin.site.register(Insignia)
 admin.site.register(Conquista)
+admin.site.register(Usu_Comp_Semanal)

@@ -1,4 +1,5 @@
 from django.db import models
+from django.db.models.fields import IntegerField
 
 class Competicao(models.Model):
     id = models.IntegerField(primary_key = True)
@@ -8,7 +9,8 @@ class Competicao(models.Model):
      
     def __str__(self):
         return "id: %s - fim: %s" % (self.id, self.data_fim)
-    
+
+   
 class Usuario (models.Model):
     id = models.IntegerField(primary_key=True)
     login = models.CharField(max_length=40)
@@ -180,3 +182,13 @@ class Conquista(models.Model):
     
     def __str__(self):
         return "Usuario: %s - Postagem: %s" % (self.usuario, self.insignia)
+    
+class Usu_Comp_Semanal(models.Model):
+    data_inicio = models.DateTimeField()
+    data_fim = models.DateTimeField()
+    usuario = models.ForeignKey(Usuario)
+    qtd_desafios = models.IntegerField() 
+    ativo = models.BooleanField(blank=True, default=False)     
+    def __str__(self):
+        
+        return "usuario: %s - fim: %s" % (self.usuario, self.data_fim)
