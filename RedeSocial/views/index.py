@@ -933,32 +933,12 @@ def Fazer_Amizade (request):
             
 @csrf_exempt
 def Pedido_Solicitacao (request):
-    #---------------------------Notificações-----------------------------------------------------
-    #Sessão do usuario
-    u = Usuario.objects.filter(login=request.session['id']).get()
-    #Quantidade de solicitações de amizade
-    slct = Solicitacao.objects.filter(amigo=u)
-    qtd_solicitacoes = len(slct)
-    #Solicitações de desafios
-    soli_desafios = Solicitacao_Desafio.objects.filter(usuario_desafiado = u)
-    qtd_soli_desafios = len(soli_desafios)
-    #Desafios Ativos
-    d_ativos_desafiado = Desafio_Ativo.objects.filter(usuario_desafiado = u)
-    #Desafios Cumpridos
-    d_ativos_desafiante = Desafio_Ativo.objects.filter(usuario_desafiante = u, cumprido = True)
-    qtd_d_cumpridos = len(d_ativos_desafiante)
-    #Quantidade de Mensagens
-    msgs = Mensagens.objects.filter(usuario = u)
-    qtd_msgs = len(msgs)
-    #{"desafios_cumpridos": qtd_d_cumpridos,"soli_desafios":qtd_soli_desafios, "d_ativos_desafiado":d_ativos_desafiado,"Usuario":u, "qtd_solicitacoes": qtd_solicitacoes}
-    #----------------------------------------------------------------------------------------------
     
+    u = Usuario.objects.filter(login=request.session['id']).get()
+   
     pedido = request.POST['cPedido_solicitacao']
     id_usuario = request.POST['cPedido_usuario_id']
     id_pedido = request.POST['cPedido_solicitacao_id']
-    
-    meusAmigos = Amigos.objects.filter(dono=u)
-    minhas_Solicitacoes = Solicitacao.objects.filter(amigo=u)
     
     amigo_pesquisado = Usuario.objects.filter(id=id_usuario).get()
     
@@ -973,7 +953,7 @@ def Pedido_Solicitacao (request):
         solicitacao_atual.delete()
         
         mensagem_erro = "Amigo Aceito!"
-        return render(request, 'en/public/Tela_Amigos.HTML' , {"qtd_msgs": qtd_msgs,"Meus": meusAmigos, "Minhas_Solicitacoes": minhas_Solicitacoes, "desafios_cumpridos": qtd_d_cumpridos,"soli_desafios":qtd_soli_desafios, "d_ativos_desafiado":d_ativos_desafiado,"Usuario":u, "qtd_solicitacoes": qtd_solicitacoes})    
+        return HttpResponse(mensagem_erro)    
     
     elif(pedido == 'False'):         
         
@@ -981,7 +961,7 @@ def Pedido_Solicitacao (request):
         solicitacao_atual.delete()
         
         mensagem_erro = "Convite Recusado!"
-        return render(request, 'en/public/Tela_Amigos.HTML' ,{"qtd_msgs": qtd_msgs,"Meus": meusAmigos, "Minhas_Solicitacoes": minhas_Solicitacoes, "desafios_cumpridos": qtd_d_cumpridos,"soli_desafios":qtd_soli_desafios, "d_ativos_desafiado":d_ativos_desafiado,"Usuario":u, "qtd_solicitacoes": qtd_solicitacoes})
+        return HttpResponse(mensagem_erro)
 
 def Desafiar (request):
     
@@ -1090,38 +1070,8 @@ def Ativos (request):
 
 def Pendentes (request):
     
-    #---------------------------Notificações-----------------------------------------------------
-    #Sessão do usuario
     u = Usuario.objects.filter(login=request.session['id']).get()
    
-    #Quantidade de solicitações de amizade
-    slct = Solicitacao.objects.filter(amigo=u)
-    qtd_solicitacoes = len(slct)
-    #Solicitações de desafios
-    soli_desafios = Solicitacao_Desafio.objects.filter(usuario_desafiado = u)
-    qtd_soli_desafios = len(soli_desafios)
-    #Desafios Ativos
-    d_ativos_desafiado = Desafio_Ativo.objects.filter(usuario_desafiado = u)
-    qtd_d_ativos_desafiados = len(d_ativos_desafiado)
-    #Desafios Cumpridos
-    d_ativos_desafiante = Desafio_Ativo.objects.filter(usuario_desafiante = u, cumprido = True)
-    qtd_d_cumpridos = len(d_ativos_desafiante)
-    #Quantidade de Mensagens
-    msgs = Mensagens.objects.filter(usuario = u)
-    qtd_msgs = len(msgs)
-    #{"desafios_cumpridos": qtd_d_cumpridos,"soli_desafios":qtd_soli_desafios, "d_ativos_desafiado":d_ativos_desafiado,"Usuario":u, "qtd_solicitacoes": qtd_solicitacoes}
-    #----------------------------------------------------------------------------------------------
-   
-    qtd_d_ativos_desafiado = len(d_ativos_desafiado)
-    ranking_geral = Usuario.objects.all().order_by('-pontos')
-    lista_geral = list(ranking_geral)
-    pos_geral = lista_geral.index(u) + 1
-    
-    ranking_turma = Usuario.objects.filter(turma = u.turma).order_by('-pontos')
-    lista_turma = list(ranking_turma)
-    pos_turma = lista_turma.index(u) + 1
-    #"qtd_d_ativos_desafiado": qtd_d_ativos_desafiado,"pos_turma": pos_turma, "pos_geral": pos_geral,"qtd_msgs": qtd_msgs, "desafios_cumpridos": qtd_d_cumpridos,"soli_desafios":qtd_soli_desafios, "d_ativos_desafiado":d_ativos_desafiado, "qtd_solicitacoes": qtd_solicitacoes
-    
     #Busca de desafios e de Amigos
     desafios = Desafio.objects.all() 
     meusAmigos = Amigos.objects.filter(dono = u)
@@ -1138,7 +1088,7 @@ def Pendentes (request):
     d_ativos_desafiante = Desafio_Ativo.objects.filter(usuario_desafiante = u, cumprido = True)
        
     
-    return render(request, 'en/public/Pendentes.HTML', {"qtd_d_ativos_desafiados": qtd_d_ativos_desafiados ,"qtd_msgs":qtd_msgs,"d_ativos_desafiante": d_ativos_desafiante, "d_ativos_desafiado": d_ativos_desafiado, "solicit_desafios": soli_desafios, "soli_desafios": qtd_soli_desafios, "desafios": desafios, "meus_amigos": meusAmigos, "desafios_cumpridos": qtd_d_cumpridos,"soli_desafios":qtd_soli_desafios, "d_ativos_desafiado":d_ativos_desafiado,"Usuario":u, "qtd_solicitacoes": qtd_solicitacoes, "qtd_d_ativos_desafiado": qtd_d_ativos_desafiado,"pos_turma": pos_turma, "pos_geral": pos_geral,"qtd_msgs": qtd_msgs, "desafios_cumpridos": qtd_d_cumpridos,"soli_desafios":qtd_soli_desafios, "d_ativos_desafiado":d_ativos_desafiado, "qtd_solicitacoes": qtd_solicitacoes})
+    return render(request, 'en/public/Pendentes.HTML', {"d_ativos_desafiante": d_ativos_desafiante, "d_ativos_desafiado": d_ativos_desafiado, "solicit_desafios": soli_desafios, "soli_desafios": qtd_soli_desafios, "desafios": desafios, "meus_amigos": meusAmigos, "soli_desafios":qtd_soli_desafios, "d_ativos_desafiado":d_ativos_desafiado,"Usuario":u, "soli_desafios":qtd_soli_desafios, "d_ativos_desafiado":d_ativos_desafiado})
 
 
 def Cumpridos (request):
@@ -1197,26 +1147,8 @@ def Cumpridos (request):
 @csrf_exempt
 def Lancar_Desafios(request):
     
-    #---------------------------Notificações-----------------------------------------------------
-    #Sessão do usuario
     u = Usuario.objects.filter(login=request.session['id']).get()
-    #Quantidade de solicitações de amizade
-    slct = Solicitacao.objects.filter(amigo=u)
-    qtd_solicitacoes = len(slct)
-    #Solicitações de desafios
-    soli_desafios = Solicitacao_Desafio.objects.filter(usuario_desafiado = u)
-    qtd_soli_desafios = len(soli_desafios)
-    #Desafios Ativos
-    d_ativos_desafiado = Desafio_Ativo.objects.filter(usuario_desafiado = u)
-    #Desafios Cumpridos
-    d_ativos_desafiante = Desafio_Ativo.objects.filter(usuario_desafiante = u, cumprido = True)
-    qtd_d_cumpridos = len(d_ativos_desafiante)
-    #Quantidade de Mensagens
-    msgs = Mensagens.objects.filter(usuario = u)
-    qtd_msgs = len(msgs)
-    #{"desafios_cumpridos": qtd_d_cumpridos,"soli_desafios":qtd_soli_desafios, "d_ativos_desafiado":d_ativos_desafiado,"Usuario":u, "qtd_solicitacoes": qtd_solicitacoes}
-    #----------------------------------------------------------------------------------------------
-    
+     
     desafio = request.POST.get("cDesafios", False)
     amigo = request.POST.get("cAmigos", False)
     
@@ -1225,21 +1157,11 @@ def Lancar_Desafios(request):
     amigo_desafiado = Usuario.objects.filter(id = amigo).get()
     desafio_solicitado = Desafio.objects.filter(id = desafio).get()
     
-    #Mostrar desafios e amigos apos enviar
-    desafios = Desafio.objects.all() 
-    meusAmigos = Amigos.objects.filter(dono = u)
-    
-    #Consulta para mostrar as solicitações
-    soli_desafios = Solicitacao_Desafio.objects.filter(usuario_desafiado = u)
-    #Notificação da quantidade de solicitação de desafios
-    qtd_soli_desafios = len(soli_desafios)
-    
     #Consulta para mostrar os desafios ativos
     d_ativos_desafiado = Desafio_Ativo.objects.filter(usuario_desafiado = u)
+    
     qtd_desafios_ativos = len(d_ativos_desafiado)
     
-    #Consulta para mostrar os desafios cumpridos
-    d_ativos_desafiante = Desafio_Ativo.objects.filter(usuario_desafiante = u, cumprido = True)
     qtd_desafios_amigo = len(d_ativos_desafiado)
     
     if(qtd_desafios_ativos <= 10 and qtd_desafios_amigo <= 10):
@@ -1249,7 +1171,7 @@ def Lancar_Desafios(request):
             
             consulta_solicitacao_desafio = Solicitacao_Desafio.objects.filter(usuario_desafiante = u, usuario_desafiado = amigo_desafiado, desafio = desafio_solicitado, resposta = False).get()      
             mensagem = "Esse desafio já foi enviado!"
-            return render(request, 'en/public/Tela_Desafios.HTML', {"qtd_msgs":qtd_msgs,"d_ativos_desafiante": d_ativos_desafiante, "d_ativos_desafiado": d_ativos_desafiado, "solicit_desafios": soli_desafios, "msg_erro": mensagem, "desafios": desafios, "meus_amigos": meusAmigos, "desafios_cumpridos": qtd_d_cumpridos,"soli_desafios":qtd_soli_desafios, "d_ativos_desafiado":d_ativos_desafiado,"Usuario":u, "qtd_solicitacoes": qtd_solicitacoes})
+            return HttpResponse(mensagem)
         
         except:
             
@@ -1257,7 +1179,7 @@ def Lancar_Desafios(request):
                 
                 consulta_solicitacao_desafio = Solicitacao_Desafio.objects.filter(usuario_desafiante = amigo_desafiado, usuario_desafiado = u, desafio = desafio_solicitado, resposta = False).get()      
                 mensagem = "Esse desafio já foi enviado!"
-                return render(request, 'en/public/Tela_Desafios.HTML', {"qtd_msgs":qtd_msgs,"d_ativos_desafiante": d_ativos_desafiante, "d_ativos_desafiado": d_ativos_desafiado, "solicit_desafios": soli_desafios, "msg_erro": mensagem, "desafios": desafios, "meus_amigos": meusAmigos, "desafios_cumpridos": qtd_d_cumpridos,"soli_desafios":qtd_soli_desafios, "d_ativos_desafiado":d_ativos_desafiado,"Usuario":u, "qtd_solicitacoes": qtd_solicitacoes })
+                return HttpResponse(mensagem)
             
             except:
                 
@@ -1267,13 +1189,12 @@ def Lancar_Desafios(request):
                 #mensagem de erro
                 mensagem = "Desafio Enviado!"
             
-                return render(request, 'en/public/Tela_Desafios.HTML', {"qtd_msgs":qtd_msgs,"d_ativos_desafiante": d_ativos_desafiante, "d_ativos_desafiado": d_ativos_desafiado, "solicit_desafios": soli_desafios, "msg_erro": mensagem, "desafios": desafios, "meus_amigos": meusAmigos, "desafios_cumpridos": qtd_d_cumpridos,"soli_desafios":qtd_soli_desafios, "d_ativos_desafiado":d_ativos_desafiado,"Usuario":u, "qtd_solicitacoes": qtd_solicitacoes})
+                return HttpResponse(mensagem)
 
     else:
             
         mensagem = "Usuarios com limite de desafios!"
-        return render(request, 'en/public/Tela_Desafios.HTML', {"qtd_msgs":qtd_msgs,"d_ativos_desafiante": d_ativos_desafiante, "d_ativos_desafiado": d_ativos_desafiado, "solicit_desafios": soli_desafios, "msg_erro": mensagem, "desafios": desafios, "meus_amigos": meusAmigos, "desafios_cumpridos": qtd_d_cumpridos,"soli_desafios":qtd_soli_desafios, "d_ativos_desafiado":d_ativos_desafiado,"Usuario":u, "qtd_solicitacoes": qtd_solicitacoes })
-
+        return HttpResponse(mensagem)
 
 @csrf_exempt
 def Lancar_Desafio_Turma(request):
@@ -1295,52 +1216,24 @@ def Lancar_Desafio_Turma(request):
     return Desafiar(request)
     
     
-    
+@csrf_exempt    
 def Pedido_Desafio(request):
-    #---------------------------Notificações-----------------------------------------------------
-    #Sessão do usuario
-    u = Usuario.objects.filter(login=request.session['id']).get()
-    #Quantidade de solicitações de amizade
-    slct = Solicitacao.objects.filter(amigo=u)
-    qtd_solicitacoes = len(slct)
-    #Solicitações de desafios
-    soli_desafios = Solicitacao_Desafio.objects.filter(usuario_desafiado = u)
-    qtd_soli_desafios = len(soli_desafios)
-    #Desafios Ativos
-    d_ativos_desafiado = Desafio_Ativo.objects.filter(usuario_desafiado = u)
-    #Desafios Cumpridos
-    d_ativos_desafiante = Desafio_Ativo.objects.filter(usuario_desafiante = u, cumprido = True)
-    qtd_d_cumpridos = len(d_ativos_desafiante)
-    #Quantidade de Mensagens
-    msgs = Mensagens.objects.filter(usuario = u)
-    qtd_msgs = len(msgs)
-    #{"desafios_cumpridos": qtd_d_cumpridos,"soli_desafios":qtd_soli_desafios, "d_ativos_desafiado":d_ativos_desafiado,"Usuario":u, "qtd_solicitacoes": qtd_solicitacoes}
-    #----------------------------------------------------------------------------------------------
     
     pedido_desafio = request.POST["cPedido_solicitacao"]
     u_desafiante = request.POST["cPedido_usuario_id"]
     desafio_p = request.POST["cPedido_desafio_id"]
     soli = request.POST["cPedido_id"]
     
-    
+    u = Usuario.objects.filter(login=request.session['id']).get()
+        
     Usuario_desafiante = Usuario.objects.filter(id = u_desafiante).get()
     desafio_proposto = Desafio.objects.filter(id = desafio_p).get()
     soli_desafio = Solicitacao_Desafio.objects.filter(id = soli).get()
     
-    #Mostrar desafios e amigos apos enviar
-    desafios = Desafio.objects.all() 
-    meusAmigos = Amigos.objects.filter(dono = u)
-    
-    #Consulta para mostrar as solicitações
-    soli_desafios = Solicitacao_Desafio.objects.filter(usuario_desafiado = u)
-        
     #Consulta para mostrar os desafios ativos
     d_ativos_desafiado = Desafio_Ativo.objects.filter(usuario_desafiado = u)
     qtd_d_ativos = len(d_ativos_desafiado)
     
-    #Consulta para mostrar os desafios cumpridos
-    d_ativos_desafiante = Desafio_Ativo.objects.filter(usuario_desafiante = u, cumprido = True) 
-         
     if(pedido_desafio == 'True'):
         
         if(qtd_d_ativos <= 10):
@@ -1353,27 +1246,36 @@ def Pedido_Desafio(request):
             
             soli_desafio.delete()
             
-            mensagem = "Desafio aceito!"   
+            soli_desafios = Solicitacao_Desafio.objects.filter(usuario_desafiado = u)
+            qtd_soli_desafios = len(soli_desafios)
             
-            #Consulta para mostrar os desafios ativos
             d_ativos_desafiado = Desafio_Ativo.objects.filter(usuario_desafiado = u)
-            qtd_d_ativos = len(d_ativos_desafiado)
+            qtd_d_ativos_desafiado = len(d_ativos_desafiado)
     
-            
-            return render(request, 'en/public/Tela_Desafios.HTML', {"qtd_msgs":qtd_msgs,"d_ativos_desafiante": d_ativos_desafiante, "d_ativos_desafiado": d_ativos_desafiado,  "msg_erro": mensagem, "desafios": desafios, "meus_amigos": meusAmigos, "desafios_cumpridos": qtd_d_cumpridos,"soli_desafios":qtd_soli_desafios, "d_ativos_desafiado":d_ativos_desafiado,"Usuario":u, "qtd_solicitacoes": qtd_solicitacoes})
+            mensagem = "Desafio aceito!"   
+    
+            return HttpResponse(mensagem)
         
         else:
             
             mensagem = "Você já possui o limite de desafios!"   
             
-            return render(request, 'en/public/Tela_Desafios.HTML', {"qtd_msgs":qtd_msgs,"d_ativos_desafiante": d_ativos_desafiante, "d_ativos_desafiado": d_ativos_desafiado,  "msg_erro": mensagem, "desafios": desafios, "meus_amigos": meusAmigos, "desafios_cumpridos": qtd_d_cumpridos,"soli_desafios":qtd_soli_desafios, "d_ativos_desafiado":d_ativos_desafiado,"Usuario":u, "qtd_solicitacoes": qtd_solicitacoes})
+            return HttpResponse(mensagem)
+            #return HttpResponse(mensagem, qtd_soli_desafios, qtd_d_ativos_desafiado)
+    
     elif(pedido_desafio == 'False'):
+        
         soli_desafio.delete()
         
+        soli_desafios = Solicitacao_Desafio.objects.filter(usuario_desafiado = u)
+        qtd_soli_desafios = len(soli_desafios)
+            
+        d_ativos_desafiado = Desafio_Ativo.objects.filter(usuario_desafiado = u)
+        qtd_d_ativos_desafiado = len(d_ativos_desafiado)
+            
         mensagem = "Desafio Recusado!"   
         
-        return render(request, 'en/public/Tela_Desafios.HTML', {"qtd_msgs":qtd_msgs,"d_ativos_desafiante": d_ativos_desafiante, "d_ativos_desafiado": d_ativos_desafiado,  "msg_erro": mensagem, "desafios": desafios, "meus_amigos": meusAmigos, "desafios_cumpridos": qtd_d_cumpridos,"soli_desafios":qtd_soli_desafios, "d_ativos_desafiado":d_ativos_desafiado,"Usuario":u, "qtd_solicitacoes": qtd_solicitacoes})
- 
+        return HttpResponse(mensagem)
     
     
 @csrf_exempt    
@@ -1822,45 +1724,15 @@ def Rankings_Amigos (request):
 
 @csrf_exempt
 def Desafiar_Amigo (request):
-    #---------------------------Notificações-----------------------------------------------------
-    #Sessão do usuario
-    u = Usuario.objects.filter(login=request.session['id']).get()
-    #Quantidade de solicitações de amizade
-    slct = Solicitacao.objects.filter(amigo=u)
-    qtd_solicitacoes = len(slct)
-    #Solicitações de desafios
-    soli_desafios = Solicitacao_Desafio.objects.filter(usuario_desafiado = u)
-    qtd_soli_desafios = len(soli_desafios)
-    #Desafios Ativos
-    d_ativos_desafiado = Desafio_Ativo.objects.filter(usuario_desafiado = u)
-    #Desafios Cumpridos
-    d_ativos_desafiante = Desafio_Ativo.objects.filter(usuario_desafiante = u, cumprido = True)
-    qtd_d_cumpridos = len(d_ativos_desafiante)
-    #Quantidade de Mensagens
-    msgs = Mensagens.objects.filter(usuario = u)
-    qtd_msgs = len(msgs)
-    #{"desafios_cumpridos": qtd_d_cumpridos,"soli_desafios":qtd_soli_desafios, "d_ativos_desafiado":d_ativos_desafiado,"Usuario":u, "qtd_solicitacoes": qtd_solicitacoes}
-    #----------------------------------------------------------------------------------------------
-    
+   
     id_amigo = request.POST["id_usuario"]
     
     amigo_desafiado = Usuario.objects.filter(id = id_amigo).get()
    
-    #Busca de desafios e de Amigos
     desafios = Desafio.objects.all() 
-    
-    #Consulta para mostrar as solicitações
-    soli_desafios = Solicitacao_Desafio.objects.filter(usuario_desafiado = u)
-    #Notificação da quantidade de solicitação de desafios
-    qtd_soli_desafios = len(soli_desafios)
-    
-    #Consulta para mostrar os desafios ativos
-    d_ativos_desafiado = Desafio_Ativo.objects.filter(usuario_desafiado = u, enviado = False)
-    
-    #Consulta para mostrar os desafios cumpridos
-    d_ativos_desafiante = Desafio_Ativo.objects.filter(usuario_desafiante = u, cumprido = True)
        
-    return render(request, 'en/public/Desafios_Individual.HTML', {"qtd_msgs":qtd_msgs,"amigo": amigo_desafiado,"d_ativos_desafiante": d_ativos_desafiante, "d_ativos_desafiado": d_ativos_desafiado, "solicit_desafios": soli_desafios, "soli_desafios": qtd_soli_desafios, "desafios": desafios, "desafios_cumpridos": qtd_d_cumpridos,"soli_desafios":qtd_soli_desafios, "d_ativos_desafiado":d_ativos_desafiado,"Usuario":u, "qtd_solicitacoes": qtd_solicitacoes})
+    return render(request, 'en/public/Desafios_Individual.HTML', {"amigo": amigo_desafiado,"desafios": desafios})
+
 
 def Mensagens_Usuario (request):
      #---------------------------Notificações-----------------------------------------------------
@@ -1885,27 +1757,11 @@ def Mensagens_Usuario (request):
     return render(request, 'en/public/Mensagens.HTML', {"qtd_msgs": qtd_msgs, "msg_usuario": msgs, "desafios_cumpridos": qtd_d_cumpridos,"soli_desafios":qtd_soli_desafios, "d_ativos_desafiado":d_ativos_desafiado,"Usuario":u, "qtd_solicitacoes": qtd_solicitacoes})
 
 
-
+@csrf_exempt
 def Apagar_Menagem (request):
-     #---------------------------Notificações-----------------------------------------------------
-    #Sessão do usuario
-    u = Usuario.objects.filter(login=request.session['id']).get()
-    #Quantidade de solicitações de amizade
-    slct = Solicitacao.objects.filter(amigo=u)
-    qtd_solicitacoes = len(slct)
-    #Solicitações de desafios
-    soli_desafios = Solicitacao_Desafio.objects.filter(usuario_desafiado = u)
-    qtd_soli_desafios = len(soli_desafios)
-    #Desafios Ativos
-    d_ativos_desafiado = Desafio_Ativo.objects.filter(usuario_desafiado = u)
-    #Desafios Cumpridos
-    d_ativos_desafiante = Desafio_Ativo.objects.filter(usuario_desafiante = u, cumprido = True)
-    qtd_d_cumpridos = len(d_ativos_desafiante)
-    #Mensagens
-    
-    #{"desafios_cumpridos": qtd_d_cumpridos,"soli_desafios":qtd_soli_desafios, "d_ativos_desafiado":d_ativos_desafiado,"Usuario":u, "qtd_solicitacoes": qtd_solicitacoes}
-    #----------------------------------------------------------------------------------------------
    
+    u = Usuario.objects.filter(login=request.session['id']).get()
+    
     id_mensagem = request.POST["cMensagem"]
     del_msg = Mensagens.objects.filter(id = id_mensagem).get()
     del_msg.delete()
@@ -1913,24 +1769,30 @@ def Apagar_Menagem (request):
     msgs = Mensagens.objects.filter(usuario = u)
     qtd_msgs = len(msgs)
     
-    return render(request, 'en/public/Mensagens.HTML', {"qtd_msgs": qtd_msgs, "msg_usuario": msgs, "desafios_cumpridos": qtd_d_cumpridos,"soli_desafios":qtd_soli_desafios, "d_ativos_desafiado":d_ativos_desafiado,"Usuario":u, "qtd_solicitacoes": qtd_solicitacoes})
+    return HttpResponse(qtd_msgs)
 
 
 @csrf_exempt
 def Pingo_Like (request):
-    
     u = Usuario.objects.filter(login=request.session['id']).get()
-    
+        
     id_post = request.POST["cID_post"]
     
     post = TimeLine.objects.filter(id = id_post).get()
-    post.qtd_pingo = post.qtd_pingo + 1
-    post.save()
     
-    pingo = Pingo(usuario = u, postagem = post)
-    pingo.save()
+    try:
+        pingo = Pingo.objects.filter(usuario = u, postagem = post).get()
+        
+        return HttpResponse(post.qtd_pingo)
+    except:
+        
+        post.qtd_pingo = post.qtd_pingo + 1
+        post.save()
+        
+        pingo = Pingo(usuario = u, postagem = post)
+        pingo.save()
   
-    return HttpResponse(post.qtd_pingo)
+        return HttpResponse(post.qtd_pingo)
 
 @csrf_exempt
 def Despingo_Deslike (request):
@@ -1939,15 +1801,22 @@ def Despingo_Deslike (request):
     id_post = request.POST["cID_post"]
     
     post = TimeLine.objects.filter(id = id_post).get()
-    post.qtd_pingo = post.qtd_pingo - 1
-    post.save()
     
-    pingo = Pingo.objects.filter(usuario = u, postagem = post).get()
-    pingo.delete()
-  
-    
-    return HttpResponse(post.qtd_pingo)
-
+    try:
+        pingo = Pingo.objects.filter(usuario = u, postagem = post).get()
+        
+        post.qtd_pingo = post.qtd_pingo - 1
+        post.save()
+        
+        pingo = Pingo.objects.filter(usuario = u, postagem = post).get()
+        pingo.delete()
+        
+        return HttpResponse(post.qtd_pingo)
+        
+    except:
+        return HttpResponse(post.qtd_pingo)
+        
+        
 def Atribuir_Conquistas(request, usu, dsf):
     
     u = usu   

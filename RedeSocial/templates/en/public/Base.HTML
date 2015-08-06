@@ -4,6 +4,7 @@
 <head>
 <link rel="stylesheet" type="text/css" href="{% static "css/estilorede.css" %}">
 <link rel="stylesheet" type="text/css" href="{% static "css/loader.css" %}">
+<link rel="stylesheet" type="text/css" href="{% static "css/timeline.css" %}">
 <meta charset="utf-8">
 
 
@@ -42,8 +43,8 @@
 	<div id="wrap">
 		
 		<div id="containerNotificacaoGeral">
-			<div id="containerNotificacao" style="margin-top: 60px">
-				<ul id="notificacao-ul">
+			<div id="containerNotificacao" class="notificacoes-msg" style="margin-top: 60px">
+				<ul id="notificacao-ul" class="ul-msg">
 					<li><div class="tituloMenu">Notificações</div></li>
 					<li><span class="badge">{{qtd_solicitacoes}}</span><a href="amigos" class="form-notificacao">Solicitações de amizade</a></li>
 					
@@ -54,17 +55,17 @@
 				</ul>
 			</div>
 			
-			<div id="containerNotificacao">
-				<ul id="notificacao-ul">
+			<div id="containerNotificacao" class="notificacoes-desafios">
+				<ul id="notificacao-ul" class="ul-desafios">
 					<li><div class="tituloMenu">Desafios</div></li>
 					
 					
-					<li><span class="badge">{{qtd_d_ativos_desafiado}}</span><a href="ativos" class="form-notificacao">Ativos</a></li>
-					
+					<li id="li-pendentes"><span class="badge" id="badge-pendentes">{{soli_desafios}}</span><a href="pendentes" id="href-id" class="form-notificacao">Pendentes</a></li>
 					
 					<hr style="margin: 8px 0px 8px 0px; border: 0; height: 0; border-top: 1px solid rgba(0, 0, 0, 0.1); border-bottom: 1px solid rgba(255, 255, 255, 0.3);">
 					
-					<li><span class="badge">{{soli_desafios}}</span><a href="pendentes" class="form-notificacao">Pendentes</a></li>
+					<li id="li-ativos"><span class="badge" id="badge-ativos">{{qtd_d_ativos_desafiado}}</span><a href="ativos" class="form-notificacao">Ativos</a></li>
+					
 					
 					<hr style="margin: 8px 0px 8px 0px; border: 0; height: 0; border-top: 1px solid rgba(0, 0, 0, 0.1); border-bottom: 1px solid rgba(255, 255, 255, 0.3);">
 					
@@ -91,8 +92,9 @@
 		</div>
 		
 		<section>
+			
 			<div id="containerFeedGeral">
-		
+				<div class="loader" style="display: none; margin-top: 35%;">Loading...</div>
 				{% block contents %}
 				
 				{% endblock contents %}
@@ -114,11 +116,11 @@
 					</div>
 				</center>
 					<div id="containerMenu1">
-					<script type="text/javascript">
-						$(document).ready(function(){
+					<!-- <script type="text/javascript">
+						$(document).on(function(){
 							$("#menu-ul li a[href='"+location.href.substring(location.href.lastIndexOf("/")+1,255)+"']").css("border-left","4px solid #F8C51B");
 						});
-					</script>
+					</script> -->
 						<ul id="menu-ul">
 							<div class="tituloMenu">Principal</div>
 							<li id="desa">

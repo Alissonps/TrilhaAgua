@@ -7,22 +7,21 @@
 
 			{% for a in msg_usuario %}
 			<!-- {{a.usuario.nome}} -->
-			<div style="background: ; height: 27px;">
+			<div class="container-mensagem-remove">
 				<div id="mensagem" class="form-mensagem" style="width: 90%; height: 1px; float: left; background: ; margin-top: 3px;">
 					{{a.mensagem}}
 				</div>
 
-				<div id="botao" style="left:; background:; margin-left: 35px;">
-					<form action="apagar_mensagem" method="post">
-						{% csrf_token %} <input type="hidden" name="cMensagem"
-							value={{a.id}} />
-						<button type="submit" value="excluir" title="Excluir" style="background: transparent; border: none; float: right;">
+				<div style="left:; background:; margin-left: 35px;">
+					<form action="apagar_mensagem" id="form-remove-msg" method="post">
+						{% csrf_token %} 
+						<input type="hidden" id="hide-msg" name="cMensagem" value={{a.id}} />
+						<button type="submit" id="btn-remove-msg" value="excluir" title="Excluir" style="background: transparent; border: none; float: right;">
 							<span class="glyphicon glyphicon-remove remove-feed" style="top: 2px;"></span>
 						</button>
 					</form>
 				</div>
 			</div>
-			<hr class="form-hr">
 			{% endfor %}
 		</fieldset>
 	</div>

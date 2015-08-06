@@ -57,6 +57,7 @@ urlpatterns = patterns('',
     url (r'^verificar_desafio$', 'RedeSocial.views.index.Verificar_Desafio'),
     url (r'^atribuir_desafio$', 'RedeSocial.views.index.Atribuir_Desafio'),
     url (r'^desafiar_amigo$', 'RedeSocial.views.index.Desafiar_Amigo'),
+    
     url (r'^mensagens$', 'RedeSocial.views.index.Mensagens_Usuario'),
     url (r'^apagar_mensagem$', 'RedeSocial.views.index.Apagar_Menagem'),
     url (r'^base$', 'RedeSocial.views.index.Base'),
