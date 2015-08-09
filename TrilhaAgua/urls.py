@@ -26,7 +26,10 @@ urlpatterns = patterns('',
     url (r'^verificarPergunta$', 'RedeSocial.views.index.VerificarPergunta'),
     url (r'^redefinirsenha$', 'RedeSocial.views.index.Redefinir'),
     url (r'^atualizarInformacoes$', 'RedeSocial.views.index.AtualizarInformacoes'),
-    url (r'^buscaPerfilUsuario$', 'RedeSocial.views.index.BuscaPerfilUsuario'),
+    
+    url (r'^buscaPerfilUsuario/(?P<ID_Usuario>\d+)$', 'RedeSocial.views.index.BuscaPerfilUsuario'),
+    
+    
     url (r'^logout$', 'RedeSocial.views.index.Logout'),
     url (r'^visualizarComentarios$', 'RedeSocial.views.index.VisualizarComentarios'),
     
@@ -59,6 +62,8 @@ urlpatterns = patterns('',
     url (r'^desafiar_amigo$', 'RedeSocial.views.index.Desafiar_Amigo'),
     
     url (r'^mensagens$', 'RedeSocial.views.index.Mensagens_Usuario'),
+    url (r'^mais_mensagens$', 'RedeSocial.views.index.Mais_Mensagens'),
+    
     url (r'^apagar_mensagem$', 'RedeSocial.views.index.Apagar_Menagem'),
     url (r'^base$', 'RedeSocial.views.index.Base'),
     url (r'^hello$', 'RedeSocial.views.index.hello'),
@@ -71,9 +76,15 @@ urlpatterns = patterns('',
     url (r'^usuarios_curtiram$', 'RedeSocial.views.index.Usuarios_curtiram'),
     
     url (r'^mais_posts$', 'RedeSocial.views.index.Mais_posts'),
+    url (r'^mais_comentarios$', 'RedeSocial.views.index.Mais_Comentarios'),
+    url (r'^mais_pingo', 'RedeSocial.views.index.Mais_Pingos'),
+    url (r'^mais_posts_perfil$', 'RedeSocial.views.index.Mais_posts_perfil'),
+    url (r'^mais_posts_buscado$', 'RedeSocial.views.index.Mais_posts_buscado'),
+    
     url (r'^descurtir$', 'RedeSocial.views.index.Descurtir'),
     url (r'^curtir$', 'RedeSocial.views.index.Curtir'),
     
 ) + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
 
 

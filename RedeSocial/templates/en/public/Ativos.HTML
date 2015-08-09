@@ -9,15 +9,14 @@
 		<fieldset>
 			<legend>Desafios Ativos</legend>
 			{% csrf_token %} {% for a in d_ativos_desafiado %}
-				<ul>
+				<ul id="ul-cumprir">
 					<div style="background: ; width: 79%; float: left;">						
 						<li>
 							<img src="{{a.usuario_desafiante.foto.url}}" id="imgAmigos">
 						</li>
 						
-						
 						<li style="margin: 7px 15px 15px 15px;">
-							<form name="form" action="buscaPerfilUsuario" method="post">
+							<form name="form" action="buscaPerfilUsuario/{{a.usuario_desafiante.id}}" method="post">
 								{% csrf_token %} <input type="submit" value="{{a.usuario_desafiante.nome}}"
 									class="meulink"> <input type="hidden" name="cUsuario"
 									value="{{a.usuario_desafiante.id}}">
@@ -34,10 +33,10 @@
 					</div>
 			
 					<form action="cumprir_desafio" method="post">					
-						<button type="submit" value="aceitar"
+						<button type="submit" id="btn-cumprir-desafio" value="aceitar"
 							class="btn btn-success btn-lg" title="Aceitar solicitação">
 	
-							<input type="hidden" name="id_desafio_ativo" value={{a.id}} /> <span
+							<input type="hidden" id="hide-desafio-cumprir" name="id_desafio_ativo" value={{a.id}} /> <span
 								class="glyphicon glyphicon-ok"></span> Cumprir
 						</button>
 					</form>
@@ -47,7 +46,6 @@
 		
 		</fieldset>
 		{% endif %}
-	
 	
 	</div>
 </div>

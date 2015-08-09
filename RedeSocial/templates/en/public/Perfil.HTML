@@ -81,4 +81,253 @@
 
 	</form>
 </div>
+
+<div id="wrap-postagens-perfil" style="margin-top: 30px;">
+	
+	{% for e in minhas_postagens %} 
+	
+	{% if e.desafio == False %}
+	
+<!-- ############################ Postagem normal #################################### -->
+	
+	<div class="containerPostagem" id="{{e.id}}">
+	{% if e.usuario == Usuario %}
+	
+	<form id="id-apagar" action="apagar_postagem" method="post"> {% csrf_token %}
+		<input type="hidden" name = "id" id="id-apagar" value={{e.id}}>
+		<button type="submit" value="excluir" class="remover" title="Remover" 
+		style="background: transparent; border: none; float: right;">
+			<span class="glyphicon glyphicon-remove remove-feed" style="top: 4px;"></span>
+		</button>
+	</form>	
+	
+	{% endif %}
+		
+		<form name="form" action="buscaPerfilUsuario/{{e.usuario.id}}" method="post" style="margin-top: 2px;">
+			{% csrf_token %} <input type="submit" value="{{e.usuario.nome}}"
+				class="meulink"> <input type="hidden" name="cUsuario"
+				value="{{e.usuario.id}}"> <font id="containerData">{{e.date|date:"D d M Y"}}</font> 
+		</form>
+
+		<div id="containerTextoPostagem">
+			{{e.text}} {% if e.foto.url != '/media/False' %}
+			<center>
+				<img src="{{e.foto.url}}" width="500" height="390" style="margin-top: 15px;" />
+			</center>
+			{% endif %}
+		</div>
+		
+		<table cellpadding="0" cellspacing="0">
+				<tr>
+					<td style="background:  ; padding-left: 42px;">	
+					  {% if e.curtiu == True %}		
+					  			   		
+				    	<a href="#" class="deslike">
+					       <button type="submit" value="excluir" class="curtir" title="Curtir" 
+							style="background: transparent; border: none; float: right;">
+								<img alt="curtir" src="../static/imagens/pingo.png" width="10" height="13" style="margin-top: 3px;">
+							</button>
+							<input type="hidden" id="hide" name="cID_post" value="{{e.id}}">   
+						</a>	
+					   
+				      {% elif e.curtiu == False %}
+					
+					  	<a href="#" class="like">
+					       <button type="submit" value="excluir" class="curtir" title="Curtir" 
+							style="background: transparent; border: none; float: right;">
+								<img alt="curtir" src="../static/imagens/despingo.png" width="10" height="13" style="margin-top: 3px;">
+							</button>
+							<input type="hidden" id="hide" name="cID_post" value="{{e.id}}">   
+						</a>	
+						
+				   	</td>
+				   	
+		 			{% endif %}
+		 			
+					<td style="background:  ;">
+						<form action="usuarios_curtiram" id="form-u-curtiu" method="post"> {% csrf_token %} 
+							<input type="submit" id="id{{e.id}}" value="({{e.qtd_pingo}})" class="u-curtidas">
+							<input type="hidden" id="hide-u-curtiu" name="cID_post" value="{{e.id}}">
+						</form>
+					</td>
+	
+					<td style="background: ;">
+						<form action="visualizarComentarios" id="form-comentarios" method="post">
+						{% csrf_token %} 
+							<input type="hidden" id="hide-comentarios" name="cPost" value="{{e.id}}">
+							<input type="submit" name="comentarios" value="Comentários ({{e.qtd_coments}})" class="linkPostagem">
+						</form>
+					</td>
+				</tr>
+			</table>
+
+		<form action="postarComentarios" id="postar-comentario" method="post">
+			{% csrf_token %}
+			<hr
+				style="margin: 5px 15px 0px 15px; border: 0; height: 0; border-top: 1px solid rgba(0, 0, 0, 0.1); border-bottom: 1px solid rgba(255, 255, 255, 0.3);">
+
+			<div id="enviarPost">
+				<table>
+					<tr>
+						<td style="background: ; width: 100%; height: 0px ">
+			
+				<textarea name="cComentario" class="formTextAreaTimeLine"
+					placeholder="Escreva um comentário..."></textarea>		
+
+						</td>
+						
+						<td style="margin-left: 10px; background: ; width: 50px;">
+						
+							<input type="hidden" id="comentario-id" name="cId" value="{{e.id}}" /> 
+							<button style="float: right;" class="btn btn-enviaComent">
+								<span class="glyphicon glyphicon-share-alt"></span>
+							</button>
+							
+						</td>
+					</tr>
+				</table>
+			</div>
+		</form>
+		
+	</div>
+
+<!-- ############################ Fim - Postagem normal ############################### -->
+
+	{% elif e.desafio == True %}
+	
+<!-- ############################ Postagem desafio #################################### -->
+	
+  <div class="containerPostagemDesafio" id="{{e.id}}">
+    {% if e.usuario == Usuario %}
+
+     <form id="id-apagar-desafio" action="apagar_postagem" method="post"> {% csrf_token %}
+        <input type="hidden" name = "id" id="id-apagar" value={{e.id}}>
+        <button type="submit" value="excluir" class="remover" title="Remover" 
+          style="background: transparent; border: none; float: right;">
+            <span class="glyphicon glyphicon-remove remove-feed" style="top: 4px;"></span>
+        </button>
+    </form> 
+
+    {% endif %}
+
+       <form name="form" action="buscaPerfilUsuario/{{e.usuario.id}}" method="post" style="margin-top: 2px;">
+            {% csrf_token %} <input type="submit" value="{{e.usuario.nome}}"
+                class="meulink"> <input type="hidden" name="cUsuario"
+                value="{{e.usuario.id}}"> 
+
+                <font id="containerData">
+                    {{e.date|date:"D d M Y"}}
+                    
+                    {% if e.nome_desafio != None %}
+                        <font class="meulink" style="margin-left: 55px;"><span class="form-class-nome">Desafio: </span>{{e.nome_desafio}}</font>
+                    {% endif %}
+                </font>
+        </form>
+
+        <div id="containerTextoPostagem">
+          {{e.text}} {% if e.foto.url != '/media/False' %}
+            <center>
+              <img src="{{e.foto.url}}" width="500" height="390" style="margin-top: 15px;" />
+            </center>
+          {% endif %}
+        </div>
+
+        <table cellpadding="0" cellspacing="0">
+          <tr>
+            <td style="background:  ; padding-left: 42px;"> 
+              {% if e.curtiu == True %}   
+                          
+                <a href="#" class="deslike-desafio">
+                    <button type="submit" value="excluir" class="curtir" title="Curtir" 
+                      style="background: transparent; border: none; float: right;">
+                      <img alt="curtir" src="../static/imagens/pingo.png" width="10" height="13" style="margin-top: 3px;">
+                    </button>
+                    <input type="hidden" id="hide" name="cID_post" value="{{e.id}}">   
+                </a>  
+               
+                {% elif e.curtiu == False %}
+            
+                <a href="#" class="like-desafio">
+                   <button type="submit" value="excluir" class="curtir" title="Curtir" 
+                      style="background: transparent; border: none; float: right;">
+                      <img alt="curtir" src="../static/imagens/despingo.png" width="10" height="13" style="margin-top: 3px;">
+                    </button>
+                    <input type="hidden" id="hide" name="cID_post" value="{{e.id}}">   
+                </a>  
+            </td>
+              
+            {% endif %}
+            
+            <td style="background:  ;">
+				<form action="usuarios_curtiram" id="form-u-curtiu-desafio" method="post"> {% csrf_token %} 
+					<input type="submit" id="id{{e.id}}" value="({{e.qtd_pingo}})" class="u-curtidas">
+					<input type="hidden" id="hide-u-curtiu" name="cID_post" value="{{e.id}}">
+				</form>
+			</td>
+
+			<td style="background: ;">
+				<form action="visualizarComentarios" id="form-comentarios-desafio" method="post">
+					{% csrf_token %} 
+					<input type="hidden" id="hide-comentarios" name="cPost" value="{{e.id}}">
+					<input type="submit" name="comentarios" value="Comentários ({{e.qtd_coments}})" class="linkPostagem">
+				</form>
+			</td>
+          </tr>
+      </table>
+
+        <form action="postarComentarios" id="postar-comentario-desafio" method="post">
+          {% csrf_token %}
+          <hr style="margin: 5px 15px 0px 15px; border: 0; height: 0; border-top: 1px solid rgba(0, 0, 0, 0.1); border-bottom: 1px solid rgba(255, 255, 255, 0.3);">
+
+          <div id="enviarPost">
+            <table>
+              <tr>
+                <td style="background: ; width: 100%; height: 0px ">
+                  <textarea name="cComentario" class="formTextAreaTimeLine"
+                    placeholder="Escreva um comentário..."></textarea>    
+                </td>
+                
+                <td style="margin-left: 10px; background: ; width: 50px;">
+                  <input type="hidden" id="comentario-id" name="cId" value="{{e.id}}" /> 
+                  <button style="float: right;" class="btn btn-enviaComent">
+                    <span class="glyphicon glyphicon-share-alt"></span>
+                  </button>
+                </td>
+              </tr>
+            </table>
+          </div>
+        </form>
+    </div>
+    
+<!-- ############################ Fim - Postagem desafio #################################### -->
+
+    {% endif %} 
+    
+		{% if forloop.last %}
+		    
+			<form action="mais_posts_perfil" method ="post" id="ver-mais-perfil"> {% csrf_token %}
+				<input type ="hidden" name = "id_ultimo" value = {{e.id}}>
+			   	<button type="submit" id="btnVerMais" class="btn-primary">Ver mais</button>
+			</form>
+				
+		{% endif %}
+		
+    {% endfor %}
+    
+</div><!-- fim wrap-postagens-perfil -->
+
+	<div class="sk-circle" style="display: none;">
+	  <div class="sk-circle1 sk-child"></div>
+	  <div class="sk-circle2 sk-child"></div>
+	  <div class="sk-circle3 sk-child"></div>
+	  <div class="sk-circle4 sk-child"></div>
+	  <div class="sk-circle5 sk-child"></div>
+	  <div class="sk-circle6 sk-child"></div>
+	  <div class="sk-circle7 sk-child"></div>
+	  <div class="sk-circle8 sk-child"></div>
+	  <div class="sk-circle9 sk-child"></div>
+	  <div class="sk-circle10 sk-child"></div>
+	  <div class="sk-circle11 sk-child"></div>
+	  <div class="sk-circle12 sk-child"></div>
+	</div>
 {% endblock contents %}

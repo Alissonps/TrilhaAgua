@@ -58,7 +58,6 @@ class TimeLine (models.Model):
         return "Id: %s" % (self.id)
     
 class Beta_TimeLine (models.Model):
-    id = models.IntegerField(primary_key=True)
     date = models.DateTimeField(auto_now_add=True)
     text = models.TextField()
     usuario = models.ForeignKey(Usuario)
@@ -70,7 +69,7 @@ class Beta_TimeLine (models.Model):
     qtd_pingo = models.IntegerField(max_length=10, blank=True, null=True, default=0)
     
     def __str__(self):
-        return "Id: %s" % (self.id)
+        return "Id: %s" % (self.pk)
 
 class Comentarios (models.Model):
     text = models.TextField()
@@ -132,13 +131,6 @@ class Desafio_Ativo(models.Model):
     
     def __str__(self):
         return "%s - %s - %s to %s" % (self.id, self.usuario_desafiante, self.desafio, self.usuario_desafiado)
-
-class Cont_Postagem(models.Model):
-    id = models.IntegerField(primary_key = True)
-    qtd = models.IntegerField(blank = True, null = True, default = 0)
-    
-    def __str__(self):
-        return "Qtd: %s" % (self.qtd)
     
 class Mensagens(models.Model):
     id = models.IntegerField(primary_key = True)
@@ -232,4 +224,20 @@ class SS1S2(models.Model):
     def __str__(self):
         
         return "usuario: %s" % (self.usuario)
+    
+class Conq_menino_menina(models.Model):
+    data_inicio = models.DateTimeField()
+    data_fim = models.DateTimeField()
+    usuario_desafiador = models.ForeignKey(Usuario, related_name = "usuario1")
+    usuario_desafiado = models.ForeignKey(Usuario, related_name = "usuario2")
+    desafio1 = models.ForeignKey(Desafio, related_name = "desafio1", blank=True, null=True, default=None)
+    desafio2 = models.ForeignKey(Desafio, related_name = "desafio2", blank=True, null=True, default=None)
+    desafio3 = models.ForeignKey(Desafio, related_name = "desafio3", blank=True, null=True, default=None)
+    d1 = models.BooleanField(blank=True, default=False)
+    d2 = models.BooleanField(blank=True, default=False)
+    d3 = models.BooleanField(blank=True, default=False)
+    
+    def __str__(self):
+        
+        return "usuario 1: %s usuario 2: %s" % (self.usuario_desafiador, self.usuario_desafiador)
     

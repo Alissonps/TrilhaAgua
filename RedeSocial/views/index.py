@@ -5,9 +5,9 @@ from django.http.response import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 from _winapi import NULL
 from RedeSocial.models import Usuario, TimeLine, Comentarios, Amigos, \
-    Solicitacao, Desafio, Solicitacao_Desafio, Desafio_Ativo, Cont_Postagem,\
+    Solicitacao, Desafio, Solicitacao_Desafio, Desafio_Ativo,\
     Beta_TimeLine, Mensagens, Competicao, Campeao, hist_pontuacao, Pingo, \
-    Insignia, Conquista, Usu_Comp_Semanal, LEL, HBG, TS1S2, SS1S2
+    Insignia, Conquista, Usu_Comp_Semanal, LEL, HBG, TS1S2, SS1S2, Conq_menino_menina
 from datetime import datetime, date, timedelta
 from django.utils import timezone
 
@@ -37,7 +37,7 @@ def Tela_Amigos (request):
     soli_desafios = Solicitacao_Desafio.objects.filter(usuario_desafiado = u)
     qtd_soli_desafios = len(soli_desafios)
     #Desafios Ativos
-    d_ativos_desafiado = Desafio_Ativo.objects.filter(usuario_desafiado = u)
+    d_ativos_desafiado = Desafio_Ativo.objects.filter(usuario_desafiado = u, enviado = False)
     #Desafios Cumpridos
     d_ativos_desafiante = Desafio_Ativo.objects.filter(usuario_desafiante = u, cumprido = True)
     qtd_d_cumpridos = len(d_ativos_desafiante)
@@ -72,9 +72,6 @@ def Postar (request):
         
     competicao_atual = Competicao.objects.filter(ativo = True).get()
         
-    qtd_post = TimeLine.objects.all()
-    add_post = len(qtd_post) + 1
-
     u = Usuario.objects.filter(login=request.session['id']).get()
 
     passar = False
@@ -83,19 +80,11 @@ def Postar (request):
         time = TimeLine(text=Texto, usuario=u, foto=Foto, competicao = competicao_atual)
         time.save()
         
-        cont_post = Cont_Postagem.objects.filter(id = 1).get()
-        cont_post.qtd = add_post
-        cont_post.save()
-        
         passar = True
         
     elif(Texto != False):
         time = TimeLine(text=Texto, usuario=u, foto=Foto, competicao = competicao_atual)
         time.save()
-        
-        cont_post = Cont_Postagem.objects.filter(id = 1).get()
-        cont_post.qtd = add_post   
-        cont_post.save()
         
         passar = True
         
@@ -169,8 +158,7 @@ def Timeline (request):
     soli_desafios = Solicitacao_Desafio.objects.filter(usuario_desafiado = u)
     qtd_soli_desafios = len(soli_desafios)
     #Desafios Ativos
-    d_ativos_desafiado = Desafio_Ativo.objects.filter(usuario_desafiado = u)
-    qtd_d_ativos_desafiado = len(d_ativos_desafiado)
+    d_ativos_desafiado = Desafio_Ativo.objects.filter(usuario_desafiado = u, enviado = False)
     #Desafios Cumpridos
     d_ativos_desafiante = Desafio_Ativo.objects.filter(usuario_desafiante = u, cumprido = True)
     qtd_d_cumpridos = len(d_ativos_desafiante)
@@ -244,8 +232,7 @@ def Timeline_turma (request):
     soli_desafios = Solicitacao_Desafio.objects.filter(usuario_desafiado = u)
     qtd_soli_desafios = len(soli_desafios)
     #Desafios Ativos
-    d_ativos_desafiado = Desafio_Ativo.objects.filter(usuario_desafiado = u)
-    qtd_d_ativos_desafiado = len(d_ativos_desafiado)
+    d_ativos_desafiado = Desafio_Ativo.objects.filter(usuario_desafiado = u, enviado = False)
     #Desafios Cumpridos
     d_ativos_desafiante = Desafio_Ativo.objects.filter(usuario_desafiante = u, cumprido = True)
     qtd_d_cumpridos = len(d_ativos_desafiante)
@@ -267,10 +254,10 @@ def Timeline_turma (request):
     return render_to_response('en/public/Timeline_turma.HTML', {"entries": entries, "Usuario":u, "qtd_d_ativos_desafiado": qtd_d_ativos_desafiado,"pos_turma": pos_turma, "pos_geral": pos_geral,"qtd_msgs": qtd_msgs, "desafios_cumpridos": qtd_d_cumpridos,"soli_desafios":qtd_soli_desafios, "d_ativos_desafiado":d_ativos_desafiado, "qtd_solicitacoes": qtd_solicitacoes})
 
 def Timeline_amigos (request):
+    
     u = Usuario.objects.filter(login=request.session['id']).get()
-   
-    #Postagens
-    pesquisa_amigos = Amigos.objects.filter(dono=u)
+    
+    pesquisa_amigos = Amigos.objects.filter(dono = u)
     entries = TimeLine.objects.all().order_by('-date')
     pingo = Pingo.objects.all()
     
@@ -303,8 +290,7 @@ def Timeline_amigos (request):
     soli_desafios = Solicitacao_Desafio.objects.filter(usuario_desafiado = u)
     qtd_soli_desafios = len(soli_desafios)
     #Desafios Ativos
-    d_ativos_desafiado = Desafio_Ativo.objects.filter(usuario_desafiado = u)
-    qtd_d_ativos_desafiado = len(d_ativos_desafiado)
+    d_ativos_desafiado = Desafio_Ativo.objects.filter(usuario_desafiado = u, enviado = False)
     #Desafios Cumpridos
     d_ativos_desafiante = Desafio_Ativo.objects.filter(usuario_desafiante = u, cumprido = True)
     qtd_d_cumpridos = len(d_ativos_desafiante)
@@ -486,7 +472,7 @@ def editarPerfil (request):
         soli_desafios = Solicitacao_Desafio.objects.filter(usuario_desafiado = u)
         qtd_soli_desafios = len(soli_desafios)
         #Desafios Ativos
-        d_ativos_desafiado = Desafio_Ativo.objects.filter(usuario_desafiado = u)
+        d_ativos_desafiado = Desafio_Ativo.objects.filter(usuario_desafiado = u, enviado = False)
         #Desafios Cumpridos
         d_ativos_desafiante = Desafio_Ativo.objects.filter(usuario_desafiante = u, cumprido = True)
         qtd_d_cumpridos = len(d_ativos_desafiante)
@@ -520,7 +506,7 @@ def Perfil (request):
         soli_desafios = Solicitacao_Desafio.objects.filter(usuario_desafiado = u)
         qtd_soli_desafios = len(soli_desafios)
         #Desafios Ativos
-        d_ativos_desafiado = Desafio_Ativo.objects.filter(usuario_desafiado = u)
+        d_ativos_desafiado = Desafio_Ativo.objects.filter(usuario_desafiado = u, enviado = False)
         #Desafios Cumpridos
         d_ativos_desafiante = Desafio_Ativo.objects.filter(usuario_desafiante = u, cumprido = True)
         qtd_d_cumpridos = len(d_ativos_desafiante)
@@ -540,10 +526,68 @@ def Perfil (request):
         pos_turma = lista_turma.index(u) + 1
         #"qtd_d_ativos_desafiado": qtd_d_ativos_desafiado,"pos_turma": pos_turma, "pos_geral": pos_geral,"qtd_msgs": qtd_msgs, "desafios_cumpridos": qtd_d_cumpridos,"soli_desafios":qtd_soli_desafios, "d_ativos_desafiado":d_ativos_desafiado, "qtd_solicitacoes": qtd_solicitacoes
         
-        if(u.login != NULL):
-            return render(request, 'en/public/Perfil.HTML', {"qtd_msgs":qtd_msgs,"desafios_cumpridos": qtd_d_cumpridos,"soli_desafios":qtd_soli_desafios, "d_ativos_desafiado":d_ativos_desafiado,"Usuario":u, "qtd_solicitacoes": qtd_solicitacoes, "qtd_d_ativos_desafiado": qtd_d_ativos_desafiado,"pos_turma": pos_turma, "pos_geral": pos_geral,"qtd_msgs": qtd_msgs, "desafios_cumpridos": qtd_d_cumpridos,"soli_desafios":qtd_soli_desafios, "d_ativos_desafiado":d_ativos_desafiado, "qtd_solicitacoes": qtd_solicitacoes, "qtd_d_ativos_desafiado": qtd_d_ativos_desafiado,"pos_turma": pos_turma, "pos_geral": pos_geral,"qtd_msgs": qtd_msgs, "desafios_cumpridos": qtd_d_cumpridos,"soli_desafios":qtd_soli_desafios, "d_ativos_desafiado":d_ativos_desafiado, "qtd_solicitacoes": qtd_solicitacoes})
-        else:
-            return HttpResponse('Você não está logado')
+        qtd_entries = []
+    
+        #Postagens
+        minhas_postagens = TimeLine.objects.filter(usuario = u).order_by('-date')
+            
+        i = 0
+        for a in minhas_postagens:
+                  
+            try:
+                pingo = Pingo.objects.filter(usuario = u, postagem = a).get()
+                a.curtiu = True
+                a.save()
+            except:
+                a.curtiu = False       
+                a.save()
+            
+            qtd_entries.append(a)
+            
+            i = i + 1
+        
+            if (i == 3):
+                break
+        
+        return render(request, 'en/public/Perfil.HTML', {"minhas_postagens": qtd_entries,"qtd_msgs":qtd_msgs,"desafios_cumpridos": qtd_d_cumpridos,"soli_desafios":qtd_soli_desafios, "d_ativos_desafiado":d_ativos_desafiado,"Usuario":u, "qtd_solicitacoes": qtd_solicitacoes, "qtd_d_ativos_desafiado": qtd_d_ativos_desafiado,"pos_turma": pos_turma, "pos_geral": pos_geral,"qtd_msgs": qtd_msgs, "desafios_cumpridos": qtd_d_cumpridos,"soli_desafios":qtd_soli_desafios, "d_ativos_desafiado":d_ativos_desafiado, "qtd_solicitacoes": qtd_solicitacoes, "qtd_d_ativos_desafiado": qtd_d_ativos_desafiado,"pos_turma": pos_turma, "pos_geral": pos_geral,"qtd_msgs": qtd_msgs, "desafios_cumpridos": qtd_d_cumpridos,"soli_desafios":qtd_soli_desafios, "d_ativos_desafiado":d_ativos_desafiado, "qtd_solicitacoes": qtd_solicitacoes})
+
+@csrf_exempt
+def Mais_posts_perfil (request):
+    id_ultimo = request.POST["id_ultimo"]
+    
+    u = Usuario.objects.filter(login=request.session['id']).get()
+    
+    minhas_postagens = TimeLine.objects.filter(usuario = u).order_by('-date')
+       
+    postagem = TimeLine.objects.filter(id = id_ultimo).get()
+    
+    entries = list(minhas_postagens)
+    
+    pos = entries.index(postagem) + 1
+    
+    qtd_entries = []
+    
+    
+    i = 0
+    for a in range(pos, len(entries)):
+        
+        try:
+            pingo = Pingo.objects.filter(usuario = u, postagem = entries[a]).get()
+            entries[a].curtiu = True
+            entries[a].save()
+        except:
+            entries[a].curtiu = False       
+            entries[a].save()
+            
+        qtd_entries.append(entries[a]) 
+        i = i + 1
+        
+        if(i == 10):
+            break
+
+            
+    return render(request, 'en/public/Perfil.HTML', {"minhas_postagens": qtd_entries, "Usuario":u})
+            
 
 def AtualizarInformacoes(request):
     
@@ -563,7 +607,7 @@ def AtualizarInformacoes(request):
     soli_desafios = Solicitacao_Desafio.objects.filter(usuario_desafiado = u)
     qtd_soli_desafios = len(soli_desafios)
     #Desafios Ativos
-    d_ativos_desafiado = Desafio_Ativo.objects.filter(usuario_desafiado = u)
+    d_ativos_desafiado = Desafio_Ativo.objects.filter(usuario_desafiado = u, enviado = False)
     #Desafios Cumpridos
     d_ativos_desafiante = Desafio_Ativo.objects.filter(usuario_desafiante = u, cumprido = True)
     qtd_d_cumpridos = len(d_ativos_desafiante)
@@ -651,9 +695,9 @@ def Redefinir(request):
         return render(request, 'en/public/RedefinirSenha.HTML')
 
 @csrf_exempt  
-def BuscaPerfilUsuario (request):
+def BuscaPerfilUsuario (request, ID_Usuario):
     
-    ID_Usuario = request.POST.get('cUsuario')
+    #ID_Usuario = request.POST.get('cUsuario')
     UsuarioBuscado = Usuario.objects.filter(id=ID_Usuario).get()
     
     ranking_turma = Usuario.objects.filter(turma = UsuarioBuscado.turma).order_by('-pontos')
@@ -676,8 +720,7 @@ def BuscaPerfilUsuario (request):
     soli_desafios = Solicitacao_Desafio.objects.filter(usuario_desafiado = u)
     qtd_soli_desafios = len(soli_desafios)
     #Desafios Ativos
-    d_ativos_desafiado = Desafio_Ativo.objects.filter(usuario_desafiado = u)
-    qtd_d_ativos_desafiado = len(d_ativos_desafiado)
+    d_ativos_desafiado = Desafio_Ativo.objects.filter(usuario_desafiado = u, enviado = False)
     #Desafios Cumpridos
     d_ativos_desafiante = Desafio_Ativo.objects.filter(usuario_desafiante = u, cumprido = True)
     qtd_d_cumpridos = len(d_ativos_desafiante)
@@ -697,9 +740,71 @@ def BuscaPerfilUsuario (request):
     pos_turma = lista_turma.index(u) + 1
     #"qtd_d_ativos_desafiado": qtd_d_ativos_desafiado,"pos_turma": pos_turma, "pos_geral": pos_geral,"qtd_msgs": qtd_msgs, "desafios_cumpridos": qtd_d_cumpridos,"soli_desafios":qtd_soli_desafios, "d_ativos_desafiado":d_ativos_desafiado, "qtd_solicitacoes": qtd_solicitacoes
     
+    qtd_entries = []
+    #Postagens
+    postagens_usuario = TimeLine.objects.filter(usuario = UsuarioBuscado).order_by("-date")
+    teste = len(postagens_usuario)
     
-    return render(request, 'en/public/ConsultaPerfil.HTML' , {"conquista": conquista,"pos_geral_u": pos_geral_u, "pos_turma_u": pos_turma_u, "uBuscado": UsuarioBuscado, "desafios_cumpridos": qtd_d_cumpridos,"soli_desafios":qtd_soli_desafios, "d_ativos_desafiado":d_ativos_desafiado,"Usuario":u, "qtd_solicitacoes": qtd_solicitacoes, "qtd_d_ativos_desafiado": qtd_d_ativos_desafiado,"pos_turma": pos_turma, "pos_geral": pos_geral,"qtd_msgs": qtd_msgs, "desafios_cumpridos": qtd_d_cumpridos,"soli_desafios":qtd_soli_desafios, "d_ativos_desafiado":d_ativos_desafiado, "qtd_solicitacoes": qtd_solicitacoes})
+    i = 0
+    for a in postagens_usuario:
+                  
+        try:
+            pingo = Pingo.objects.filter(usuario = u, postagem = a).get()
+            a.curtiu = True
+            a.save()
+        except:
+            a.curtiu = False       
+            a.save()
+                
+        qtd_entries.append(a)
+                
+        i = i + 1
+            
+        if (i == 3):
+            break
+            
+    return render(request, 'en/public/ConsultaPerfil.HTML' , {"teste": teste,"postagens_usuario": qtd_entries,"conquista": conquista,"pos_geral_u": pos_geral_u, "pos_turma_u": pos_turma_u, "uBuscado": UsuarioBuscado, "desafios_cumpridos": qtd_d_cumpridos,"soli_desafios":qtd_soli_desafios, "d_ativos_desafiado":d_ativos_desafiado,"Usuario":u, "qtd_solicitacoes": qtd_solicitacoes, "qtd_d_ativos_desafiado": qtd_d_ativos_desafiado,"pos_turma": pos_turma, "pos_geral": pos_geral,"qtd_msgs": qtd_msgs, "desafios_cumpridos": qtd_d_cumpridos,"soli_desafios":qtd_soli_desafios, "d_ativos_desafiado":d_ativos_desafiado, "qtd_solicitacoes": qtd_solicitacoes})
+
+@csrf_exempt
+def Mais_posts_buscado (request):
+    id_ultimo = request.POST["id_ultimo"]
+    id_usuario = request.POST["id_usuario"]
     
+    UsuarioBuscado = Usuario.objects.filter(id=id_usuario).get()
+    
+    postagens_usuario = TimeLine.objects.filter(usuario = UsuarioBuscado).order_by("-date")
+    
+    postagem = TimeLine.objects.filter(id = id_ultimo).get()
+    
+    entries = list(postagens_usuario)
+    
+    pos = entries.index(postagem) + 1
+    
+    qtd_entries = []
+    
+    u = Usuario.objects.filter(login=request.session['id']).get()
+    
+    i = 0
+    for a in range(pos, len(entries)):
+        
+        try:
+            pingo = Pingo.objects.filter(usuario = u, postagem = entries[a]).get()
+            entries[a].curtiu = True
+            entries[a].save()
+        except:
+            entries[a].curtiu = False       
+            entries[a].save()
+            
+        qtd_entries.append(entries[a]) 
+        i = i + 1
+        
+        if(i == 10):
+            break
+
+            
+    return render(request, 'en/public/ConsultaPerfil.HTML', {"postagens_usuario": qtd_entries, "Usuario":u})
+            
+
 def Logout (request):
     try:
         del request.session['id']
@@ -714,6 +819,19 @@ def VisualizarComentarios (request):
     Postagem = TimeLine.objects.filter(id=Id).get()
     Coment = Comentarios.objects.filter(postagem=Postagem)
     
+    vetor_coment = []
+    
+    i = 0
+    for a in Coment:
+        
+        vetor_coment.append(a)
+        
+        i = i + 1
+    
+        if (i == 3):
+            break
+        
+    
     #---------------------------Notificações-----------------------------------------------------
     #Sessão do usuario
     u = Usuario.objects.filter(login=request.session['id']).get()
@@ -724,7 +842,7 @@ def VisualizarComentarios (request):
     soli_desafios = Solicitacao_Desafio.objects.filter(usuario_desafiado = u)
     qtd_soli_desafios = len(soli_desafios)
     #Desafios Ativos
-    d_ativos_desafiado = Desafio_Ativo.objects.filter(usuario_desafiado = u)
+    d_ativos_desafiado = Desafio_Ativo.objects.filter(usuario_desafiado = u, enviado = False)
     #Desafios Cumpridos
     d_ativos_desafiante = Desafio_Ativo.objects.filter(usuario_desafiante = u, cumprido = True)
     qtd_d_cumpridos = len(d_ativos_desafiante)
@@ -734,7 +852,36 @@ def VisualizarComentarios (request):
     #{"desafios_cumpridos": qtd_d_cumpridos,"soli_desafios":qtd_soli_desafios, "d_ativos_desafiado":d_ativos_desafiado,"Usuario":u, "qtd_solicitacoes": qtd_solicitacoes}
     #----------------------------------------------------------------------------------------------
     
-    return render(request, 'en/public/VisualizarComentarios.HTML', {"qtd_msgs": qtd_msgs,"Postagem": Postagem, "Coment":Coment, "desafios_cumpridos": qtd_d_cumpridos,"soli_desafios":qtd_soli_desafios, "d_ativos_desafiado":d_ativos_desafiado,"Usuario":u, "qtd_solicitacoes": qtd_solicitacoes})
+    return render(request, 'en/public/VisualizarComentarios.HTML', {"qtd_msgs": qtd_msgs,"Postagem": Postagem, "Coment":vetor_coment, "desafios_cumpridos": qtd_d_cumpridos,"soli_desafios":qtd_soli_desafios, "d_ativos_desafiado":d_ativos_desafiado,"Usuario":u, "qtd_solicitacoes": qtd_solicitacoes})
+
+def Mais_Comentarios (request):
+    id_postagem = request.POST['id_postagem']
+    id_ultimo = request.POST["id_ultimo"]
+    
+    #Sessão do usuario
+    u = Usuario.objects.filter(login=request.session['id']).get()
+    
+    Postagem = TimeLine.objects.filter(id=id_postagem).get()
+    Coment = Comentarios.objects.filter(postagem=Postagem)
+    
+    ultimo_coment = Comentarios.objects.filter(id = id_ultimo).get()
+    
+    vetor_coment = list(Coment)
+    
+    pos = vetor_coment.index(ultimo_coment) + 1
+    
+    qtd_coment = []
+    
+    i = 0
+    for a in range(pos, len(Coment)):
+            
+        qtd_coment.append(Coment[a]) 
+        i = i + 1
+        
+        if(i == 10):
+            break
+    
+    return render(request, 'en/public/VisualizarComentarios.HTML', {"Usuario" : u, "Coment": qtd_coment, "Postagem": Postagem})
 
 @csrf_exempt
 def PostarComentario2 (request):
@@ -751,7 +898,7 @@ def PostarComentario2 (request):
     soli_desafios = Solicitacao_Desafio.objects.filter(usuario_desafiado = u)
     qtd_soli_desafios = len(soli_desafios)
     #Desafios Ativos
-    d_ativos_desafiado = Desafio_Ativo.objects.filter(usuario_desafiado = u)
+    d_ativos_desafiado = Desafio_Ativo.objects.filter(usuario_desafiado = u, enviado = False)
     #Desafios Cumpridos
     d_ativos_desafiante = Desafio_Ativo.objects.filter(usuario_desafiante = u, cumprido = True)
     qtd_d_cumpridos = len(d_ativos_desafiante)
@@ -791,7 +938,7 @@ def Pesquisa (request):
     soli_desafios = Solicitacao_Desafio.objects.filter(usuario_desafiado = u)
     qtd_soli_desafios = len(soli_desafios)
     #Desafios Ativos
-    d_ativos_desafiado = Desafio_Ativo.objects.filter(usuario_desafiado = u)
+    d_ativos_desafiado = Desafio_Ativo.objects.filter(usuario_desafiado = u, enviado = False)
     #Desafios Cumpridos
     d_ativos_desafiante = Desafio_Ativo.objects.filter(usuario_desafiante = u, cumprido = True)
     qtd_d_cumpridos = len(d_ativos_desafiante)
@@ -861,7 +1008,7 @@ def Fazer_Amizade (request):
     soli_desafios = Solicitacao_Desafio.objects.filter(usuario_desafiado = u)
     qtd_soli_desafios = len(soli_desafios)
     #Desafios Ativos
-    d_ativos_desafiado = Desafio_Ativo.objects.filter(usuario_desafiado = u)
+    d_ativos_desafiado = Desafio_Ativo.objects.filter(usuario_desafiado = u, enviado = False)
     #Desafios Cumpridos
     d_ativos_desafiante = Desafio_Ativo.objects.filter(usuario_desafiante = u, cumprido = True)
     qtd_d_cumpridos = len(d_ativos_desafiante)
@@ -942,6 +1089,8 @@ def Pedido_Solicitacao (request):
     
     amigo_pesquisado = Usuario.objects.filter(id=id_usuario).get()
     
+    competicao_atual = Competicao.objects.filter(ativo = True).get()
+    
     if(pedido == 'True'):
         amigo_remetente = Amigos(dono=u, amigo=amigo_pesquisado)
         amigo_destinatario = Amigos(dono=amigo_pesquisado, amigo=u)
@@ -952,7 +1101,35 @@ def Pedido_Solicitacao (request):
         solicitacao_atual = Solicitacao.objects.filter(id=id_pedido).get()
         solicitacao_atual.delete()
         
+        msg1 = "%s da turma %s aceitou a sua solicitação de amizade, você já pode o desafiar! vamos lá! " % (u.nome, u.turma)
+        not_msg = Mensagens(usuario = amigo_pesquisado, mensagem = msg1)
+        not_msg.save()
+        
         mensagem_erro = "Amigo Aceito!"
+        
+        try:    #Conquista 8 - Feito
+            
+            i = Insignia.objects.filter(nome='Conquista 8').get()
+            conq = Conquista.objects.filter(insignia=i, usuario=u).get()
+            
+        except:
+            
+            pesquisa_amigos = Amigos.objects.filter(dono=u)
+            qtd_amigos = len(pesquisa_amigos) 
+                    
+            if(qtd_amigos >= 300):
+                i = Insignia.objects.filter(nome='Conquista 8').get()
+                conquista = Conquista(insignia = i, usuario = u)
+                conquista.save()
+                
+                msg1 = "Você recebeu a conquista %s, Parabéns! " % (i.nome)
+                not_msg = Mensagens(usuario = u, mensagem = msg1)
+                not_msg.save()
+                    
+                msg2 = " %s acabou de receber a conquista %s, Parabéns! " % (u.nome, i.nome)
+                time = TimeLine(text=msg2, usuario=u, foto = i.Imagem, competicao = competicao_atual, desafio = True)
+                time.save() # Fim 8
+                
         return HttpResponse(mensagem_erro)    
     
     elif(pedido == 'False'):         
@@ -961,6 +1138,11 @@ def Pedido_Solicitacao (request):
         solicitacao_atual.delete()
         
         mensagem_erro = "Convite Recusado!"
+        
+        msg1 = "%s da turma %s recusou a sua solicitação de amizade, que pena! " % (u.nome, u.turma)
+        not_msg = Mensagens(usuario = amigo_pesquisado, mensagem = msg1)
+        not_msg.save()
+        
         return HttpResponse(mensagem_erro)
 
 def Desafiar (request):
@@ -976,7 +1158,7 @@ def Desafiar (request):
     soli_desafios = Solicitacao_Desafio.objects.filter(usuario_desafiado = u)
     qtd_soli_desafios = len(soli_desafios)
     #Desafios Ativos
-    d_ativos_desafiado = Desafio_Ativo.objects.filter(usuario_desafiado = u)
+    d_ativos_desafiado = Desafio_Ativo.objects.filter(usuario_desafiado = u, enviado = False)
     qtd_d_ativos_desafiados = len(d_ativos_desafiado)
     #Desafios Cumpridos
     d_ativos_desafiante = Desafio_Ativo.objects.filter(usuario_desafiante = u, cumprido = True)
@@ -1026,10 +1208,7 @@ def Ativos (request):
     slct = Solicitacao.objects.filter(amigo=u)
     qtd_solicitacoes = len(slct)
     #Solicitações de desafios
-    soli_desafios = Solicitacao_Desafio.objects.filter(usuario_desafiado = u)
-    qtd_soli_desafios = len(soli_desafios)
-    #Desafios Ativos
-    d_ativos_desafiado = Desafio_Ativo.objects.filter(usuario_desafiado = u)
+    d_ativos_desafiado = Desafio_Ativo.objects.filter(usuario_desafiado = u, enviado = False)
     qtd_d_ativos_desafiados = len(d_ativos_desafiado)
     #Desafios Cumpridos
     d_ativos_desafiante = Desafio_Ativo.objects.filter(usuario_desafiante = u, cumprido = True)
@@ -1070,29 +1249,6 @@ def Ativos (request):
 
 def Pendentes (request):
     
-    u = Usuario.objects.filter(login=request.session['id']).get()
-   
-    #Busca de desafios e de Amigos
-    desafios = Desafio.objects.all() 
-    meusAmigos = Amigos.objects.filter(dono = u)
-    
-    #Consulta para mostrar as solicitações
-    soli_desafios = Solicitacao_Desafio.objects.filter(usuario_desafiado = u)
-    #Notificação da quantidade de solicitação de desafios
-    qtd_soli_desafios = len(soli_desafios)
-    
-    #Consulta para mostrar os desafios ativos
-    d_ativos_desafiado = Desafio_Ativo.objects.filter(usuario_desafiado = u, enviado = False)
-    
-    #Consulta para mostrar os desafios cumpridos
-    d_ativos_desafiante = Desafio_Ativo.objects.filter(usuario_desafiante = u, cumprido = True)
-       
-    
-    return render(request, 'en/public/Pendentes.HTML', {"d_ativos_desafiante": d_ativos_desafiante, "d_ativos_desafiado": d_ativos_desafiado, "solicit_desafios": soli_desafios, "soli_desafios": qtd_soli_desafios, "desafios": desafios, "meus_amigos": meusAmigos, "soli_desafios":qtd_soli_desafios, "d_ativos_desafiado":d_ativos_desafiado,"Usuario":u, "soli_desafios":qtd_soli_desafios, "d_ativos_desafiado":d_ativos_desafiado})
-
-
-def Cumpridos (request):
-    
     #---------------------------Notificações-----------------------------------------------------
     #Sessão do usuario
     u = Usuario.objects.filter(login=request.session['id']).get()
@@ -1101,10 +1257,7 @@ def Cumpridos (request):
     slct = Solicitacao.objects.filter(amigo=u)
     qtd_solicitacoes = len(slct)
     #Solicitações de desafios
-    soli_desafios = Solicitacao_Desafio.objects.filter(usuario_desafiado = u)
-    qtd_soli_desafios = len(soli_desafios)
-    #Desafios Ativos
-    d_ativos_desafiado = Desafio_Ativo.objects.filter(usuario_desafiado = u)
+    d_ativos_desafiado = Desafio_Ativo.objects.filter(usuario_desafiado = u, enviado = False)
     qtd_d_ativos_desafiados = len(d_ativos_desafiado)
     #Desafios Cumpridos
     d_ativos_desafiante = Desafio_Ativo.objects.filter(usuario_desafiante = u, cumprido = True)
@@ -1125,6 +1278,7 @@ def Cumpridos (request):
     pos_turma = lista_turma.index(u) + 1
     #"qtd_d_ativos_desafiado": qtd_d_ativos_desafiado,"pos_turma": pos_turma, "pos_geral": pos_geral,"qtd_msgs": qtd_msgs, "desafios_cumpridos": qtd_d_cumpridos,"soli_desafios":qtd_soli_desafios, "d_ativos_desafiado":d_ativos_desafiado, "qtd_solicitacoes": qtd_solicitacoes
     
+    
     #Busca de desafios e de Amigos
     desafios = Desafio.objects.all() 
     meusAmigos = Amigos.objects.filter(dono = u)
@@ -1141,7 +1295,48 @@ def Cumpridos (request):
     d_ativos_desafiante = Desafio_Ativo.objects.filter(usuario_desafiante = u, cumprido = True)
        
     
-    return render(request, 'en/public/Cumpridos.HTML', {"qtd_d_ativos_desafiados": qtd_d_ativos_desafiados ,"qtd_msgs":qtd_msgs,"d_ativos_desafiante": d_ativos_desafiante, "d_ativos_desafiado": d_ativos_desafiado, "solicit_desafios": soli_desafios, "soli_desafios": qtd_soli_desafios, "desafios": desafios, "meus_amigos": meusAmigos, "desafios_cumpridos": qtd_d_cumpridos,"soli_desafios":qtd_soli_desafios, "d_ativos_desafiado":d_ativos_desafiado,"Usuario":u, "qtd_solicitacoes": qtd_solicitacoes, "qtd_d_ativos_desafiado": qtd_d_ativos_desafiado,"pos_turma": pos_turma, "pos_geral": pos_geral,"qtd_msgs": qtd_msgs, "desafios_cumpridos": qtd_d_cumpridos,"soli_desafios":qtd_soli_desafios, "d_ativos_desafiado":d_ativos_desafiado, "qtd_solicitacoes": qtd_solicitacoes})
+    return render(request, 'en/public/Pendentes.HTML', {"d_ativos_desafiante": d_ativos_desafiante, "d_ativos_desafiado": d_ativos_desafiado, "solicit_desafios": soli_desafios, "soli_desafios": qtd_soli_desafios, "desafios": desafios, "meus_amigos": meusAmigos, "soli_desafios":qtd_soli_desafios, "d_ativos_desafiado":d_ativos_desafiado,"Usuario":u, "soli_desafios":qtd_soli_desafios, "d_ativos_desafiado":d_ativos_desafiado, "qtd_d_ativos_desafiados": qtd_d_ativos_desafiados ,"qtd_msgs":qtd_msgs,"d_ativos_desafiante": d_ativos_desafiante, "d_ativos_desafiado": d_ativos_desafiado, "solicit_desafios": soli_desafios, "soli_desafios": qtd_soli_desafios, "desafios": desafios, "meus_amigos": meusAmigos, "desafios_cumpridos": qtd_d_cumpridos,"soli_desafios":qtd_soli_desafios, "d_ativos_desafiado":d_ativos_desafiado,"Usuario":u, "qtd_solicitacoes": qtd_solicitacoes, "qtd_d_ativos_desafiado": qtd_d_ativos_desafiado,"pos_turma": pos_turma, "pos_geral": pos_geral,"qtd_msgs": qtd_msgs, "desafios_cumpridos": qtd_d_cumpridos,"soli_desafios":qtd_soli_desafios, "d_ativos_desafiado":d_ativos_desafiado, "qtd_solicitacoes": qtd_solicitacoes})
+
+
+def Cumpridos (request):
+    #---------------------------Notificações-----------------------------------------------------
+    #Sessão do usuario
+    u = Usuario.objects.filter(login=request.session['id']).get()
+   
+    #Quantidade de solicitações de amizade
+    slct = Solicitacao.objects.filter(amigo=u)
+    qtd_solicitacoes = len(slct)
+    #Solicitações de desafios
+    d_ativos_desafiado = Desafio_Ativo.objects.filter(usuario_desafiado = u, enviado = False)
+    qtd_d_ativos_desafiados = len(d_ativos_desafiado)
+    #Desafios Cumpridos
+    d_ativos_desafiante = Desafio_Ativo.objects.filter(usuario_desafiante = u, cumprido = True)
+    qtd_d_cumpridos = len(d_ativos_desafiante)
+    #Quantidade de Mensagens
+    msgs = Mensagens.objects.filter(usuario = u)
+    qtd_msgs = len(msgs)
+    #Consulta para mostrar as solicitações
+    soli_desafios = Solicitacao_Desafio.objects.filter(usuario_desafiado = u)
+    #Notificação da quantidade de solicitação de desafios
+    qtd_soli_desafios = len(soli_desafios)
+    #{"desafios_cumpridos": qtd_d_cumpridos,"soli_desafios":qtd_soli_desafios, "d_ativos_desafiado":d_ativos_desafiado,"Usuario":u, "qtd_solicitacoes": qtd_solicitacoes}
+    #----------------------------------------------------------------------------------------------
+   
+    qtd_d_ativos_desafiado = len(d_ativos_desafiado)
+    ranking_geral = Usuario.objects.all().order_by('-pontos')
+    lista_geral = list(ranking_geral)
+    pos_geral = lista_geral.index(u) + 1
+    
+    ranking_turma = Usuario.objects.filter(turma = u.turma).order_by('-pontos')
+    lista_turma = list(ranking_turma)
+    pos_turma = lista_turma.index(u) + 1
+    #"qtd_d_ativos_desafiado": qtd_d_ativos_desafiado,"pos_turma": pos_turma, "pos_geral": pos_geral,"qtd_msgs": qtd_msgs, "desafios_cumpridos": qtd_d_cumpridos,"soli_desafios":qtd_soli_desafios, "d_ativos_desafiado":d_ativos_desafiado, "qtd_solicitacoes": qtd_solicitacoes
+    
+    #Consulta para mostrar os desafios cumpridos
+    d_ativos_desafiante = Desafio_Ativo.objects.filter(usuario_desafiante = u, cumprido = True)
+       
+    
+    return render(request, 'en/public/Cumpridos.HTML', {"d_ativos_desafiante": d_ativos_desafiante, "Usuario":u, "qtd_d_ativos_desafiados": qtd_d_ativos_desafiados ,"qtd_msgs":qtd_msgs,"d_ativos_desafiante": d_ativos_desafiante, "d_ativos_desafiado": d_ativos_desafiado, "desafios_cumpridos": qtd_d_cumpridos, "d_ativos_desafiado":d_ativos_desafiado,"Usuario":u, "qtd_solicitacoes": qtd_solicitacoes, "qtd_d_ativos_desafiado": qtd_d_ativos_desafiado,"pos_turma": pos_turma, "pos_geral": pos_geral,"qtd_msgs": qtd_msgs, "desafios_cumpridos": qtd_d_cumpridos,"d_ativos_desafiado":d_ativos_desafiado, "qtd_solicitacoes": qtd_solicitacoes, "soli_desafios":qtd_soli_desafios})
 
 
 @csrf_exempt
@@ -1246,11 +1441,11 @@ def Pedido_Desafio(request):
             
             soli_desafio.delete()
             
-            soli_desafios = Solicitacao_Desafio.objects.filter(usuario_desafiado = u)
-            qtd_soli_desafios = len(soli_desafios)
-            
             d_ativos_desafiado = Desafio_Ativo.objects.filter(usuario_desafiado = u)
-            qtd_d_ativos_desafiado = len(d_ativos_desafiado)
+            
+            msg1 = "%s da turma %s aceitou o seu desafio %s!" % (u.nome, u.turma, desafio_ativo_desafiado.desafio.nome)
+            not_msg = Mensagens(usuario = Usuario_desafiante, mensagem = msg1)
+            not_msg.save()
     
             mensagem = "Desafio aceito!"   
     
@@ -1261,18 +1456,19 @@ def Pedido_Desafio(request):
             mensagem = "Você já possui o limite de desafios!"   
             
             return HttpResponse(mensagem)
-            #return HttpResponse(mensagem, qtd_soli_desafios, qtd_d_ativos_desafiado)
     
     elif(pedido_desafio == 'False'):
         
         soli_desafio.delete()
         
         soli_desafios = Solicitacao_Desafio.objects.filter(usuario_desafiado = u)
-        qtd_soli_desafios = len(soli_desafios)
             
         d_ativos_desafiado = Desafio_Ativo.objects.filter(usuario_desafiado = u)
-        qtd_d_ativos_desafiado = len(d_ativos_desafiado)
-            
+
+        msg1 = "%s da turma %s recusou o seu desafio %s!" % (u.nome, u.turma, desafio_ativo_desafiado.desafio.nome)
+        not_msg = Mensagens(usuario = Usuario_desafiante, mensagem = msg1)
+        not_msg.save()
+                        
         mensagem = "Desafio Recusado!"   
         
         return HttpResponse(mensagem)
@@ -1290,7 +1486,7 @@ def Cumprir_Desafio (request):
     soli_desafios = Solicitacao_Desafio.objects.filter(usuario_desafiado = u)
     qtd_soli_desafios = len(soli_desafios)
     #Desafios Ativos
-    d_ativos_desafiado = Desafio_Ativo.objects.filter(usuario_desafiado = u)
+    d_ativos_desafiado = Desafio_Ativo.objects.filter(usuario_desafiado = u, enviado = False)
     #Desafios Cumpridos
     d_ativos_desafiante = Desafio_Ativo.objects.filter(usuario_desafiante = u, cumprido = True)
     qtd_d_cumpridos = len(d_ativos_desafiante)
@@ -1308,32 +1504,12 @@ def Cumprir_Desafio (request):
         
     
 def Postar_Desafio (request):
-    #---------------------------Notificações-----------------------------------------------------
-    #Sessão do usuario
+    
     u = Usuario.objects.filter(login=request.session['id']).get()
-    #Quantidade de solicitações de amizade
-    slct = Solicitacao.objects.filter(amigo=u)
-    qtd_solicitacoes = len(slct)
-    #Solicitações de desafios
-    soli_desafios = Solicitacao_Desafio.objects.filter(usuario_desafiado = u)
-    qtd_soli_desafios = len(soli_desafios)
-    #Desafios Ativos
-    d_ativos_desafiado = Desafio_Ativo.objects.filter(usuario_desafiado = u)
-    #Desafios Cumpridos
-    d_ativos_desafiante = Desafio_Ativo.objects.filter(usuario_desafiante = u, cumprido = True)
-    qtd_d_cumpridos = len(d_ativos_desafiante)
-    #Quantidade de Mensagens
-    msgs = Mensagens.objects.filter(usuario = u)
-    qtd_msgs = len(msgs)
-    #{"desafios_cumpridos": qtd_d_cumpridos,"soli_desafios":qtd_soli_desafios, "d_ativos_desafiado":d_ativos_desafiado,"Usuario":u, "qtd_solicitacoes": qtd_solicitacoes}
-    #----------------------------------------------------------------------------------------------
     
     Texto = request.POST.get('mensagem', False)
     Foto = request.FILES.get('arquivo', False)
     desafio_ativo = request.POST["cDesafio_Ativo"]
-    
-    qtd_post = TimeLine.objects.all()
-    add_post = len(qtd_post) + 1
     
     hora_atual = datetime.now() 
     competicao_atual = Competicao.objects.filter(ativo = True).get()
@@ -1342,24 +1518,16 @@ def Postar_Desafio (request):
      
     if(Texto != False and Foto != False):
         
-        time = Beta_TimeLine(id = add_post, text=Texto, competicao = competicao_atual, usuario=u, foto=Foto, date = hora_atual)
+        time = Beta_TimeLine(text=Texto, competicao = competicao_atual, usuario=u, foto=Foto, date = hora_atual)
         time.save()
-        
-        cont_post = Cont_Postagem.objects.filter(id = 1).get()
-        cont_post.qtd = add_post
-        cont_post.save()
-                    
+                         
         passar=True
         
     
     elif(Texto != False):        
         
-        time = Beta_TimeLine(id = add_post, text=Texto, usuario=u, competicao = competicao_atual, foto=Foto, date = hora_atual)
+        time = Beta_TimeLine(text=Texto, usuario=u, competicao = competicao_atual, foto=Foto, date = hora_atual)
         time.save()
-        
-        cont_post = Cont_Postagem.objects.filter(id = 1).get()
-        cont_post.qtd = add_post
-        cont_post.save()
         
         passar=True
         
@@ -1367,16 +1535,15 @@ def Postar_Desafio (request):
             
         passar=True
        
-    if(passar): return render(request, 'en/public/Ver_Postagem_Desafio.HTML', {"qtd_msgs":qtd_msgs,"id_desafio": desafio_ativo, "entries": time, "desafios_cumpridos": qtd_d_cumpridos,"soli_desafios":qtd_soli_desafios, "d_ativos_desafiado":d_ativos_desafiado,"Usuario":u, "qtd_solicitacoes": qtd_solicitacoes})
+    if(passar): return render(request, 'en/public/Ver_Postagem_Desafio.HTML', {"id_desafio": desafio_ativo, "entries": time, "Usuario":u})
     
-
-
-
 
 @csrf_exempt  
 def Lancar_Desafio(request):
     id_postagem = request.POST.get("cId", False)
     id_desafio = request.POST.get("cId_desafio", False)
+    
+    u = Usuario.objects.filter(login=request.session['id']).get()
     
     #Filtrar a postagem beta
     postagem = Beta_TimeLine.objects.filter(id = id_postagem).get()
@@ -1389,7 +1556,7 @@ def Lancar_Desafio(request):
     postagem.save()
     
     #criando uma instancia de timeline
-    time = TimeLine(id = postagem.id, date = postagem.date, text = postagem.text, competicao = postagem.competicao ,usuario = postagem.usuario, foto = postagem.foto, qtd_coments = postagem.qtd_coments, nome_desafio = postagem.nome_desafio, desafio = postagem.desafio)
+    time = TimeLine(date = postagem.date, text = postagem.text, competicao = postagem.competicao ,usuario = postagem.usuario, foto = postagem.foto, qtd_coments = postagem.qtd_coments, nome_desafio = postagem.nome_desafio, desafio = postagem.desafio)
     time.save()
     
     #atribuindo a tabela de desafio a postagem
@@ -1402,6 +1569,31 @@ def Lancar_Desafio(request):
     
     #excluindo a postagem beta
     postagem.delete()
+    
+    try:
+        conq_m = Conq_menino_menina.objects.filter(usuario_desafiador = u).get()
+        
+                
+    except:
+        
+        if(desafio_ativo.usuario_desafiado == u):
+            
+            data_atual = timezone.now()
+            d_fim = data_atual + timedelta(days = 7)
+        
+            conq_m = Conq_menino_menina(
+                                        
+            data_inicio = data_atual, 
+            data_fim = d_fim, 
+            usuario_desafiador = u,
+            usuario_desafiado = desafio_ativo.usuario_desafiado,
+            #desafio1 = Desafio_Ativo.desafio,
+            #desafio2 = False,
+            #desafio3 = False,
+            )
+            
+            conq_m.save()
+           
     
     return Timeline(request)
 
@@ -1417,7 +1609,7 @@ def Verificar_Desafio (request):
     soli_desafios = Solicitacao_Desafio.objects.filter(usuario_desafiado = u)
     qtd_soli_desafios = len(soli_desafios)
     #Desafios Ativos
-    d_ativos_desafiado = Desafio_Ativo.objects.filter(usuario_desafiado = u)
+    d_ativos_desafiado = Desafio_Ativo.objects.filter(usuario_desafiado = u, enviado = False)
     #Desafios Cumpridos
     d_ativos_desafiante = Desafio_Ativo.objects.filter(usuario_desafiante = u, cumprido = True)
     qtd_d_cumpridos = len(d_ativos_desafiante)
@@ -1521,7 +1713,7 @@ def Atribuir_Desafio (request):
         not_msg.save()
         
         desafio.delete()
-        return Timeline(request)
+        return Cumpridos(request)
     
 def Campeoes (request):
     #---------------------------Notificações-----------------------------------------------------
@@ -1534,7 +1726,7 @@ def Campeoes (request):
     soli_desafios = Solicitacao_Desafio.objects.filter(usuario_desafiado = u)
     qtd_soli_desafios = len(soli_desafios)
     #Desafios Ativos
-    d_ativos_desafiado = Desafio_Ativo.objects.filter(usuario_desafiado = u)
+    d_ativos_desafiado = Desafio_Ativo.objects.filter(usuario_desafiado = u, enviado = False)
     #Desafios Cumpridos
     d_ativos_desafiante = Desafio_Ativo.objects.filter(usuario_desafiante = u, cumprido = True)
     qtd_d_cumpridos = len(d_ativos_desafiante)
@@ -1627,7 +1819,7 @@ def Conquistas (request):
     soli_desafios = Solicitacao_Desafio.objects.filter(usuario_desafiado = u)
     qtd_soli_desafios = len(soli_desafios)
     #Desafios Ativos
-    d_ativos_desafiado = Desafio_Ativo.objects.filter(usuario_desafiado = u)
+    d_ativos_desafiado = Desafio_Ativo.objects.filter(usuario_desafiado = u, enviado = False)
     #Desafios Cumpridos
     d_ativos_desafiante = Desafio_Ativo.objects.filter(usuario_desafiante = u, cumprido = True)
     qtd_d_cumpridos = len(d_ativos_desafiante)
@@ -1667,7 +1859,7 @@ def Rankings (request):
     soli_desafios = Solicitacao_Desafio.objects.filter(usuario_desafiado = u)
     qtd_soli_desafios = len(soli_desafios)
     #Desafios Ativos
-    d_ativos_desafiado = Desafio_Ativo.objects.filter(usuario_desafiado = u)
+    d_ativos_desafiado = Desafio_Ativo.objects.filter(usuario_desafiado = u, enviado = False)
     #Desafios Cumpridos
     d_ativos_desafiante = Desafio_Ativo.objects.filter(usuario_desafiante = u, cumprido = True)
     qtd_d_cumpridos = len(d_ativos_desafiante)
@@ -1745,17 +1937,71 @@ def Mensagens_Usuario (request):
     soli_desafios = Solicitacao_Desafio.objects.filter(usuario_desafiado = u)
     qtd_soli_desafios = len(soli_desafios)
     #Desafios Ativos
-    d_ativos_desafiado = Desafio_Ativo.objects.filter(usuario_desafiado = u)
+    d_ativos_desafiado = Desafio_Ativo.objects.filter(usuario_desafiado = u, enviado = False)
     #Desafios Cumpridos
     d_ativos_desafiante = Desafio_Ativo.objects.filter(usuario_desafiante = u, cumprido = True)
     qtd_d_cumpridos = len(d_ativos_desafiante)
+    
+    qtd_d_ativos_desafiado = len(d_ativos_desafiado)
+    ranking_geral = Usuario.objects.all().order_by('-pontos')
+    lista_geral = list(ranking_geral)
+    pos_geral = lista_geral.index(u) + 1
+    
+    ranking_turma = Usuario.objects.filter(turma = u.turma).order_by('-pontos')
+    lista_turma = list(ranking_turma)
+    pos_turma = lista_turma.index(u) + 1
+    
     #{"desafios_cumpridos": qtd_d_cumpridos,"soli_desafios":qtd_soli_desafios, "d_ativos_desafiado":d_ativos_desafiado,"Usuario":u, "qtd_solicitacoes": qtd_solicitacoes}
     #----------------------------------------------------------------------------------------------
     
+    vetor_msgs = []
+    
+    #mensagens
     msgs = Mensagens.objects.filter(usuario = u)
+    lista_msgs = list(msgs)
+    lista_msgs.reverse()
+        
+    i = 0
+    for a in lista_msgs:
+        
+        vetor_msgs.append(a)
+        
+        i = i + 1
+    
+        if (i == 3):
+            break
+    
     qtd_msgs = len(msgs)
-    return render(request, 'en/public/Mensagens.HTML', {"qtd_msgs": qtd_msgs, "msg_usuario": msgs, "desafios_cumpridos": qtd_d_cumpridos,"soli_desafios":qtd_soli_desafios, "d_ativos_desafiado":d_ativos_desafiado,"Usuario":u, "qtd_solicitacoes": qtd_solicitacoes})
+    return render(request, 'en/public/Mensagens.HTML', {"qtd_msgs": qtd_msgs, "msg_usuario": vetor_msgs, "desafios_cumpridos": qtd_d_cumpridos,"soli_desafios":qtd_soli_desafios, "d_ativos_desafiado":d_ativos_desafiado,"Usuario":u, "qtd_solicitacoes": qtd_solicitacoes, "desafios_cumpridos": qtd_d_cumpridos,"soli_desafios":qtd_soli_desafios, "d_ativos_desafiado":d_ativos_desafiado,"Usuario":u, "qtd_solicitacoes": qtd_solicitacoes, "qtd_d_ativos_desafiado": qtd_d_ativos_desafiado,"pos_turma": pos_turma, "pos_geral": pos_geral,"qtd_msgs": qtd_msgs, "desafios_cumpridos": qtd_d_cumpridos,"soli_desafios":qtd_soli_desafios, "d_ativos_desafiado":d_ativos_desafiado, "qtd_solicitacoes": qtd_solicitacoes})
 
+def Mais_Mensagens (request):
+    
+    id_ultimo = request.POST["id_ultimo"]
+    
+    u = Usuario.objects.filter(login=request.session['id']).get()
+    
+    todas_msgs = Mensagens.objects.filter(usuario = u)
+    
+    ultima_mensagem = Mensagens.objects.filter(id = id_ultimo).get()
+    
+    vetor_msg = list(todas_msgs)
+    vetor_msg.reverse()
+        
+    pos = vetor_msg.index(ultima_mensagem) + 1
+    
+    qtd_msgs = []
+    
+    
+    i = 0
+    for a in range(pos, len(vetor_msg)):
+            
+        qtd_msgs.append(vetor_msg[a]) 
+        i = i + 1
+        
+        if(i == 10):
+            break
+    
+    return render(request, 'en/public/Mensagens.HTML', {"msg_usuario": qtd_msgs})
 
 @csrf_exempt
 def Apagar_Menagem (request):
@@ -1818,7 +2064,10 @@ def Despingo_Deslike (request):
         
         
 def Atribuir_Conquistas(request, usu, dsf):
-    
+ 
+        
+    competicao_atual = Competicao.objects.filter(ativo = True).get()
+        
     u = usu   
 
     pesquisa_amigos = Amigos.objects.filter(dono=u)
@@ -1836,6 +2085,14 @@ def Atribuir_Conquistas(request, usu, dsf):
                 i = Insignia.objects.filter(nome='Conquista 1').get()
                 conquista = Conquista(insignia = i, usuario=u)
                 conquista.save()
+                
+                msg1 = "Você recebeu a conquista %s, Parabéns! " % (i.nome)
+                not_msg = Mensagens(usuario = usu, mensagem = msg1)
+                not_msg.save()
+                
+                msg2 = " %s acabou de receber a conquista %s, Parabéns! " % (u.nome, i.nome)
+                time = TimeLine(text=msg2, usuario=u, foto = i.Imagem, competicao = competicao_atual, desafio = True)
+                time.save()
             
             
     try:    #Conquista 2 - Feito
@@ -1855,6 +2112,14 @@ def Atribuir_Conquistas(request, usu, dsf):
             conquista = Conquista(insignia = i, usuario = u)
             conquista.save()
             
+            msg1 = "Você recebeu a conquista %s, Parabéns! " % (i.nome)
+            not_msg = Mensagens(usuario = usu, mensagem = msg1)
+            not_msg.save()
+                
+            msg2 = " %s acabou de receber a conquista %s, Parabéns! " % (u.nome, i.nome)
+            time = TimeLine(text=msg2, usuario=u, foto = i.Imagem, competicao = competicao_atual, desafio = True)
+            time.save()
+            
     try:    #Conquista 3 - feito
             
         i = Insignia.objects.filter(nome='Conquista 3').get()
@@ -1868,6 +2133,14 @@ def Atribuir_Conquistas(request, usu, dsf):
             i = Insignia.objects.filter(nome='Conquista 3').get()
             conquista = Conquista(insignia = i, usuario = u)
             conquista.save()
+            
+            msg1 = "Você recebeu a conquista %s, Parabéns! " % (i.nome)
+            not_msg = Mensagens(usuario = usu, mensagem = msg1)
+            not_msg.save()
+                
+            msg2 = " %s acabou de receber a conquista %s, Parabéns! " % (u.nome, i.nome)
+            time = TimeLine(text=msg2, usuario=u, foto = i.Imagem, competicao = competicao_atual, desafio = True)
+            time.save()
                             
     try:    #Conquista 4 - Feito
             
@@ -1880,6 +2153,14 @@ def Atribuir_Conquistas(request, usu, dsf):
             i = Insignia.objects.filter(nome='Conquista 4').get()
             conquista = Conquista(insignia=i, usuario=u)
             conquista.save()
+            
+            msg1 = "Você recebeu a conquista %s, Parabéns! " % (i.nome)
+            not_msg = Mensagens(usuario = usu, mensagem = msg1)
+            not_msg.save()
+                
+            msg2 = " %s acabou de receber a conquista %s, Parabéns! " % (u.nome, i.nome)
+            time = TimeLine(text=msg2, usuario=u, foto = i.Imagem, competicao = competicao_atual, desafio = True)
+            time.save()
                     
     try:    #Conquista 5 - Feito
             
@@ -1893,6 +2174,14 @@ def Atribuir_Conquistas(request, usu, dsf):
             i = Insignia.objects.filter(nome='Conquista 5').get()
             conquista = Conquista(insignia = i, usuario = u)
             conquista.save()
+            
+            msg1 = "Você recebeu a conquista %s, Parabéns! " % (i.nome)
+            not_msg = Mensagens(usuario = usu, mensagem = msg1)
+            not_msg.save()
+                
+            msg2 = " %s acabou de receber a conquista %s, Parabéns! " % (u.nome, i.nome)
+            time = TimeLine(text=msg2, usuario=u, foto = i.Imagem, competicao = competicao_atual, desafio = True)
+            time.save()
                         
     try:    #Conquista 6 - feito
             
@@ -1907,6 +2196,14 @@ def Atribuir_Conquistas(request, usu, dsf):
             i = Insignia.objects.filter(nome='Conquista 6').get()
             conquista = Conquista(insignia = i, usuario = u)
             conquista.save()
+            
+            msg1 = "Você recebeu a conquista %s, Parabéns! " % (i.nome)
+            not_msg = Mensagens(usuario = usu, mensagem = msg1)
+            not_msg.save()
+                
+            msg2 = " %s acabou de receber a conquista %s, Parabéns! " % (u.nome, i.nome)
+            time = TimeLine(text=msg2, usuario=u, foto = i.Imagem, competicao = competicao_atual, desafio = True)
+            time.save()
                         
     try:    #Conquista 7 - feito
                 
@@ -1922,18 +2219,14 @@ def Atribuir_Conquistas(request, usu, dsf):
             conquista = Conquista(insignia = i, usuario = u)
             conquista.save()
             
-    try:    #Conquista 8 - Feito
+            msg1 = "Você recebeu a conquista %s, Parabéns! " % (i.nome)
+            not_msg = Mensagens(usuario = usu, mensagem = msg1)
+            not_msg.save()
+                
+            msg2 = " %s acabou de receber a conquista %s, Parabéns! " % (u.nome, i.nome)
+            time = TimeLine(text=msg2, usuario=u, foto = i.Imagem, competicao = competicao_atual, desafio = True)
+            time.save()
             
-        i = Insignia.objects.filter(nome='Conquista 8').get()
-        conq = Conquista.objects.filter(insignia=i, usuario=u).get()
-            
-    except:
-        
-        if(qtd_amigos >= 300):
-            i = Insignia.objects.filter(nome='Conquista 8').get()
-            conquista = Conquista(insignia = i, usuario = u)
-            conquista.save()
-                                
     try:    #Conquista 9 - Feito
             
         i = Insignia.objects.filter(nome='Conquista 9').get()
@@ -1944,7 +2237,15 @@ def Atribuir_Conquistas(request, usu, dsf):
         if(u.pontos >= 120):
             i = Insignia.objects.filter(nome='Conquista 9').get()
             conquista = Conquista(insignia = i, usuario = u)
-            conquista.save() 
+            conquista.save()
+            
+            msg1 = "Você recebeu a conquista %s, Parabéns! " % (i.nome)
+            not_msg = Mensagens(usuario = usu, mensagem = msg1)
+            not_msg.save()
+                
+            msg2 = " %s acabou de receber a conquista %s, Parabéns! " % (u.nome, i.nome)
+            time = TimeLine(text=msg2, usuario=u, foto = i.Imagem, competicao = competicao_atual, desafio = True)
+            time.save() 
                                     
     try:    #Conquista 10
             
@@ -1957,6 +2258,14 @@ def Atribuir_Conquistas(request, usu, dsf):
             i = Insignia.objects.filter(nome='Conquista 10').get()
             conquista = Conquista(insignia = i, usuario = u)
             conquista.save()
+            
+            msg1 = "Você recebeu a conquista %s, Parabéns! " % (i.nome)
+            not_msg = Mensagens(usuario = usu, mensagem = msg1)
+            not_msg.save()
+                
+            msg2 = " %s acabou de receber a conquista %s, Parabéns! " % (u.nome, i.nome)
+            time = TimeLine(text=msg2, usuario=u, foto = i.Imagem, competicao = competicao_atual, desafio = True)
+            time.save()
                                             
     try:    #Conquista 11 - feito
             
@@ -1971,8 +2280,18 @@ def Atribuir_Conquistas(request, usu, dsf):
             i = Insignia.objects.filter(nome='Conquista 11').get()
             conquista = Conquista(insignia = i, usuario = u)
             conquista.save()
+            
+            msg1 = "Você recebeu a conquista %s, Parabéns! " % (i.nome)
+            not_msg = Mensagens(usuario = usu, mensagem = msg1)
+            not_msg.save()
+                
+            msg2 = " %s acabou de receber a conquista %s, Parabéns! " % (u.nome, i.nome)
+            time = TimeLine(text=msg2, usuario=u, foto = i.Imagem, competicao = competicao_atual, desafio = True)
+            time.save()
+            
+            #fim 11
                                                                                     
-    return Timeline(request)  
+    return Cumpridos(request)
 
 @csrf_exempt
 def Usuarios_curtiram (request):
@@ -1986,7 +2305,7 @@ def Usuarios_curtiram (request):
     soli_desafios = Solicitacao_Desafio.objects.filter(usuario_desafiado = u)
     qtd_soli_desafios = len(soli_desafios)
     #Desafios Ativos
-    d_ativos_desafiado = Desafio_Ativo.objects.filter(usuario_desafiado = u)
+    d_ativos_desafiado = Desafio_Ativo.objects.filter(usuario_desafiado = u, enviado = False)
     #Desafios Cumpridos
     d_ativos_desafiante = Desafio_Ativo.objects.filter(usuario_desafiante = u, cumprido = True)
     qtd_d_cumpridos = len(d_ativos_desafiante)
@@ -1997,8 +2316,49 @@ def Usuarios_curtiram (request):
     post = TimeLine.objects.filter(id = id_post).get()
     
     pingo = Pingo.objects.filter(postagem = post)
+    
+    vetor_pingo = []
+    
+    i = 0
+    for a in pingo:
+        
+        vetor_pingo.append(a)
+        
+        i = i + 1
+    
+        if (i == 3):
+            break
   
-    return render(request, 'en/public/U_Curtiu.HTML', {"pingo": pingo, "desafios_cumpridos": qtd_d_cumpridos,"soli_desafios":qtd_soli_desafios, "d_ativos_desafiado":d_ativos_desafiado,"Usuario":u, "qtd_solicitacoes": qtd_solicitacoes})
+    return render(request, 'en/public/U_Curtiu.HTML', {"id_postagem": id_post, "pingo": vetor_pingo, "desafios_cumpridos": qtd_d_cumpridos,"soli_desafios":qtd_soli_desafios, "d_ativos_desafiado":d_ativos_desafiado,"Usuario":u, "qtd_solicitacoes": qtd_solicitacoes})
+    
+def Mais_Pingos (request):
+    
+    id_postagem = request.POST["id_postagem"]
+    id_ultimo = request.POST["id_ultimo"]
+    
+    post = TimeLine.objects.filter(id = id_postagem).get()
+    
+    pingo = Pingo.objects.filter(postagem = post)
+    
+    ultimo_pingo = Pingo.objects.filter(id = id_ultimo).get()
+    
+    vetor_pingo = list(pingo)
+    
+    pos = vetor_pingo.index(ultimo_pingo) + 1
+    
+    qtd_pingo = []
+    
+    i = 0
+    for a in range(pos, len(pingo)):
+            
+        qtd_pingo.append(pingo[a]) 
+        i = i + 1
+        
+        if(i == 10):
+            break
+    
+    return render(request, 'en/public/U_Curtiu.HTML', {"pingo": qtd_pingo,"id_postagem": id_postagem})
+    
     
 @csrf_exempt
 def Mais_posts (request):

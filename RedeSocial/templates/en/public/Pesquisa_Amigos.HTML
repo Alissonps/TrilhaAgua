@@ -43,10 +43,10 @@
 					<li><img src="{{a.amigo.foto.url}}" id="imgAmigos" /></li>
 
 					<li style="margin: 7px 15px 15px 15px;">
-						<form name="form" action="buscaPerfilUsuario" method="post">
+						<form name="form" action="buscaPerfilUsuario/{{a.amigo.id}}" method="post">
 							{% csrf_token %} <input type="submit" value="{{a.amigo.nome}} "
 								class="meulink"> <input type="hidden" name="cUsuario"
-								value={{a.amigo.id}}>
+							value="{{a.amigo.id}}">
 						</form>
 						<div class="form-ano">{{a.amigo.turma}}</div>
 					</li>

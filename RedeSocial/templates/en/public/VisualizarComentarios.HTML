@@ -2,75 +2,107 @@
 <meta charset="utf-8">
 {% block contents %}
 <div id="containerFeed1">
-	<div class="containerPostagem" style="padding-bottom: 30px;">
-		<form name="form" action="buscaPerfilUsuario" method="post" style="margin-top: 3px;">
-			{% csrf_token %} <input type="submit"
-				value="{{Postagem.usuario.nome}}" class="meulink"> <input
-				type="hidden" name="cUsuario" value="{{Postagem.usuario.id}}">
-			<div id="containerData">{{Postagem.date}}</div>
-		</form>
+  <div class="containerPostagem">
+      	{% if Postagem.usuario == Usuario %}
+        <form id="id-apagar" action="apagar_postagem" method="post"> {% csrf_token %}
+          <input type="hidden" name = "id" id="id-apagar" value="{{Postagem.id}}">
+          <button type="submit" value="excluir" class="remover" title="Remover" 
+            style="background: transparent; border: none; float: right;">
+            <span class="glyphicon glyphicon-remove remove-feed" style="top: 4px;"></span>
+          </button>
+        </form> 
+        {% endif %}
+        
+        <form name="form" action="buscaPerfilUsuario/{{Postagem.usuario.id}}" method="post" style="margin-top: 2px;">
+          {% csrf_token %} 
+          <input type="submit" value="{{Postagem.usuario.nome}}" class="meulink"> 
+          <input type="hidden" name="cUsuario" value="{{Postagem.usuario.id}}"> 
+          <font id="containerData">{{Postagem.date|date:"D d M Y"}}</font> 
+        </form>
+    
+        <div id="containerTextoPostagem">
+          {{Postagem.text}} {% if Postagem.foto.url != '/media/False' %}
+          <center>
+            <img src="{{Postagem.foto.url}}" width="500" height="390" style="margin-top: 15px;" />
+          </center>
+          {% endif %}
+        </div>
+      
+       <hr style="margin: 5px 15px 0px 15px; border: 0; height: 0; border-top: 1px solid rgba(0, 0, 0, 0.1); border-bottom: 1px solid rgba(  255, 255, 255, 0.3);">
 
-
-
-		<div id="containerTexto">
-			{{Postagem.text}} {% if Postagem.foto.url != '/media/False' %}
-
-			<center>
-				<img src="{{Postagem.foto.url}}" width="450" height="390"
-					style="margin-top: 15px;" />
-			</center>
-			{% endif %}
-		</div>
-
-
-		<form action="postarComentarios2" method="post">
-			{% csrf_token %}
-			
-			<hr style="margin: 0px 15px 0px 15px; border: 0; height: 0; border-top: 1px solid rgba(0, 0, 0, 0.1); border-bottom: 1px solid rgba(255, 255, 255, 0.3);">
-			
-			<center>
-				<textarea cols="78" rows="2" name="cComentario" class="formTextAreaTimeLine"
-					placeholder="Escreva um comentário..."></textarea>
-			</center>
-
-			<div id="enviarPost">
-				<input type="hidden" name="cId" value="{{Postagem.id}}" /> <input
-					type="submit" name="Enviar" value="Enviar" class="btn btn-primary" />
-			</div>
-		</form>
-	</div>
+        <form action="postarComentarios2" id="postar-comentario-2" method="post">
+          {% csrf_token %}
+          <div id="enviarPost">
+            <table>
+              <tr>
+                <td style="background: ; width: 100%; height: 0px ">
+                  <textarea id="textarea-comentario-2" name="cComentario" class="formTextAreaTimeLine"
+                    placeholder="Escreva um comentário..."></textarea>    
+                </td>
+                
+                <td style="margin-left: 10px; background: ; width: 50px;">
+                  <input type="hidden" id="comentario-id" name="cId" value="{{Postagem.id}}" /> 
+                  <button style="float: right;" class="btn btn-enviaComent">
+                    <span class="glyphicon glyphicon-share-alt"></span>
+                  </button>
+                </td>
+              </tr>
+            </table>
+          </div>
+      </form>
+  </div>
 </div>
 
 <div id="containerFeed2">
-
-	{% block content %} {% for e in Coment %}
-	<div class="containerPostagem">
+	<ul id="ul-comentarios">
+		{% block content %} {% for e in Coment %}
+			<li id="li-comentarios">
+				{% if e.usuario == Usuario %}
+				<form action="apagar_comentario" id="id-apagar-comentario" method="post"> {% csrf_token %}
+					<input type="hidden" id="hide-comentario-id" name="id" value="{{e.pk}}">
+					<input type="hidden" id="hide-comentario-postagem" name="id_postagem" value="{{Postagem.id}}">
+					<button type="submit" value="excluir" class="remover" title="Remover" 
+		            	style="background: transparent; border: none; float: right;">
+		            	<span class="glyphicon glyphicon-remove remove-feed" style="top: 4px;"></span>
+		          	</button>
+				</form>
+				{% endif %}	
+				
+				<form name="form" action="buscaPerfilUsuario/{{e.usuario.id}}" method="post" style="margin-top: 2px;">
+		      		{% csrf_token %} 
+			     	<input type="submit" value="{{e.usuario.nome}}/{{e.usuario.id}}" class="meulink"> 
+			      	<input type="hidden" name="cUsuario" value="{{e.usuario.id}}"> 
+			      	<font id="containerData">{{e.date|date:"D d M Y"}}</font> 
+			    </form>
 		
-		{% if e.usuario == Usuario %}
-		<form action="apagar_comentario" id="ajax_form" method="post"> {% csrf_token %}
-			<input type="hidden" name = "id" value={{e.pk}}>
-			<input type="hidden" name = "id_postagem" value={{Postagem.id}}>
-			<button type="submit" value="excluir" style="background: transparent; border: none; float: right;">
-				<span class="glyphicon glyphicon-remove remove-feed" style="top: 4px;"></span>
-			</button>
-		</form>
-		
-		{% endif %}	
-		<form name="form" action="buscaPerfilUsuario" method="post" style="margin-top: 3px;">
-			{% csrf_token %} 
+				<div id="containerTextoPostagem" style="margin-bottom: 3px;">{{e.text}}</div>
+			</li>
 			
-			<input type="submit" value="{{e.usuario.nome}}" class="meulink"> 
-			
-			<input type="hidden" name="cUsuario" value="{{e.usuario.id}}">
-
-			<div id="containerData">{{e.date}}</div>
-		</form>
-
-
-		<div id="containerTexto">{{e.text}}</div>
-
+			{% if forloop.last %}
+				    
+				<form action="mais_comentarios" method ="post" id="ver-mais-comentario"> {% csrf_token %}
+					<input type ="hidden" name = "id_ultimo" value = "{{e.pk}}">
+					<input type ="hidden" name = "id_postagem" value = "{{Postagem.id}}">
+					<button type="submit" id="btnVerMais" class="btn-primary">Ver mais</button>
+				</form>
+						
+			{% endif %}
+		{% endfor %} {% endblock %}
+	</ul>
+	<div class="sk-circle" style="display: none;">
+		<div class="sk-circle1 sk-child"></div>
+		<div class="sk-circle2 sk-child"></div>
+		<div class="sk-circle3 sk-child"></div>
+		<div class="sk-circle4 sk-child"></div>
+		<div class="sk-circle5 sk-child"></div>
+		<div class="sk-circle6 sk-child"></div>
+		<div class="sk-circle7 sk-child"></div>
+		<div class="sk-circle8 sk-child"></div>
+		<div class="sk-circle9 sk-child"></div>
+		<div class="sk-circle10 sk-child"></div>
+		<div class="sk-circle11 sk-child"></div>
+		<div class="sk-circle12 sk-child"></div>
 	</div>
-	{% endfor %} {% endblock %}
-
 </div>
 {% endblock contents %}
+

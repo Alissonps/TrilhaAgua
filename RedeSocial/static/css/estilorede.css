@@ -19,6 +19,29 @@ staticfiles
 }
 @charset "uft-8";
 
+.window{
+    display:none;
+    width:300px;
+    height:300px;
+    position:absolute;
+    left:0;
+    top:0;
+    background:#FFF;
+    z-index:9900;
+    padding:10px;
+    border-radius:10px;
+}
+ 
+#mascara{
+    display:none;
+    position:absolute;
+    left:0;
+    top:0;
+    z-index:9000;
+    background-color:#000;
+}
+ 
+.fechar{display:block; text-align:right;}
 .disabled{
 	border-color: transparent;
     color: white;
@@ -216,7 +239,13 @@ button:focus {
 	color: #333333;
 }
 
-.container-mensagem-remove {
+#ul-mensagens{
+	list-style: none;
+	margin: 0;
+	padding: 0;	
+}
+
+.li-mensagens {
 	height: 27px;
 	border-bottom: 1px solid #E0E0E0;
 	margin-bottom: 7px;
@@ -673,6 +702,39 @@ hr.style-seven:before { /* Not really supposed to work, but does */
 	box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.3);
 }
 
+#ul-comentarios{
+	list-style: none;
+	margin: 0px 27px;
+	padding: 0px;
+	background-color: #f7f7f7;
+	clear: both;
+	-moz-border-radius: 2px;
+	-webkit-border-radius: 2px;
+	border-radius: 2px;
+	-moz-box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.3);
+	-webkit-box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.3);
+	box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.3);
+}
+
+#ul-comentarios li{
+	word-wrap: break-word;
+	line-height: 1.45;
+	border-bottom: 1px solid #e0e0e0;
+}
+
+#li-comentarios .remover {
+	display: none;
+	width: 5px;
+}
+
+#li-comentarios:hover .remover {
+	display: block;
+}
+
+#ul-curtiram li{
+	border-bottom: 1px solid #e0e0e0;
+}
+
 .containerPostagem {
 	word-wrap: break-word;
 	margin: 10px 27px 10px 27px;
@@ -692,16 +754,16 @@ hr.style-seven:before { /* Not really supposed to work, but does */
 	border: 1px solid #FF8901;
 }
 
-#containerPostagem .remover {
+.containerPostagem .remover {
 	display: none;
 	width: 5px;
 }
 
-#containerPostagem:hover .remover {
+.containerPostagem:hover .remover {
 	display: block;
 }
 
-#containerPostagem tr td button{
+.containerPostagem tr td button{
 	cursor: pointer;
 }
 
@@ -790,7 +852,7 @@ hr.style-seven:before { /* Not really supposed to work, but does */
 	text-decoration: underline;
 }
 
-#containerPostagemDesafio {
+.containerPostagemDesafio {
 	word-wrap: break-word;
 	margin: 10px 27px 10px 27px;
 	line-height: 1.45;
@@ -805,20 +867,20 @@ hr.style-seven:before { /* Not really supposed to work, but does */
 	box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.3);
 }
 
-#containerPostagemDesafio:hover {
+.containerPostagemDesafio:hover {
 	border: 1px solid #337ab7;
 }
 
-#containerPostagemDesafio .remover {
+.containerPostagemDesafio .remover {
 	display: none;
 	width: 5px;
 }
 
-#containerPostagemDesafio:hover .remover {
+.containerPostagemDesafio:hover .remover {
 	display: block;
 }
 
-#containerPostagemDesafio tr td button{
+.containerPostagemDesafio tr td button{
 	cursor: pointer;
 }
 

@@ -42,7 +42,7 @@
 					</li>
 	
 					<li style="margin-top: 50px;">
-						<form name="form" action="buscaPerfilUsuario" method="post">
+						<form name="form" action="buscaPerfilUsuario/{{e.usuario.id}}" method="post">
 							{% csrf_token %} <input type="submit" value="{{e.usuario.nome}}"
 								class="meulink"> <input type="hidden" name="cUsuario"
 								value="{{e.usuario.id}}">						

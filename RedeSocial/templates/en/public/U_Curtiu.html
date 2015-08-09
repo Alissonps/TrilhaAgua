@@ -6,34 +6,55 @@
 	<div id="containerConquistas">
 		<fieldset>
 			<legend>Curtiram</legend>
-				<ul>
+				<ul id="ul-curtiram">
 					{% for e in pingo %}
 					
-					<li>
+					<li id="li-curtiram">
 						<div id="imgConquistas">
 							<img src="{{e.usuario.foto.url}}" width="100" height="100"/>
 						</div>
 						
 						<div id="nomeConquistas">
-							{{e.usuario.nome}}
+								<form name="form" action="buscaPerfilUsuario/{{e.usuario.id}}" method="post" style="margin-top: 2px;"> {% csrf_token %} 
+										<input type="submit" value="{{e.usuario.nome}}" class="meulink"> 
+										<input type="hidden" name="cUsuario" value="{{e.usuario.id}}">  
+								</form>
 						</div>
 						
 						<div id="descricaoConquistas">
 							{{e.usuario.turma}}
 						</div>
 					</li>
-					<hr>	
+						{% if forloop.last %}
+			    
+						     <form action="mais_pingo" method ="post" id="ver-mais-curtidas"> {% csrf_token %}
+						    
+						    	<input type ="hidden" name = "id_ultimo" value = "{{e.id}}">
+						    	<input type ="hidden" name = "id_postagem" value = "{{id_postagem}}">
+						    	
+						    	<button type="submit" id="btnVerMais" class="btn-primary">Ver mais</button>
+							
+							</form>
+					
+						{% endif %}
+		
 					{% endfor %}					
 				</ul>
-		
-<!-- <button type="button" id="button1">Hello Server!</button> -->
-<!-- <button type="button" id="button2">div!</button> -->
-
-
-<!-- <script type="text/javascript" src="../static/js/testeHello.js"></script> -->
-<!-- <script type="text/javascript" src="../static/js/teste.js"></script> -->
-
-
+				
+				<div class="sk-circle" style="display: none;">
+					<div class="sk-circle1 sk-child"></div>
+					<div class="sk-circle2 sk-child"></div>
+					<div class="sk-circle3 sk-child"></div>
+					<div class="sk-circle4 sk-child"></div>
+					<div class="sk-circle5 sk-child"></div>
+					<div class="sk-circle6 sk-child"></div>
+					<div class="sk-circle7 sk-child"></div>
+					<div class="sk-circle8 sk-child"></div>
+					<div class="sk-circle9 sk-child"></div>
+					<div class="sk-circle10 sk-child"></div>
+					<div class="sk-circle11 sk-child"></div>
+					<div class="sk-circle12 sk-child"></div>
+				</div>
 		</fieldset>
 	</div>
 </div>

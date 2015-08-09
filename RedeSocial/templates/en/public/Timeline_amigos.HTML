@@ -102,7 +102,7 @@
 	
 	
 	{% endif %}
-		<form name="form" action="buscaPerfilUsuario" method="post">
+		<form name="form" action="buscaPerfilUsuario/{{e.usuario.id}}" method="post">
 			{% csrf_token %} <input type="submit" value="{{e.usuario.nome}}"
 				class="meulink"> <input type="hidden" name="cUsuario"
 				value="{{e.usuario.id}}"><font id="containerData">{{e.date|date:"D d M Y"}}</font>
@@ -161,7 +161,7 @@
 		</button>
 	</form>
 	{% endif %}
-		<form name="form" action="buscaPerfilUsuario" method="post" style="margin-top: 2px;">
+		<form name="form" action="buscaPerfilUsuario/{{e.usuario.id}}" method="post" style="margin-top: 2px;">
 			{% csrf_token %} <input type="submit" value="{{e.usuario.nome}}"
 				class="meulink"> <input type="hidden" name="cUsuario"
 				value="{{e.usuario.id}}">

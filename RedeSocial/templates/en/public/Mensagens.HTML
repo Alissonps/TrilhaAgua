@@ -3,27 +3,54 @@
 <div id="containerFeed1">
 	<div id="containerAmigos">
 		<fieldset>
-			<legend>Mensagens</legend>
+			<legend>Mensagens {{teste}}</legend>
+			<ul id="ul-mensagens">
 
 			{% for a in msg_usuario %}
-			<!-- {{a.usuario.nome}} -->
-			<div class="container-mensagem-remove">
-				<div id="mensagem" class="form-mensagem" style="width: 90%; height: 1px; float: left; background: ; margin-top: 3px;">
-					{{a.mensagem}}
-				</div>
-
-				<div style="left:; background:; margin-left: 35px;">
-					<form action="apagar_mensagem" id="form-remove-msg" method="post">
-						{% csrf_token %} 
-						<input type="hidden" id="hide-msg" name="cMensagem" value={{a.id}} />
-						<button type="submit" id="btn-remove-msg" value="excluir" title="Excluir" style="background: transparent; border: none; float: right;">
-							<span class="glyphicon glyphicon-remove remove-feed" style="top: 2px;"></span>
-						</button>
+					<li class="li-mensagens">
+						<div id="mensagem" class="form-mensagem" style="width: 90%; height: 1px; float: left; background: ; margin-top: 3px;">
+							{{a.mensagem}}
+						</div>
+		
+						<div style="left:; background:; margin-left: 35px;">
+							<form action="apagar_mensagem" id="form-remove-msg" method="post">	{% csrf_token %} 
+								<input type="hidden" id="hide-msg" name="cMensagem" value="{{a.id}}" />
+								
+								<button type="submit" id="btn-remove-msg" value="excluir" title="Excluir" style="background: transparent; border: none; float: right;">
+									<span class="glyphicon glyphicon-remove remove-feed" style="top: 2px;"></span>
+								</button>
+							</form>
+						</div>
+					</li>
+			{% if forloop.last %}
+			    
+					<form action="mais_mensagens" method ="post" id="ver-mais-msg"> {% csrf_token %}
+				    	<input type ="hidden" name = "id_ultimo" value = "{{a.id}}">
+				    	<button type="submit" id="btnVerMais" class="btn-primary">Ver mais</button>
 					</form>
-				</div>
-			</div>
+				{% endif %}
+				
 			{% endfor %}
+			</ul>
+			
+			
 		</fieldset>
 	</div>
+	
+	<div class="sk-circle" style="display: none;">
+	  <div class="sk-circle1 sk-child"></div>
+	  <div class="sk-circle2 sk-child"></div>
+	  <div class="sk-circle3 sk-child"></div>
+	  <div class="sk-circle4 sk-child"></div>
+	  <div class="sk-circle5 sk-child"></div>
+	  <div class="sk-circle6 sk-child"></div>
+	  <div class="sk-circle7 sk-child"></div>
+	  <div class="sk-circle8 sk-child"></div>
+	  <div class="sk-circle9 sk-child"></div>
+	  <div class="sk-circle10 sk-child"></div>
+	  <div class="sk-circle11 sk-child"></div>
+	  <div class="sk-circle12 sk-child"></div>
+	</div>
 </div>
+
 {% endblock contents %}

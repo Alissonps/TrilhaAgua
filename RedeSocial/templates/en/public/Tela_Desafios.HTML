@@ -15,7 +15,7 @@
 					</li>
 					
 					<li style="margin: 7px 15px 15px 15px;">
-						<form name="form" action="buscaPerfilUsuario" method="post">
+						<form name="form" action="buscaPerfilUsuario/{{e.usuario_desafiante.id}}" method="post">
 							{% csrf_token %} <input type="submit" value="{{e.usuario_desafiante.nome}}"
 								class="meulink"> <input type="hidden" name="cUsuario"
 								value="{{e.usuario_desafiante.id}}">
@@ -136,7 +136,7 @@
 						
 						
 						<li style="margin: 7px 15px 15px 15px;">
-							<form name="form" action="buscaPerfilUsuario" method="post">
+							<form name="form" action="buscaPerfilUsuario/{{a.usuario_desafiante.id}}" method="post">
 								{% csrf_token %} <input type="submit" value="{{a.usuario_desafiante.nome}}"
 									class="meulink"> <input type="hidden" name="cUsuario"
 									value="{{a.usuario_desafiante.id}}">
@@ -179,7 +179,7 @@
 							</li>						
 							
 							<li style="margin: 7px 15px 15px 15px;">
-								<form name="form" action="buscaPerfilUsuario" method="post">
+								<form name="form" action="buscaPerfilUsuario/{{a.usuario_desafiado.id}}" method="post">
 									{% csrf_token %} <input type="submit" value="{{a.usuario_desafiado.nome}}"
 										class="meulink"> <input type="hidden" name="cUsuario"
 										value="{{a.usuario_desafiado.id}}">

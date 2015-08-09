@@ -7,7 +7,7 @@
 			<legend>Desafiar</legend>
 			<hr class="form-hr">
 
-			<form action="lancar_desafios" method="post">
+			<form action="lancar_desafios" id="form-desafiar-amigos" method="post">
 				{% csrf_token %}
 				<table style="margin-left: 23%;">
 					<tr>
@@ -22,7 +22,7 @@
 								<optgroup label="Desafios">
 
 									{% for a in desafios %}
-										<option value="{{a.id}}">{{a.nome}}:  		{{a.pontuacao}} pontos</option>
+										<option id="options-desafios" value="{{a.id}}">{{a.nome}}:  		{{a.pontuacao}} pontos</option>
 									{% endfor %}
 									
 								</optgroup>
@@ -44,7 +44,7 @@
 								<optgroup label="Amigos">
 									{% for a in meus_amigos %}
 									
-									<option value="{{a.amigo.id}}">{{a.amigo.nome}}</option>
+									<option id="options-amigos" value="{{a.amigo.id}}">{{a.amigo.nome}}</option>
 
 									{% endfor %}
 
@@ -55,7 +55,7 @@
 				</table>
 
 				<center>
-					<input type="submit" value="Lançar Desafio"
+					<input type="submit" id="btn-amigos-lancar" value="Lançar Desafio"
 						class="btn btn-primary btn-second">
 				</center>
 				

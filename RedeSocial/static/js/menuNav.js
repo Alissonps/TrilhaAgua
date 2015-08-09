@@ -97,4 +97,152 @@ $(document).ready(function(){
 		});
 		return false;
 	});/* Fim 5*/
-});
+  	
+/*-------- 6: Navegação usuarios curtiram ------ */      
+  	$(document).on("submit", "#form-u-curtiu", function(){
+  		var feed = $(this).closest(".containerPostagem");
+  		
+  		var hide_u_curtiu = $("#hide-u-curtiu", feed).val();
+		var content = $("#containerFeedGeral");// div que recebe os dados.
+
+		//$('#menu-ul a').css("border-left","4px solid #337ab7").css("background-color", "#f7f7f7");
+	    //$(this).css("border-left","4px solid #F8C51B").css( "background-color", "#F0F0F0");
+		
+	    content.html($(".loader").show());
+		
+	    $.ajax({
+			url: "usuarios_curtiram",
+			type: "post",
+			data: {
+				"cID_post" : hide_u_curtiu,
+			},
+			success: function( response ){
+				var data = $( '<div>'+response+'</div>' ).find('#containerFeedGeral').html();
+				// entra no conteudo da href procurando pela div #containerFeedGeral.
+				 
+				
+				window.setTimeout( function(){ //atrasando para verificar o load.
+					content.html( data ).hide();
+				    
+					content.html( data ).show('slide', {direction: 'up'}, 300, function(){
+				    // a div que declarei vai receber o valor do sucesso do ajax.
+				});
+			    
+			    //history.pushState('', 'New URL: '+href, href);  
+				}, 500 );
+			}
+		});
+		return false;
+	});/* Fim 6--------  Navegação usuarios curtiram ------ */ 
+  	
+/*-------- 7: Navegação comentarios da publicacao ------ */      
+  	$(document).on("submit", "#form-comentarios", function(){
+  		var feed = $(this).closest(".containerPostagem");
+  		
+  		var hide_comentarios = $("#hide-comentarios", feed).val();
+		var content = $("#containerFeedGeral");// div que recebe os dados.
+
+		//$('#menu-ul a').css("border-left","4px solid #337ab7").css("background-color", "#f7f7f7");
+	    //$(this).css("border-left","4px solid #F8C51B").css( "background-color", "#F0F0F0");
+		
+	    content.html($(".loader").show());
+		
+	    $.ajax({
+			url: "visualizarComentarios",
+			type: "post",
+			data: {
+				"cPost" : hide_comentarios,
+			},
+			success: function( response ){
+				var data = $( '<div>'+response+'</div>' ).find('#containerFeedGeral').html();
+				// entra no conteudo da href procurando pela div #containerFeedGeral.
+				 
+				
+				window.setTimeout( function(){ //atrasando para verificar o load.
+					content.html( data ).hide();
+				    
+					content.html( data ).show('slide', {direction: 'up'}, 300, function(){
+				    // a div que declarei vai receber o valor do sucesso do ajax.
+				});
+			    
+			    //history.pushState('', 'New URL: '+href, href);  
+				}, 500 );
+			}
+		});
+		return false;
+	});/* Fim 7: Navegação comentarios da publicacao ------ */ 
+  	
+/*-------- 8: Navegação usuarios curtiram desafios ------ */      
+  	$(document).on("submit", "#form-u-curtiu-desafio", function(){
+  		var feed = $(this).closest(".containerPostagemDesafio");
+  		
+  		var hide_u_curtiu = $("#hide-u-curtiu", feed).val();
+		var content = $("#containerFeedGeral");// div que recebe os dados.
+
+		//$('#menu-ul a').css("border-left","4px solid #337ab7").css("background-color", "#f7f7f7");
+	    //$(this).css("border-left","4px solid #F8C51B").css( "background-color", "#F0F0F0");
+		
+	    content.html($(".loader").show());
+		
+	    $.ajax({
+			url: "usuarios_curtiram",
+			type: "post",
+			data: {
+				"cID_post" : hide_u_curtiu,
+			},
+			success: function( response ){
+				var data = $( '<div>'+response+'</div>' ).find('#containerFeedGeral').html();
+				// entra no conteudo da href procurando pela div #containerFeedGeral.
+				 
+				
+				window.setTimeout( function(){ //atrasando para verificar o load.
+					content.html( data ).hide();
+				    
+					content.html( data ).show('slide', {direction: 'up'}, 300, function(){
+				    // a div que declarei vai receber o valor do sucesso do ajax.
+				});
+			    
+			    //history.pushState('', 'New URL: '+href, href);  
+				}, 500 );
+			}
+		});
+		return false;
+	});/* Fim 8:--------  Navegação usuarios curtiram desafios ------ */ 
+  	
+/*-------- 9: Navegação comentarios da publicacao desafios ------ */      
+  	$(document).on("submit", "#form-comentarios-desafio", function(){
+  		var feed = $(this).closest(".containerPostagemDesafio");
+  		
+  		var hide_comentarios = $("#hide-comentarios", feed).val();
+		var content = $("#containerFeedGeral");// div que recebe os dados.
+
+		//$('#menu-ul a').css("border-left","4px solid #337ab7").css("background-color", "#f7f7f7");
+	    //$(this).css("border-left","4px solid #F8C51B").css( "background-color", "#F0F0F0");
+		
+	    content.html($(".loader").show());
+		
+	    $.ajax({
+			url: "visualizarComentarios",
+			type: "post",
+			data: {
+				"cPost" : hide_comentarios,
+			},
+			success: function( response ){
+				var data = $( '<div>'+response+'</div>' ).find('#containerFeedGeral').html();
+				// entra no conteudo da href procurando pela div #containerFeedGeral.
+				 
+				
+				window.setTimeout( function(){ //atrasando para verificar o load.
+					content.html( data ).hide();
+				    
+					content.html( data ).show('slide', {direction: 'up'}, 300, function(){
+				    // a div que declarei vai receber o valor do sucesso do ajax.
+				});
+			    
+			    //history.pushState('', 'New URL: '+href, href);  
+				}, 500 );
+			}
+		});
+		return false;
+	});/* Fim 9: Navegação comentarios da publicacao desafios ------ */  
+});// fim document ready

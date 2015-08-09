@@ -1,61 +1,48 @@
 {% extends "en/public/Base.HTML" %} {% block contents %}
 <meta charset="utf-8">
-<div id="containerAmigos" style="margin-top: 30px;">
-	<div id="containerSolicitacao">
-		<p>{{msg_erro}}</p>		
-		
-		
-		
-		
-	
-		
-		
-		
-	
-		
-		{% if desafios_cumpridos > 0 %}
-		<fieldset>
-
-			<legend>Desafios concluídos</legend>
-				{% csrf_token %} {% for a in d_ativos_desafiante %}
-				<ul>
-					<div style="background:; width: 79%; float: left;">						
+<div id="desafios-cumpridos">
+	<div id="containerAmigos" style="margin-top: 30px;">
+		<div id="containerSolicitacao">		
+			<fieldset>
+				<legend>Desafios concluídos</legend>
+					{% csrf_token %} 
+					
+					{% for a in d_ativos_desafiante %}
+					<ul id="ul-verificar">
+						<div style="background:; width: 79%; float: left;">						
 							<li>
 								<img src="{{a.usuario_desafiado.foto.url}}" id="imgAmigos">
 							</li>						
-							
+								
 							<li style="margin: 7px 15px 15px 15px;">
-								<form name="form" action="buscaPerfilUsuario" method="post">
-									{% csrf_token %} <input type="submit" value="{{a.usuario_desafiado.nome}}"
-										class="meulink"> <input type="hidden" name="cUsuario"
-										value="{{a.usuario_desafiado.id}}">
+								<form name="form" action="buscaPerfilUsuario/{{a.usuario_desafiado.id}}" method="post">
+									{% csrf_token %} 
+									<input type="submit" value="{{a.usuario_desafiado.nome}}" class="meulink"> 
+									<input type="hidden" name="cUsuario" value="{{a.usuario_desafiado.id}}">
 								</form>
+							
 								<div class="form-ano">
 									{{a.usuario_desafiado.turma}}
 								</div>
 							</li>
-							
+								
 							<li style="margin: 19px 0px 0px 0px; float: right;"
-							class="form-ano">
+								class="form-ano">
 								{{a.desafio}}						
 							</li>						
-					</div>
-					
-					<form action="verificar_desafio" method="post">				
+						</div>
 						
-						<button type="submit" value="aceitar"
-							class="btn btn-success btn-lg" title="Aceitar solicitação">
-	
-							<input type="hidden" name="id_desafio_ativo" value={{a.id}} /> <span
-								class="glyphicon glyphicon-ok"></span> verificar
-						</button>
-					</form>
-				</ul>
-								
-				{% endfor %}							
-		</fieldset>
-		{% endif %}
-		
+						<form action="verificar_desafio" method="post">				
+							<button type="submit" value="aceitar"
+								class="btn btn-success btn-lg" id="btn-verificar-desafio" title="Aceitar solicitação">
+								<input type="hidden" id="hide-verificar-desafio" name="id_desafio_ativo" value={{a.id}} /> 
+								<span class="glyphicon glyphicon-ok"></span> verificar
+							</button>
+						</form>
+					</ul>
+					{% endfor %}							
+			</fieldset>
+		</div>
 	</div>
 </div>
 {% endblock contents %}
