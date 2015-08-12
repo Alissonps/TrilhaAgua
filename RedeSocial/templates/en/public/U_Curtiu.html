@@ -15,7 +15,7 @@
 						</div>
 						
 						<div id="nomeConquistas">
-								<form name="form" action="buscaPerfilUsuario/{{e.usuario.id}}" method="post" style="margin-top: 2px;"> {% csrf_token %} 
+								<form name="form" action="buscaPerfilUsuario{{e.usuario.id}}" method="post" style="margin-top: 2px;"> {% csrf_token %} 
 										<input type="submit" value="{{e.usuario.nome}}" class="meulink"> 
 										<input type="hidden" name="cUsuario" value="{{e.usuario.id}}">  
 								</form>

@@ -48,7 +48,7 @@ $(document).on("click", ".like-desafio", function() {
 $(document).on("submit", "#postar-comentario", function() {
 	var li = $(this).closest(".containerPostagem");
 	var feed = $(li).attr("id");
-	var hi = $(".formTextAreaTimeLine", li).val();
+	var hi = $(".input-comentario", li).val();
 
 	$.ajax({
 		url : 'postarComentarios',
@@ -60,7 +60,7 @@ $(document).on("submit", "#postar-comentario", function() {
 		cache : false,
 		success : function(data) {
 			$(".linkPostagem", li).val("Comentários (" + data + ")");
-			$(".formTextAreaTimeLine", li).val('');
+			$(".input-comentario", li).val('');
 		
 		}
 
@@ -72,7 +72,7 @@ $(document).on("submit", "#postar-comentario", function() {
 $(document).on("submit", "#postar-comentario-desafio", function() {
 	var li = $(this).closest(".containerPostagemDesafio");
 	var feed = $(li).attr("id");
-	var hi = $(".formTextAreaTimeLine", li).val();
+	var hi = $(".input-comentario", li).val();
 
 	$.ajax({
 		url : 'postarComentarios',
@@ -84,7 +84,7 @@ $(document).on("submit", "#postar-comentario-desafio", function() {
 		cache : false,
 		success : function(data) {
 			$(".linkPostagem", li).val("Comentários (" + data + ")");
-			$(".formTextAreaTimeLine", li).val('');
+			$(".input-comentario", li).val('');
 		
 		}
 

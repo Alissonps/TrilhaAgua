@@ -13,6 +13,7 @@
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
 
 <script type="text/javascript" src="../static/js/menuNav.js"></script>
+<script type="text/javascript" src="../static/js/menuNavTimeline.js"></script>
 <script type="text/javascript" src="../static/js/carregar.js"></script>
 <script type="text/javascript" src="../static/js/like.js"></script>
 <script type="text/javascript" src="../static/js/deslike.js"></script>
@@ -93,7 +94,7 @@
 		<section>
 			
 			<div id="containerFeedGeral">
-				<div class="loader" style="display: none; margin-top: 35%;">Loading...</div>
+				<div class="loader" style="display: none; margin-top: 35%;"></div>
 				{% block contents %}
 				
 				{% endblock contents %}
@@ -122,14 +123,7 @@
 					</script> -->
 						<ul id="menu-ul">
 							<div class="tituloMenu">Principal</div>
-							<li id="desa">
-								<span class="feed"></span><a href="timeline"><font id="nomeMenu">Feed</font></a>
-								<ul id="des">
-									<li style="margin-top: 2px;"><a href="timeline"><font id="nomeSubMenu">Geral</font></a></li>
-									<li><a href="time_amigos"><font id="nomeSubMenu">Amigos</font></a></li>
-									<li style="margin-bottom: 2px;"><a href="time_turma"><font id="nomeSubMenu">Turma</font></a></li>	
-								</ul>	
-							</li>							
+							<li><span class="feed"></span><a href="timeline"><font id="nomeMenu">Feed</font></a></li>	
 							<li><span class="perfil"></span><a href="perfil"><font id="nomeMenu">Perfil</font></a></li>
 							<li><span class="amigos"></span><a href="amigos"><font id="nomeMenu">Amigos</font></a></li>
 						</ul>

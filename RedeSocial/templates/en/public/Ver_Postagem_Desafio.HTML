@@ -6,7 +6,7 @@
 		
 		<div class="containerPostagem" style="padding-bottom: 30px;">
 
-			<form name="form" action="buscaPerfilUsuario/{{entries.usuario.id}}" method="post" style="margin-top: 2px;">
+			<form name="form" action="buscaPerfilUsuario{{entries.usuario.id}}" method="post" style="margin-top: 2px;">
 				{% csrf_token %} 
 				<input type="submit" value="{{entries.usuario.nome}}" class="meulink"> 
 				<input type="hidden" name="cUsuario" value="{{entries.usuario.id}}"> 

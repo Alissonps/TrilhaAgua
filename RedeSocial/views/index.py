@@ -213,54 +213,9 @@ def Timeline_turma (request):
     entries = TimeLine.objects.filter(usuario = turma).order_by('-date')
     pingo = Pingo.objects.all()
     
-    for e in entries:
-        try:
-            pingo = Pingo.objects.filter(usuario = u, postagem = e).get()
-            e.curtiu = True
-            e.save()
-        except:
-            e.curtiu = False       
-            e.save() 
-            
-     #---------------------------Notificações-----------------------------------------------------
-    #Sessão do usuario
+    qtd_entries = []
     
-    #Quantidade de solicitações de amizade
-    slct = Solicitacao.objects.filter(amigo=u)
-    qtd_solicitacoes = len(slct)
-    #Solicitações de desafios
-    soli_desafios = Solicitacao_Desafio.objects.filter(usuario_desafiado = u)
-    qtd_soli_desafios = len(soli_desafios)
-    #Desafios Ativos
-    d_ativos_desafiado = Desafio_Ativo.objects.filter(usuario_desafiado = u, enviado = False)
-    #Desafios Cumpridos
-    d_ativos_desafiante = Desafio_Ativo.objects.filter(usuario_desafiante = u, cumprido = True)
-    qtd_d_cumpridos = len(d_ativos_desafiante)
-    #Quantidade de Mensagens
-    msgs = Mensagens.objects.filter(usuario = u)
-    qtd_msgs = len(msgs)
-    
-    #----------------------------------------------------------------------------------------------
-
-    qtd_d_ativos_desafiado = len(d_ativos_desafiado)
-    ranking_geral = Usuario.objects.all().order_by('-pontos')
-    lista_geral = list(ranking_geral)
-    pos_geral = lista_geral.index(u) + 1
-    
-    ranking_turma = Usuario.objects.filter(turma = u.turma).order_by('-pontos')
-    lista_turma = list(ranking_turma)
-    pos_turma = lista_turma.index(u) + 1
-    
-    return render_to_response('en/public/Timeline_turma.HTML', {"entries": entries, "Usuario":u, "qtd_d_ativos_desafiado": qtd_d_ativos_desafiado,"pos_turma": pos_turma, "pos_geral": pos_geral,"qtd_msgs": qtd_msgs, "desafios_cumpridos": qtd_d_cumpridos,"soli_desafios":qtd_soli_desafios, "d_ativos_desafiado":d_ativos_desafiado, "qtd_solicitacoes": qtd_solicitacoes})
-
-def Timeline_amigos (request):
-    
-    u = Usuario.objects.filter(login=request.session['id']).get()
-    
-    pesquisa_amigos = Amigos.objects.filter(dono = u)
-    entries = TimeLine.objects.all().order_by('-date')
-    pingo = Pingo.objects.all()
-    
+    i = 0
     for e in entries:
         try:
             pingo = Pingo.objects.filter(usuario = u, postagem = e).get()
@@ -269,16 +224,12 @@ def Timeline_amigos (request):
         except:
             e.curtiu = False       
             e.save()
-            
-    amigos = []
-    posts_amigos = []
-    
-    for a in pesquisa_amigos:
-        amigos.append(a.amigo)
         
-    for a in entries:    
-        if a.usuario in amigos:
-            posts_amigos.append(a)  
+        qtd_entries.append(e)
+        i = i + 1
+    
+        if (i == 3):
+            break
     
     #---------------------------Notificações-----------------------------------------------------
     #Sessão do usuario
@@ -298,8 +249,6 @@ def Timeline_amigos (request):
     msgs = Mensagens.objects.filter(usuario = u)
     qtd_msgs = len(msgs)
     
-    #----------------------------------------------------------------------------------------------
-
     qtd_d_ativos_desafiado = len(d_ativos_desafiado)
     ranking_geral = Usuario.objects.all().order_by('-pontos')
     lista_geral = list(ranking_geral)
@@ -308,9 +257,71 @@ def Timeline_amigos (request):
     ranking_turma = Usuario.objects.filter(turma = u.turma).order_by('-pontos')
     lista_turma = list(ranking_turma)
     pos_turma = lista_turma.index(u) + 1
-    #"qtd_d_ativos_desafiado": qtd_d_ativos_desafiado,"pos_turma": pos_turma, "pos_geral": pos_geral,"qtd_msgs": qtd_msgs, "desafios_cumpridos": qtd_d_cumpridos,"soli_desafios":qtd_soli_desafios, "d_ativos_desafiado":d_ativos_desafiado, "qtd_solicitacoes": qtd_solicitacoes
+    #----------------------------------------------------------------------------------------------
     
-    return render_to_response('en/public/Timeline_amigos.HTML', {"entries": posts_amigos, "Usuario":u, "qtd_d_ativos_desafiado": qtd_d_ativos_desafiado,"pos_turma": pos_turma, "pos_geral": pos_geral,"qtd_msgs": qtd_msgs, "desafios_cumpridos": qtd_d_cumpridos,"soli_desafios":qtd_soli_desafios, "d_ativos_desafiado":d_ativos_desafiado, "qtd_solicitacoes": qtd_solicitacoes})
+    return render_to_response('en/public/Timeline.HTML', {"entries": qtd_entries, "Usuario":u, "qtd_d_ativos_desafiado": qtd_d_ativos_desafiado,"pos_turma": pos_turma, "pos_geral": pos_geral,"qtd_msgs": qtd_msgs, "desafios_cumpridos": qtd_d_cumpridos,"soli_desafios":qtd_soli_desafios, "d_ativos_desafiado":d_ativos_desafiado, "qtd_solicitacoes": qtd_solicitacoes})
+
+def Timeline_amigos (request):
+    
+    u = Usuario.objects.filter(login=request.session['id']).get()
+    
+    pesquisa_amigos = Amigos.objects.filter(dono = u)
+    
+    amigos = []
+    for a in pesquisa_amigos:
+        amigos.append(a.amigo)
+    
+    entries = TimeLine.objects.all().order_by('-date')
+
+    posts_amigos = []
+   
+    i = 0            
+    for e in entries:
+        if e.usuario in amigos:
+            try:
+                pingo = Pingo.objects.filter(usuario = u, postagem = e).get()
+                e.curtiu = True
+                e.save()
+            except:
+                e.curtiu = False       
+                e.save()
+       
+            posts_amigos.append(e)
+            
+            i = i + 1
+        
+            if (i == 3):
+                break
+    
+    #---------------------------Notificações-----------------------------------------------------
+    #Sessão do usuario
+    
+    #Quantidade de solicitações de amizade
+    slct = Solicitacao.objects.filter(amigo=u)
+    qtd_solicitacoes = len(slct)
+    #Solicitações de desafios
+    soli_desafios = Solicitacao_Desafio.objects.filter(usuario_desafiado = u)
+    qtd_soli_desafios = len(soli_desafios)
+    #Desafios Ativos
+    d_ativos_desafiado = Desafio_Ativo.objects.filter(usuario_desafiado = u, enviado = False)
+    #Desafios Cumpridos
+    d_ativos_desafiante = Desafio_Ativo.objects.filter(usuario_desafiante = u, cumprido = True)
+    qtd_d_cumpridos = len(d_ativos_desafiante)
+    #Quantidade de Mensagens
+    msgs = Mensagens.objects.filter(usuario = u)
+    qtd_msgs = len(msgs)
+    
+    qtd_d_ativos_desafiado = len(d_ativos_desafiado)
+    ranking_geral = Usuario.objects.all().order_by('-pontos')
+    lista_geral = list(ranking_geral)
+    pos_geral = lista_geral.index(u) + 1
+    
+    ranking_turma = Usuario.objects.filter(turma = u.turma).order_by('-pontos')
+    lista_turma = list(ranking_turma)
+    pos_turma = lista_turma.index(u) + 1
+    #----------------------------------------------------------------------------------------------
+    
+    return render_to_response('en/public/Timeline.HTML', {"entries": posts_amigos,"qtd_d_ativos_desafiado": qtd_d_ativos_desafiado,"pos_turma": pos_turma, "pos_geral": pos_geral,"qtd_msgs": qtd_msgs, "desafios_cumpridos": qtd_d_cumpridos,"soli_desafios":qtd_soli_desafios, "d_ativos_desafiado":d_ativos_desafiado, "Usuario":u, "qtd_solicitacoes": qtd_solicitacoes})
 
 @csrf_exempt  
 def Apagar_Post (request):
@@ -696,9 +707,17 @@ def Redefinir(request):
 
 @csrf_exempt  
 def BuscaPerfilUsuario (request, ID_Usuario):
+    u = Usuario.objects.filter(login=request.session['id']).get()
     
     #ID_Usuario = request.POST.get('cUsuario')
     UsuarioBuscado = Usuario.objects.filter(id=ID_Usuario).get()
+    
+     
+    try:
+        verificar_amizade = Amigos.objects.filter(dono = u, amigo = UsuarioBuscado).get()
+        amigo = True
+    except:
+        amigo = False
     
     ranking_turma = Usuario.objects.filter(turma = UsuarioBuscado.turma).order_by('-pontos')
     lista_turma = list(ranking_turma)
@@ -711,8 +730,6 @@ def BuscaPerfilUsuario (request, ID_Usuario):
     conquista = Conquista.objects.filter(usuario = UsuarioBuscado)
     
     #---------------------------Notificações-----------------------------------------------------
-    #Sessão do usuario
-    u = Usuario.objects.filter(login=request.session['id']).get()
     #Quantidade de solicitações de amizade
     slct = Solicitacao.objects.filter(amigo=u)
     qtd_solicitacoes = len(slct)
@@ -763,7 +780,7 @@ def BuscaPerfilUsuario (request, ID_Usuario):
         if (i == 3):
             break
             
-    return render(request, 'en/public/ConsultaPerfil.HTML' , {"teste": teste,"postagens_usuario": qtd_entries,"conquista": conquista,"pos_geral_u": pos_geral_u, "pos_turma_u": pos_turma_u, "uBuscado": UsuarioBuscado, "desafios_cumpridos": qtd_d_cumpridos,"soli_desafios":qtd_soli_desafios, "d_ativos_desafiado":d_ativos_desafiado,"Usuario":u, "qtd_solicitacoes": qtd_solicitacoes, "qtd_d_ativos_desafiado": qtd_d_ativos_desafiado,"pos_turma": pos_turma, "pos_geral": pos_geral,"qtd_msgs": qtd_msgs, "desafios_cumpridos": qtd_d_cumpridos,"soli_desafios":qtd_soli_desafios, "d_ativos_desafiado":d_ativos_desafiado, "qtd_solicitacoes": qtd_solicitacoes})
+    return render(request, 'en/public/ConsultaPerfil.HTML' , {"Usuario":u, "verificar_amigo":amigo, "teste": teste,"postagens_usuario": qtd_entries,"conquista": conquista,"pos_geral_u": pos_geral_u, "pos_turma_u": pos_turma_u, "uBuscado": UsuarioBuscado, "desafios_cumpridos": qtd_d_cumpridos,"soli_desafios":qtd_soli_desafios, "d_ativos_desafiado":d_ativos_desafiado,"Usuario":u, "qtd_solicitacoes": qtd_solicitacoes, "qtd_d_ativos_desafiado": qtd_d_ativos_desafiado,"pos_turma": pos_turma, "pos_geral": pos_geral,"qtd_msgs": qtd_msgs, "desafios_cumpridos": qtd_d_cumpridos,"soli_desafios":qtd_soli_desafios, "d_ativos_desafiado":d_ativos_desafiado, "qtd_solicitacoes": qtd_solicitacoes})
 
 @csrf_exempt
 def Mais_posts_buscado (request):
@@ -2396,7 +2413,86 @@ def Mais_posts (request):
 
             
    
-    return render_to_response('en/public/Feeds2.HTML', {"entries": qtd_entries, "Usuario":u})    
+    return render_to_response('en/public/Feeds2.HTML', {"entries": qtd_entries, "Usuario":u})  
+
+@csrf_exempt
+def Mais_posts_amigos (request):
+    id_ultimo = request.POST["id_ultimo"]
+    
+    u = Usuario.objects.filter(login=request.session['id']).get()
+    
+    postagem = TimeLine.objects.filter(id = id_ultimo).get()
+    
+    pesquisa_amigos = Amigos.objects.filter(dono = u)
+    
+    amigos = []
+    for a in pesquisa_amigos:
+        amigos.append(a.amigo)
+    
+    entries = TimeLine.objects.all().order_by('-date')
+    
+    entr = list(entries)
+    
+    pos = entr.index(postagem) + 1
+    
+    posts_amigos = []
+   
+    i = 0            
+    for a in range(pos, len(entries)):
+        if a.usuario in amigos:
+            try:
+                pingo = Pingo.objects.filter(usuario = u, postagem = entries[a]).get()
+                entries[a].curtiu = True
+                entries[a].save()
+            except:
+                entries[a].curtiu = False       
+                entries[a].save()
+       
+            posts_amigos.append(entries[a])
+            
+            i = i + 1
+        
+            if (i == 3):
+                break            
+   
+    return render_to_response('en/public/Feeds2.HTML', {"entries": posts_amigos, "Usuario":u})
+
+@csrf_exempt
+def Mais_posts_turma (request):
+    id_ultimo = request.POST["id_ultimo"]
+    
+    u = Usuario.objects.filter(login=request.session['id']).get()
+    
+    postagem = TimeLine.objects.filter(id = id_ultimo).get()
+    
+    turma = Usuario.objects.filter(turma = u.turma)
+    entries = TimeLine.objects.filter(usuario = turma).order_by('-date')
+    
+    entr = list(entries)
+    
+    pos = entr.index(postagem) + 1
+    
+    qtd_post = []
+   
+    i = 0            
+    for a in range(pos, len(entries)):
+        try:
+            pingo = Pingo.objects.filter(usuario = u, postagem = entries[a]).get()
+            entries[a].curtiu = True
+            entries[a].save()
+        except:
+            entries[a].curtiu = False       
+            entries[a].save()
+       
+        qtd_post.append(entries[a])
+            
+        i = i + 1
+        
+        if (i == 3):
+            break            
+   
+    return render_to_response('en/public/Feeds2.HTML', {"entries": qtd_post, "Usuario":u})
+
     
 def Descurtir(request):
     return render(request, 'en/public/Descutir.HTML')

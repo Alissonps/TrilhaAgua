@@ -1,48 +1,42 @@
-.table-nav-times{
+.nav-times{
 	width: 91.5%;
+	height: 20px;
 	margin: 10px 27px;
 	text-align: center;
 	word-wrap: break-word;
-	line-height: 1.45;
-	background-color: #337ab7;
+	line-height: 1.6;
 	clear: both;
-	-moz-border-radius: 2px;
-	-webkit-border-radius: 2px;
-	border-radius: 2px;
-	-moz-box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.3);
-	-webkit-box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.3);
-	box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.3);
-	padding-bottom: 3px;
 }
 
-.table-nav-times td{
-	background: #f7f7f7;
-	
+.nav-times ul{
+	list-style: none;
+	margin: 0;
+	padding: 0;
 }
 
-.table-nav-times .td-centro{
-	border-left: 0.5px solid #DCDCDC;
-	border-right: 0.5px solid #DCDCDC;
+.nav-times ul li{
+	float: left;
+	background: #fff;
+	width: 33.221%;
 }
 
-.table-nav-times td:hover{
+.li-geral a{
+	border-bottom: 3px solid #ff8901 !important;
+}
+
+.li-amigos{
+	border-left: 1px solid #DCDCDC;
+	border-right: 1px solid #DCDCDC;
+}
+
+.nav-times ul li a:hover{
 	border-bottom: 3px solid #ff8901;
-	
 }
 
-.table-nav-times a{
+.nav-times ul li a{
 	color: gray;
   	font-size: 13px;
   	text-decoration: none;
-}
-
-.table-nav-times a:hover {
-	cursor: pointer;
-	color:;
-}
-
-.hr-vertical{
-	width: 0;
-	height: 100%;
-	border: 2px solid black;
+  	display: block;
+  	border-bottom: 3px solid #337ab7;
 }

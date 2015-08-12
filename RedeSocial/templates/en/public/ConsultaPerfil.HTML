@@ -6,7 +6,37 @@
 				{% if e.foto.url != '/media/False' %} <img
 					src="{{uBuscado.foto.url}}" /> {% endif %}
 			</div>
-	
+			
+		{%if uBuscado != Usuario %}
+			{% if verificar_amigo == True %}
+				
+				<form action="desafiar_amigo" method="post">{% csrf_token %} 
+				
+					<input type="hidden" name="id_usuario"	value={{uBuscado.id}}>
+						<button type="submit" value="desafiar"
+							class="btn btn-primary btn-lg" title="Desafia um amigo">
+							<span class="glyphicon glyphicon-tint"></span> Desafiar
+						</button>
+				</form>
+				
+				
+			{% elif verificar_amigo == False %}
+				
+				<form action="fazer_amizade" method="post">	{% csrf_token %}									
+					<input type="hidden" name="cFazer_amizade" value='{{uBuscado.id}}'>
+									
+					<div style="background: ; float: right;">	
+						<button type="submit" class="btn btn-primary btn-lg" title="Aceitar solicitação">
+							<span class="glyphicon glyphicon-plus"></span> Fazer amizade
+						</button>
+					</div>
+					
+				</form>
+				
+			{% endif %}
+		{% endif %}	
+					
+			
 			<div id="informacoesPerfil">
 				<table>
 					<tr>
@@ -115,7 +145,6 @@
 			{% endfor %}
 			
 		</fieldset>
-		{{teste}}
 	</div>
 		
 <div id="wrap-postagens-buscado" style="margin-top: 30px;">
@@ -139,7 +168,7 @@
 	
 	{% endif %}
 		
-		<form name="form" action="buscaPerfilUsuario/{{e.usuario.id}}" method="post" style="margin-top: 2px;">
+		<form name="form" action="buscaPerfilUsuario{{e.usuario.id}}" method="post" style="margin-top: 2px;">
 			{% csrf_token %} <input type="submit" value="{{e.usuario.nome}}"
 				class="meulink"> <input type="hidden" name="cUsuario"
 				value="{{e.usuario.id}}"> <font id="containerData">{{e.date|date:"D d M Y"}}</font> 
@@ -246,7 +275,7 @@
 
     {% endif %}
 
-       <form name="form" action="buscaPerfilUsuario/{{e.usuario.id}}" method="post" style="margin-top: 2px;">
+       <form name="form" action="buscaPerfilUsuario{{e.usuario.id}}" method="post" style="margin-top: 2px;">
             {% csrf_token %} <input type="submit" value="{{e.usuario.nome}}"
                 class="meulink"> <input type="hidden" name="cUsuario"
                 value="{{e.usuario.id}}"> 

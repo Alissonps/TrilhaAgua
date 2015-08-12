@@ -18,7 +18,7 @@
 						</td>
 
 						<td style="font-size: 10pt;">
-							<form name="form" action="buscaPerfilUsuario/{{e.id}}" method="post">
+							<form name="form" action="buscaPerfilUsuario{{e.id}}" method="post">
 								{% csrf_token %} <input type="submit" value="{{e.nome}}"
 									class="meulink"> <input type="hidden" name="cUsuario"
 									value="{{e.id}}">

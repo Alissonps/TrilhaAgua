@@ -27,7 +27,7 @@ urlpatterns = patterns('',
     url (r'^redefinirsenha$', 'RedeSocial.views.index.Redefinir'),
     url (r'^atualizarInformacoes$', 'RedeSocial.views.index.AtualizarInformacoes'),
     
-    url (r'^buscaPerfilUsuario/(?P<ID_Usuario>\d+)$', 'RedeSocial.views.index.BuscaPerfilUsuario'),
+    url (r'^buscaPerfilUsuario(?P<ID_Usuario>\d+)$', 'RedeSocial.views.index.BuscaPerfilUsuario'),
     
     
     url (r'^logout$', 'RedeSocial.views.index.Logout'),
@@ -76,6 +76,8 @@ urlpatterns = patterns('',
     url (r'^usuarios_curtiram$', 'RedeSocial.views.index.Usuarios_curtiram'),
     
     url (r'^mais_posts$', 'RedeSocial.views.index.Mais_posts'),
+    url (r'^mais_posts_turma$', 'RedeSocial.views.index.Mais_posts_turma'),
+    url (r'^mais_posts_amigo$', 'RedeSocial.views.index.Mais_posts_amigos'),
     url (r'^mais_comentarios$', 'RedeSocial.views.index.Mais_Comentarios'),
     url (r'^mais_pingo', 'RedeSocial.views.index.Mais_Pingos'),
     url (r'^mais_posts_perfil$', 'RedeSocial.views.index.Mais_posts_perfil'),
@@ -85,6 +87,7 @@ urlpatterns = patterns('',
     url (r'^curtir$', 'RedeSocial.views.index.Curtir'),
     
 ) + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
 
 
 

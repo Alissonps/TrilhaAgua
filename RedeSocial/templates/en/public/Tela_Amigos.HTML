@@ -48,7 +48,7 @@
 				<li><img src="{{b.usuario.foto.url}}" id="imgAmigos"></li>
 
 				<li style="margin: 7px 15px 15px 15px;">
-					<form name="form" action="buscaPerfilUsuario/{{b.usuario.id}}" method="post">
+					<form name="form" action="buscaPerfilUsuario{{b.usuario.id}}" method="post">
 						{% csrf_token %} <input type="submit" value="{{b.usuario.nome}}"
 							class="meulink"> <input type="hidden" name="cUsuario"
 							value="{{b.usuario.id}}">
@@ -88,7 +88,7 @@
 						<li><img src="{{e.amigo.foto.url}}" id="imgAmigos"/></li>
 	
 						<li style="margin: 7px 15px 15px 15px;">
-							<form name="form" action="buscaPerfilUsuario/{{e.amigo.id}}" method="post">
+							<form name="form" action="buscaPerfilUsuario{{e.amigo.id}}" method="post">
 								{% csrf_token %} <input type="submit" value="{{e.amigo.nome}} "
 									class="meulink"> <input type="hidden" name="cUsuario"
 									value="{{e.amigo.id}}">

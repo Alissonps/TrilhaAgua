@@ -13,7 +13,7 @@
         </form> 
         {% endif %}
         
-        <form name="form" action="buscaPerfilUsuario/{{Postagem.usuario.id}}" method="post" style="margin-top: 2px;">
+        <form name="form" action="buscaPerfilUsuario{{Postagem.usuario.id}}" method="post" style="margin-top: 2px;">
           {% csrf_token %} 
           <input type="submit" value="{{Postagem.usuario.nome}}" class="meulink"> 
           <input type="hidden" name="cUsuario" value="{{Postagem.usuario.id}}"> 
@@ -68,7 +68,7 @@
 				</form>
 				{% endif %}	
 				
-				<form name="form" action="buscaPerfilUsuario/{{e.usuario.id}}" method="post" style="margin-top: 2px;">
+				<form name="form" action="buscaPerfilUsuario{{e.usuario.id}}" method="post" style="margin-top: 2px;">
 		      		{% csrf_token %} 
 			     	<input type="submit" value="{{e.usuario.nome}}/{{e.usuario.id}}" class="meulink"> 
 			      	<input type="hidden" name="cUsuario" value="{{e.usuario.id}}"> 

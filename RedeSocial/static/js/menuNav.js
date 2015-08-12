@@ -1,4 +1,5 @@
 $(document).ready(function(){
+	
 	$(document).on("click", "#menu-ul a", function(){
 
 		var content = $("#containerFeedGeral");// div que recebe os dados.
@@ -6,9 +7,11 @@ $(document).ready(function(){
 
 		$('#menu-ul a').css("border-left","4px solid #337ab7").css("background-color", "#f7f7f7");
 	    $(this).css("border-left","4px solid #F8C51B").css( "background-color", "#F0F0F0");
-		
+	    
 	    content.html($(".loader").show());
-		
+	    
+	    //window.history.pushState("", "", "/");
+	    
 	    $.ajax({
 			url: href,
 			success: function( response ){
@@ -23,13 +26,12 @@ $(document).ready(function(){
 				    // a div que declarei vai receber o valor do sucesso do ajax.
 				});
 			    
-			    history.pushState('', 'New URL: '+href, href);  
+				window.history.pushState('', 'New URL: ', href);  
 				}, 500 );
 			}
 		});
 		return false;
 	});
-
 /*-------- 2: Quando a página é voltada essa função pinta todas a href na sua cor original e
  * carrega na div ContainerFeedGeral o conteudo da href voltada com enfase na div ContainerFeedGeral do href ------ */
 	
@@ -37,7 +39,6 @@ $(document).ready(function(){
 		var content = $("#containerFeedGeral");
 		content.html($(".loader").show());
 		$('#menu-ul a').css("border-left","4px solid #337ab7").css("background-color", "#f7f7f7");
-		
 	    
         console.log("pathname: "+location.pathname);
         $("#containerFeedGeral").load(location.href+" #containerFeedGeral>*","");
@@ -133,7 +134,77 @@ $(document).ready(function(){
 			}
 		});
 		return false;
-	});/* Fim 6--------  Navegação usuarios curtiram ------ */ 
+	});/* Fim 6--------  Navegação usuarios curtiram ------ */
+  	
+/*-------- 6.1: Navegação usuarios buscados ------ */      
+  	$(document).on("submit", "#form-busca-usuario", function(){
+  		var feed = $(this).closest(".containerPostagem");
+  		
+  		var hide_u_curtiu = $("#hide-u-curtiu", feed).val();
+		var content = $("#containerFeedGeral");// div que recebe os dados.
+		var action = $("#form-busca-usuario", feed).attr("action");
+		//$('#menu-ul a').css("border-left","4px solid #337ab7").css("background-color", "#f7f7f7");
+	    //$(this).css("border-left","4px solid #F8C51B").css( "background-color", "#F0F0F0");
+		
+	    content.html($(".loader").show());
+		
+	    $.ajax({
+			url: action,
+			type: "post",
+			data: $("#form-busca-usuario").serialize(),
+			success: function( response ){
+				var data = $( '<div>'+response+'</div>' ).find('#containerFeedGeral').html();
+				// entra no conteudo da href procurando pela div #containerFeedGeral.
+				 
+				
+				window.setTimeout( function(){ //atrasando para verificar o load.
+					content.html( data ).hide();
+				    
+					content.html( data ).show('slide', {direction: 'up'}, 300, function(){
+				    // a div que declarei vai receber o valor do sucesso do ajax.
+				});
+			    
+			    history.pushState('', 'New URL: ', action);  
+				}, 500 );
+			}
+		});
+		return false;
+	});/* Fim 6.1--------  Navegação usuarios buscados ------ */ 
+  	
+/*-------- 6.2: Navegação usuarios buscados desafios ------ */      
+  	$(document).on("submit", "#form-busca-usuario-desafio", function(){
+  		var feed = $(this).closest(".containerPostagemDesafio");
+  		
+  		var hide_u_curtiu = $("#hide-u-curtiu", feed).val();
+		var content = $("#containerFeedGeral");// div que recebe os dados.
+		var action = $("#form-busca-usuario-desafio", feed).attr("action");
+		//$('#menu-ul a').css("border-left","4px solid #337ab7").css("background-color", "#f7f7f7");
+	    //$(this).css("border-left","4px solid #F8C51B").css( "background-color", "#F0F0F0");
+		
+	    content.html($(".loader").show());
+		
+	    $.ajax({
+			url: action,
+			type: "post",
+			data: $("#form-busca-usuario-desafio").serialize(),
+			success: function( response ){
+				var data = $( '<div>'+response+'</div>' ).find('#containerFeedGeral').html();
+				// entra no conteudo da href procurando pela div #containerFeedGeral.
+				 
+				
+				window.setTimeout( function(){ //atrasando para verificar o load.
+					content.html( data ).hide();
+				    
+					content.html( data ).show('slide', {direction: 'up'}, 300, function(){
+				    // a div que declarei vai receber o valor do sucesso do ajax.
+				});
+			    
+			    history.pushState('', 'New URL: ', action);  
+				}, 500 );
+			}
+		});
+		return false;
+	});/* Fim 6.2--------  Navegação usuarios buscados desafios ------ */ 
   	
 /*-------- 7: Navegação comentarios da publicacao ------ */      
   	$(document).on("submit", "#form-comentarios", function(){

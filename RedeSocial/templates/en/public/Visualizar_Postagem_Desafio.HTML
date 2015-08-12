@@ -5,7 +5,7 @@
     {% block content %}
     <div class="containerPostagem" style="padding-bottom: 30px;">
 
-      <form name="form" action="buscaPerfilUsuario/{{desafio.usuario_desafiado.id}}" method="post" style="margin-top: 2px;">
+      <form name="form" action="buscaPerfilUsuario{{desafio.usuario_desafiado.id}}" method="post" style="margin-top: 2px;">
         {% csrf_token %} 
         <input type="submit" id="usuario-cumprido" value="{{desafio.usuario_desafiado.nome}}" class="meulink"> 
         <input type="hidden" name="cUsuario" value="{{desafio.usuario_desafiado.id}}"> 
