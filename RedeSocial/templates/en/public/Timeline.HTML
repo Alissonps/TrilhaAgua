@@ -7,8 +7,11 @@
 				<textarea id="text-post" name="mensagem" placeholder=" Digite sua mensagem."></textarea>
 			</center>
 			
-			<hr
-				style="margin: -2px 15px; border: 0; height: 0; border-top: 1px solid rgba(0, 0, 0, 0.1); border-bottom: 1px solid rgba(255, 255, 255, 0.3);">
+			<div>
+			
+			</div>
+			<hr	style="margin: -2px 15px; border: 0; height: 0; border-top: 1px solid rgba(0, 0, 0, 0.1); border-bottom: 1px solid rgba(255, 255, 255, 0.3);">
+			
 			<div id="ferramentaFeed">
 				<table>
 					<tr>
@@ -28,6 +31,7 @@
 					<!-- <td>
 						<img id="uploadPreview" style="width: 100px; height: 100px;" /> 
 					</td> -->
+						
 					</tr>
 				</table>
 			</div>
@@ -144,7 +148,7 @@
 			<div class="comentario-postagem">
 				<form action="postarComentarios" id="postar-comentario" method="post">
 				{% csrf_token %}
-					<input type="text" class="input-comentario" placeholder="Deixe seu comentário" required/><button class="button-comentario"><span class="glyphicon glyphicon-send"></span></button>
+					<input type="text" class="input-comentario" placeholder="Deixe seu comentário.." required/><button class="button-comentario"><span class="glyphicon glyphicon-send"></span></button>
 					<input type="hidden" id="comentario-id" name="cId" value="{{e.id}}" /> 
 				</form>				
 			</div>
@@ -241,7 +245,7 @@
 			<div class="comentario-postagem">
 				<form action="postarComentarios" id="postar-comentario-desafio" method="post">
 				{% csrf_token %}
-					<input type="text" class="input-comentario" placeholder="Deixe seu comentário" required/><button class="button-comentario"><span class="glyphicon glyphicon-send"></span></button>
+					<input type="text" class="input-comentario" placeholder="Deixe seu comentário.." required/><button class="button-comentario"><span class="glyphicon glyphicon-send"></span></button>
 					<input type="hidden" id="comentario-id" name="cId" value="{{e.id}}" /> 
 				</form>				
 			</div>

@@ -80,11 +80,10 @@
 			<div class="comentario-postagem">
 				<form action="postarComentarios" id="postar-comentario" method="post">
 				{% csrf_token %}
-					<input type="text" class="input-comentario" placeholder="Deixe seu comentário" required/><button class="button-comentario"><span class="glyphicon glyphicon-send"></span></button>
+					<input type="text" class="input-comentario" placeholder="Deixe seu comentário.." required/><button class="button-comentario"><span class="glyphicon glyphicon-send"></span></button>
 					<input type="hidden" id="comentario-id" name="cId" value="{{e.id}}" /> 
 				</form>				
 			</div>
-		
 	</div>
 
 <!-- ############################ Fim - Postagem normal ############################### -->
@@ -177,7 +176,7 @@
 			<div class="comentario-postagem">
 				<form action="postarComentarios" id="postar-comentario-desafio" method="post">
 				{% csrf_token %}
-					<input type="text" class="input-comentario" placeholder="Deixe seu comentário" required/><button class="button-comentario"><span class="glyphicon glyphicon-send"></span></button>
+					<input type="text" class="input-comentario" placeholder="Deixe seu comentário.." required/><button class="button-comentario"><span class="glyphicon glyphicon-send"></span></button>
 					<input type="hidden" id="comentario-id" name="cId" value="{{e.id}}" /> 
 				</form>				
 			</div>

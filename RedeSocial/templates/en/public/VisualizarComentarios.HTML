@@ -28,29 +28,16 @@
           {% endif %}
         </div>
       
-       <hr style="margin: 5px 15px 0px 15px; border: 0; height: 0; border-top: 1px solid rgba(0, 0, 0, 0.1); border-bottom: 1px solid rgba(  255, 255, 255, 0.3);">
-
-        <form action="postarComentarios2" id="postar-comentario-2" method="post">
-          {% csrf_token %}
-          <div id="enviarPost">
-            <table>
-              <tr>
-                <td style="background: ; width: 100%; height: 0px ">
-                  <textarea id="textarea-comentario-2" name="cComentario" class="formTextAreaTimeLine"
-                    placeholder="Escreva um comentário..."></textarea>    
-                </td>
-                
-                <td style="margin-left: 10px; background: ; width: 50px;">
-                  <input type="hidden" id="comentario-id" name="cId" value="{{Postagem.id}}" /> 
-                  <button style="float: right;" class="btn btn-enviaComent">
-                    <span class="glyphicon glyphicon-share-alt"></span>
-                  </button>
-                </td>
-              </tr>
-            </table>
-          </div>
-      </form>
-  </div>
+       <hr style="margin: 5px 5px; border: 0; height: 0; border-top: 1px solid rgba(0, 0, 0, 0.1); border-bottom: 1px solid rgba(255, 255, 255, 0.3);">
+		
+		<div class="comentario-postagem">
+			<form action="postarComentarios2" id="postar-comentario-2"  method="post">
+				{% csrf_token %}
+				<input type="text" class="input-comentario" name="cComentario" placeholder="Deixe seu comentário.." required/><button class="button-comentario"><span class="glyphicon glyphicon-send"></span></button>
+				<input type="hidden" id="comentario-id" name="cId" value="{{Postagem.id}}" /> 
+			</form>				
+		</div>
+	</div>
 </div>
 
 <div id="containerFeed2">

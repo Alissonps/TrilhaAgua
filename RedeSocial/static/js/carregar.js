@@ -648,7 +648,7 @@ $(document).on("submit", "#form-desafiar-amigos", function(){
 $(document).on("submit", "#postar-comentario-2", function(){
 	
 	var content = $("#containerFeed2");		
-	var textarea = $("#textarea-comentario-2").val();
+	var textarea = $(".input-comentario").val();
 	
 	$.ajax({
 		url: "postarComentarios2",
@@ -656,7 +656,7 @@ $(document).on("submit", "#postar-comentario-2", function(){
 		data: $("#postar-comentario-2").serialize(),
 		success: function( response ){
 			
-			var textarea = $("#textarea-comentario-2").val('');
+			var textarea = $(".input-comentario").val('');
 			
 			var data = $( '<div>'+response+'</div>' ).find('#containerFeed2').html();
 			// entra no conteudo da href procurando pela div #containerFeedGeral.

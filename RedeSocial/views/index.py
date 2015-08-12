@@ -1441,7 +1441,7 @@ def Pedido_Desafio(request):
     soli_desafio = Solicitacao_Desafio.objects.filter(id = soli).get()
     
     #Consulta para mostrar os desafios ativos
-    d_ativos_desafiado = Desafio_Ativo.objects.filter(usuario_desafiado = u)
+    d_ativos_desafiado = Desafio_Ativo.objects.filter(usuario_desafiado = u, enviado = False)
     qtd_d_ativos = len(d_ativos_desafiado)
     
     if(pedido_desafio == 'True'):
@@ -1628,8 +1628,11 @@ def Atribuir_Desafio (request):
     desafio = Desafio_Ativo.objects.filter(id=id_desafio).get()
     dsf = desafio
     
-    
-    conq_total = Conquista_total.objects.filter(usuario = usu).get()
+    try:
+        conq_total = Conquista_total.objects.filter(usuario = usu).get()
+    except:
+        conq_total = Conquista_total(usuario = usu)
+        conq_total.save()
     
     if(opc == 'True'):
         usu.pontos = usu.pontos + desafio.desafio.pontuacao

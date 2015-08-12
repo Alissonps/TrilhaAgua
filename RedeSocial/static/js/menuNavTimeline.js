@@ -1,3 +1,5 @@
+$(document).ready(function(){
+	
 	$(document).on("click", ".nav-times a", function(){
 
 		var content = $("#containerFeed2");// div que recebe os dados.
@@ -15,10 +17,6 @@
 	    
 	    $.ajax({
 			url: href,
-			beforeSend: function () {
-				//$(this).text("carregando..");
-				content.html($(".loader").show());
-		    },
 			success: function( response ){
 				var data = $( '<div>'+response+'</div>' ).find('#containerFeed2').html();
 				// entra no conteudo da href procurando pela div #containerFeedGeral.
@@ -33,7 +31,7 @@
 				});
 			    
 				window.history.pushState('', 'New URL: ', href);  
-				}, 500 );
+				}, 0 );
 			},
 	    
 		    complete: function () {
@@ -42,3 +40,19 @@
 		});
 		return false;
 	});
+	
+/*-------- 2: Quando atualiza a página essa função pinta a href conrrespondente a atual url da timeline ------ */
+    $(function() {
+    	$(".nav-times a").each(function() {
+    		var path = window.location.pathname; // Returns path only
+    		var url      = window.location.href; 
+    		
+    		if (this.href == url) {
+    			$(this).css("border-bottom","3px solid #ff8901");
+    			
+    			$("#li-geral").removeClass("li-geral");
+    			$("#menu-ul a[href=timeline]").css("border-left","4px solid #F8C51B").css( "background-color", "#F0F0F0");
+    		};
+    	});
+    }); /* Fim 2*/
+});//Fim document ready
