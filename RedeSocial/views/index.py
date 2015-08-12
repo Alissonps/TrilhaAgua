@@ -7,7 +7,7 @@ from _winapi import NULL
 from RedeSocial.models import Usuario, TimeLine, Comentarios, Amigos, \
     Solicitacao, Desafio, Solicitacao_Desafio, Desafio_Ativo,\
     Beta_TimeLine, Mensagens, Competicao, Campeao, hist_pontuacao, Pingo, \
-    Insignia, Conquista, Usu_Comp_Semanal, LEL, HBG, TS1S2, SS1S2, Conq_menino_menina
+    Insignia, Conquista, Usu_Comp_Semanal, LEL, HBG, TS1S2, SS1S2, Conquista_total
 from datetime import datetime, date, timedelta
 from django.utils import timezone
 
@@ -1370,13 +1370,11 @@ def Lancar_Desafios(request):
     desafio_solicitado = Desafio.objects.filter(id = desafio).get()
     
     #Consulta para mostrar os desafios ativos
-    d_ativos_desafiado = Desafio_Ativo.objects.filter(usuario_desafiado = u)
+    d_ativos_desafiado = Desafio_Ativo.objects.filter(usuario_desafiado = u, enviado = False)
     
     qtd_desafios_ativos = len(d_ativos_desafiado)
     
-    qtd_desafios_amigo = len(d_ativos_desafiado)
-    
-    if(qtd_desafios_ativos <= 10 and qtd_desafios_amigo <= 10):
+    if(qtd_desafios_ativos <= 10):
     
         #criando uma solicitação
         try:
@@ -1561,7 +1559,6 @@ def Lancar_Desafio(request):
     id_desafio = request.POST.get("cId_desafio", False)
     
     u = Usuario.objects.filter(login=request.session['id']).get()
-    
     #Filtrar a postagem beta
     postagem = Beta_TimeLine.objects.filter(id = id_postagem).get()
     #filtrar o desafio ativo
@@ -1584,33 +1581,14 @@ def Lancar_Desafio(request):
     desafio_ativo.enviado = True
     desafio_ativo.save()
     
+    try:
+        conq_total = Conquista_total.objects.filter(usuario = u).get()
+    except:
+        conq_total = Conquista_total(usuario = u)
+        conq_total.save()
+    
     #excluindo a postagem beta
     postagem.delete()
-    
-    try:
-        conq_m = Conq_menino_menina.objects.filter(usuario_desafiador = u).get()
-        
-                
-    except:
-        
-        if(desafio_ativo.usuario_desafiado == u):
-            
-            data_atual = timezone.now()
-            d_fim = data_atual + timedelta(days = 7)
-        
-            conq_m = Conq_menino_menina(
-                                        
-            data_inicio = data_atual, 
-            data_fim = d_fim, 
-            usuario_desafiador = u,
-            usuario_desafiado = desafio_ativo.usuario_desafiado,
-            #desafio1 = Desafio_Ativo.desafio,
-            #desafio2 = False,
-            #desafio3 = False,
-            )
-            
-            conq_m.save()
-           
     
     return Timeline(request)
 
@@ -1650,6 +1628,9 @@ def Atribuir_Desafio (request):
     desafio = Desafio_Ativo.objects.filter(id=id_desafio).get()
     dsf = desafio
     
+    
+    conq_total = Conquista_total.objects.filter(usuario = usu).get()
+    
     if(opc == 'True'):
         usu.pontos = usu.pontos + desafio.desafio.pontuacao
         usu.save()
@@ -1666,15 +1647,19 @@ def Atribuir_Desafio (request):
         ucs.save()
         
         #inicio LEL
-        if(dsf.desafio.nome == 'Lavagem econômica'):
+        if(dsf.desafio.nome == 'Lavagem Econômica'):
             lel = LEL.objects.filter(usuario = usu).get()
             lel.lavagem_economica = True
             lel.save()
+            conq_total.lavagem_economica = True
+            conq_total.save()
             
-        elif(dsf.desafio.nome == 'Louça limpa'):
+        elif(dsf.desafio.nome == 'Louça Limpa'):
             lel = LEL.objects.filter(usuario = usu).get()
             lel.louca_limpa = True
             lel.save()
+            conq_total.louca_limpa = True
+            conq_total.save()
         #fim LEL
         
         #inicio HBG    
@@ -1682,11 +1667,15 @@ def Atribuir_Desafio (request):
             hbg = HBG.objects.filter(usuario = usu).get()
             hbg.hidrometro = True
             hbg.save()
+            conq_total.hidrometro = True
+            conq_total.save()
         
         elif(dsf.desafio.nome == 'Banho de Gato'):
             hbg = HBG.objects.filter(usuario = usu).get()
             hbg.banho_gato = True
             hbg.save()
+            conq_total.banho_gato = True
+            conq_total.save()
         #fim HBG
         
         #inicio TS1S2
@@ -1694,11 +1683,16 @@ def Atribuir_Desafio (request):
             ts1s2 = TS1S2.objects.filter(usuario = usu).get()
             ts1s2.torneira_fechada = True
             ts1s2.save()
+            conq_total.torneira_fechada = True
+            conq_total.save()
         
         elif(dsf.desafio.nome == 'Supervisor 1'):
             ts1s2 = TS1S2.objects.filter(usuario = usu).get()
             ts1s2.supervisor1 = True
             ts1s2.save()
+            
+            conq_total.supervisor1 = True
+            conq_total.save()
             
             ss1s2 = SS1S2.objects.filter(usuario = usu).get()
             ss1s2.supervisor1 = True
@@ -1708,6 +1702,9 @@ def Atribuir_Desafio (request):
             ts1s2 = TS1S2.objects.filter(usuario = usu).get()
             ts1s2.supervisor2 = True
             ts1s2.save()
+            
+            conq_total.supervisor2 = True
+            conq_total.save()
             
             ss1s2 = SS1S2.objects.filter(usuario = usu).get()
             ss1s2.supervisor2 = True
@@ -1719,9 +1716,23 @@ def Atribuir_Desafio (request):
             ss1s2 = SS1S2.objects.filter(usuario = usu).get()
             ss1s2.super_encanador = True
             ss1s2.save()
+            
+            conq_total.super_encanador = True
+            conq_total.save()
         #fim SS1S2
         
+        elif(dsf.desafio.nome == 'Reutilização'):
+            conq_total.reutilizacao1 = True
+            conq_total.save()
             
+        elif(dsf.desafio.nome == 'Reutilização 2'):
+            conq_total.reutilizacao2 = True
+            conq_total.save()
+            
+        elif(dsf.desafio.nome == 'Aquário'):
+            conq_total.aquario = True
+            conq_total.save()
+        
         return Atribuir_Conquistas(request, usu, dsf)
             
     elif(opc == 'False'):
@@ -2270,8 +2281,11 @@ def Atribuir_Conquistas(request, usu, dsf):
         conq = Conquista.objects.filter(insignia=i, usuario=u).get()
                                             
     except:
-                                        
-        if(qtd_amigos >= 1000):
+        
+        conq_total = Conquista_total.objects.filter(usuario = u).get()
+        
+        if(conq_total.aquario == True and conq_total.banho_gato == True and conq_total.hidrometro == True and conq_total.super_encanador == True and conq_total.louca_limpa == True and conq_total.reutilizacao1 == True and conq_total.reutilizacao2 == True and conq_total.torneira_fechada == True and conq_total.supervisor1 == True and  conq_total.supervisor2 == True and conq_total.lavagem_economica == True):            
+            
             i = Insignia.objects.filter(nome='Conquista 10').get()
             conquista = Conquista(insignia = i, usuario = u)
             conquista.save()

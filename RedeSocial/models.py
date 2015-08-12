@@ -1,5 +1,4 @@
 from django.db import models
-from django.db.models.fields import IntegerField
 
 class Competicao(models.Model):
     id = models.IntegerField(primary_key = True)
@@ -25,7 +24,7 @@ class Usuario (models.Model):
     resposta = models.CharField(max_length=40)
     descricao = models.TextField()
     foto = models.ImageField(blank=True, null=True, default=False, upload_to='media')
-    pontos = models.IntegerField(blank=True, null=True, default = 0)
+    pontos = models.IntegerField(max_length=100, blank=True, null=True, default = 0)
     professor = models.BooleanField(blank = True, default = None)
     
     
@@ -35,14 +34,13 @@ class Usuario (models.Model):
 
 class hist_pontuacao (models.Model):
     usuario = models.ForeignKey(Usuario)
-    pontuacao = models.IntegerField(max_length = 10)
+    pontuacao = models.IntegerField(max_length=10)
     competicao = models.ForeignKey(Competicao)
     
     def __str__(self):
         return "Nome: %s - pontuacao: %s" % (self.usuario, self.pontuacao)
 
 class TimeLine (models.Model):
-    id = models.IntegerField(primary_key=True)
     date = models.DateTimeField(auto_now_add=True)
     text = models.TextField()
     usuario = models.ForeignKey(Usuario)
@@ -225,19 +223,21 @@ class SS1S2(models.Model):
         
         return "usuario: %s" % (self.usuario)
     
-class Conq_menino_menina(models.Model):
-    data_inicio = models.DateTimeField()
-    data_fim = models.DateTimeField()
-    usuario_desafiador = models.ForeignKey(Usuario, related_name = "usuario1")
-    usuario_desafiado = models.ForeignKey(Usuario, related_name = "usuario2")
-    desafio1 = models.ForeignKey(Desafio, related_name = "desafio1", blank=True, null=True, default=None)
-    desafio2 = models.ForeignKey(Desafio, related_name = "desafio2", blank=True, null=True, default=None)
-    desafio3 = models.ForeignKey(Desafio, related_name = "desafio3", blank=True, null=True, default=None)
-    d1 = models.BooleanField(blank=True, default=False)
-    d2 = models.BooleanField(blank=True, default=False)
-    d3 = models.BooleanField(blank=True, default=False)
+class Conquista_total(models.Model):
+    usuario = models.ForeignKey(Usuario)
+    aquario = models.BooleanField(blank=True, default=False)
+    banho_gato = models.BooleanField(blank=True, default=False)
+    hidrometro = models.BooleanField(blank=True, default=False)
+    super_encanador = models.BooleanField(blank=True, default=False)
+    louca_limpa = models.BooleanField(blank=True, default=False)
+    reutilizacao1 = models.BooleanField(blank=True, default=False)
+    reutilizacao2 = models.BooleanField(blank=True, default=False)
+    torneira_fechada = models.BooleanField(blank=True, default=False)
+    supervisor1 = models.BooleanField(blank=True, default=False)
+    supervisor2 = models.BooleanField(blank=True, default=False)
+    lavagem_economica = models.BooleanField(blank=True, default=False)
     
     def __str__(self):
         
-        return "usuario 1: %s usuario 2: %s" % (self.usuario_desafiador, self.usuario_desafiador)
+        return "usuario: %s " % (self.usuario)
     
