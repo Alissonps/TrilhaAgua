@@ -7,47 +7,35 @@
 				<textarea id="text-post" name="mensagem" placeholder=" Digite sua mensagem."></textarea>
 			</center>
 			
-			<div>
-			
+			<div id="preview">
+				<span title="Remover" class="btn-preview">
+					<span class="glyphicon glyphicon-remove remove-preview"></span>
+				</span> 
+				<img class="img-preview" style="width: 100px; height: 100px;" />
 			</div>
-			<hr	style="margin: -2px 15px; border: 0; height: 0; border-top: 1px solid rgba(0, 0, 0, 0.1); border-bottom: 1px solid rgba(255, 255, 255, 0.3);">
 			
-			<div id="ferramentaFeed">
-				<table>
-					<tr>
-						<td width="499">
-							<div class="inputFile btn btn-primary">
-								<span><img src="../static/imagens/iconCamera.png" width="28" /></span> <input type="file" name="arquivo" id="arquivo" onchange="PreviewImage();"/>
-							</div>
-						</td>
-	
-						<td>
-							<input type="hidden" name="enviar" value="send" /> 
-							
-							<button id="btn-publicar" type="submit" name="Enviar" value="Publicar"
-							class="btn btn-primary disabled" disabled="disabled"><span class="glyphicon glyphicon-pencil"></span> Publicar
-							</button>
-						</td>
-					<!-- <td>
-						<img id="uploadPreview" style="width: 100px; height: 100px;" /> 
-					</td> -->
-						
-					</tr>
-				</table>
+			<div class="footer-postagem footer-postar">
+				<div id="ferramentaFeed">
+					<table>
+						<tr>
+							<td width="499">
+								<div class="fileUpload btn btn-primary">
+									<span><img src="../static/imagens/iconCamera.png" width="25" /></span> 
+									<input type="file" name="arquivo" class="upload" id="arquivo"/>
+								</div>
+							</td>
+		
+							<td>
+								<input type="hidden" name="enviar" value="send" /> 
+								
+								<button id="btn-publicar" type="submit" name="Enviar" value="Publicar"
+								class="btn btn-primary disabled" disabled="disabled"><span class="glyphicon glyphicon-pencil"></span> Publicar
+								</button>
+							</td>
+						</tr>
+					</table>
+				</div>
 			</div>
-	
-			<!-- <script type="text/javascript">
-
-			    function PreviewImage() { 
-			        var oFReader = new FileReader(); 
-			        oFReader.readAsDataURL(document.getElementById("arquivo").files[0]);
-			
-			        oFReader.onload = function (oFREvent) { 
-			            document.getElementById("uploadPreview").src = oFREvent.target.result; 
-			        }; 
-			    };
-
-		</script> -->
 		</form>
 		
 	</div>
@@ -63,10 +51,7 @@
 	</ul>
 </nav>	
 
-<!-- <script type="text/javascript" src="../static/js/menuNavTimeline.js"></script> -->
-
 <div id="containerFeed2">	
-	
 		
 {% block content %} {% for e in entries %} {% if e.desafio == False %}
 	
@@ -86,9 +71,10 @@
 	{% endif %}
 		
 		<form name="form" action="buscaPerfilUsuario{{e.usuario.id}}" id="form-busca-usuario" method="post" style="margin-top: 2px;">
-			{% csrf_token %} <input type="submit" value="{{e.usuario.nome}}"
-				class="meulink"> <input type="hidden" name="cUsuario"
-				value="{{e.usuario.id}}"> <font id="containerData">{{e.date|date:"D d M Y"}}</font> 
+			{% csrf_token %} 
+			<input type="submit" value="{{e.usuario.nome}}" class="meulink"> 
+			<input type="hidden" name="cUsuario" value="{{e.usuario.id}}"> 
+			<font id="containerData">{{e.date|date:"D d M Y"}}</font> 
 		</form>
 
 		<div id="containerTextoPostagem">
@@ -126,10 +112,11 @@
 				{% endif %}
 				
 				<td style="background:  ;">
-					<form action="usuarios_curtiram" id="form-u-curtiu" method="post"> {% csrf_token %} 
+					<!-- código modal -->
+					<form action="usuarios_curtiram" id="abrir-modal" method="post"> {% csrf_token %} 
 						<input type="submit" id="id{{e.id}}" value="({{e.qtd_pingo}})" class="u-curtidas">
 						<input type="hidden" id="hide-u-curtiu" name="cID_post" value="{{e.id}}">
-					</form>
+					</form><!-- FIM código modal -->
 				</td>
 
 				<td style="background: ;">
@@ -141,19 +128,15 @@
 				</td>
 			</tr>
 		</table>
-			
-			<hr
-				style="margin: 5px 5px; border: 0; height: 0; border-top: 1px solid rgba(0, 0, 0, 0.1); border-bottom: 1px solid rgba(255, 255, 255, 0.3);">
-
-			<div class="comentario-postagem">
-				<form action="postarComentarios" id="postar-comentario" method="post">
-				{% csrf_token %}
-					<input type="text" class="input-comentario" placeholder="Deixe seu comentário.." required/><button class="button-comentario"><span class="glyphicon glyphicon-send"></span></button>
-					<input type="hidden" id="comentario-id" name="cId" value="{{e.id}}" /> 
-				</form>				
+			<div class="footer-postagem">
+				<div class="comentario-postagem">
+					<form action="postarComentarios" id="postar-comentario" method="post">
+					{% csrf_token %}
+						<input type="text" class="input-comentario" placeholder="Deixe seu comentário.." required/><button class="button-comentario"><span class="glyphicon glyphicon-send"></span></button>
+						<input type="hidden" id="comentario-id" name="cId" value="{{e.id}}"/> 
+					</form>				
+				</div>
 			</div>
-		
-		
 	</div>
 
 <!-- ############################ Fim - Postagem normal #################################### -->
@@ -223,10 +206,11 @@
             {% endif %}
             
             <td style="background:  ;">
-				<form action="usuarios_curtiram" id="form-u-curtiu-desafio" method="post"> {% csrf_token %} 
+				<!-- código modal -->
+				<form action="usuarios_curtiram" id="abrir-modal-desafio" method="post"> {% csrf_token %} 
 					<input type="submit" id="id{{e.id}}" value="({{e.qtd_pingo}})" class="u-curtidas">
 					<input type="hidden" id="hide-u-curtiu" name="cID_post" value="{{e.id}}">
-				</form>
+				</form><!-- FIM código modal -->
 			</td>
 
 			<td style="background: ;">
@@ -237,17 +221,15 @@
 				</form>
 			</td>
           </tr>
-      </table>
-
-        <hr
-				style="margin: 5px 5px; border: 0; height: 0; border-top: 1px solid rgba(0, 0, 0, 0.1); border-bottom: 1px solid rgba(255, 255, 255, 0.3);">
-
-			<div class="comentario-postagem">
-				<form action="postarComentarios" id="postar-comentario-desafio" method="post">
-				{% csrf_token %}
-					<input type="text" class="input-comentario" placeholder="Deixe seu comentário.." required/><button class="button-comentario"><span class="glyphicon glyphicon-send"></span></button>
-					<input type="hidden" id="comentario-id" name="cId" value="{{e.id}}" /> 
-				</form>				
+      </table>			
+			<div class="footer-postagem">
+				<div class="comentario-postagem">
+					<form action="postarComentarios" id="postar-comentario-desafio" method="post">
+					{% csrf_token %}
+						<input type="text" class="input-comentario" placeholder="Deixe seu comentário.." required/><button class="button-comentario"><span class="glyphicon glyphicon-send"></span></button>
+						<input type="hidden" id="comentario-id" name="cId" value="{{e.id}}"/> 
+					</form>				
+				</div>
 			</div>
     </div>
 <!-- ############################ Fim - Postagem desafio #################################### -->

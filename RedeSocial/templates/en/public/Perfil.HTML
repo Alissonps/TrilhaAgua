@@ -1,22 +1,21 @@
 {% extends "en/public/Base.HTML" %}
-
 {% block contents %}
 <meta charset="utf-8">
 <div id="containerAmigos" style="margin-top: 30px;">
-	<form method="post" action="editarPerfil">
-		{% csrf_token %}
-		<fieldset>
-			<legend>Dados pessoais:</legend>
+		<legend>Dados pessoais:</legend>
+			<hr class="form-hr">
+			<form method="post" id="editar-perfil">
+				{% csrf_token %}	
+				<div id="btn-editar-perfil">	
+					<input type="submit" id="btnEditarPerfil" value="Editar"
+					class="btn btn-primary btn-second">
+				</div>
+			</form>
 			
 			<div id="imgMeuPerfil">
 				{% if e.foto.url != '/media/False' %} 
 					<img	src="{{Usuario.foto.url}}"/> 
 				{% endif %}
-				
-				
-				<input type="submit" id="btnEditarPerfil" value="Editar"
-					class="btn btn-primary btn-second">
-			
 			</div>
 			
 			<div id="informacoesPerfil">
@@ -77,12 +76,11 @@
 				</table>
 			</div>
 			
-		</fieldset>
-
-	</form>
 </div>
 
-<div id="wrap-postagens-perfil" style="margin-top: 30px;">
+<div id="linha-do-tempo">Linha do Tempo</div>
+
+<div id="wrap-postagens-perfil">
 	
 	{% for e in minhas_postagens %} 
 	
@@ -103,7 +101,7 @@
 	
 	{% endif %}
 		
-		<form name="form" action="buscaPerfilUsuario{{e.usuario.id}}" method="post" style="margin-top: 2px;">
+		<form name="form" action="buscaPerfilUsuario{{e.usuario.id}}" id="form-busca-usuario" method="post" style="margin-top: 2px;">
 			{% csrf_token %} <input type="submit" value="{{e.usuario.nome}}"
 				class="meulink"> <input type="hidden" name="cUsuario"
 				value="{{e.usuario.id}}"> <font id="containerData">{{e.date|date:"D d M Y"}}</font> 
@@ -118,81 +116,60 @@
 		</div>
 		
 		<table cellpadding="0" cellspacing="0">
-				<tr>
-					<td style="background:  ; padding-left: 42px;">	
-					  {% if e.curtiu == True %}		
+			<tr>
+				<td style="background:  ; padding-left: 42px;">	
+					{% if e.curtiu == True %}		
 					  			   		
-				    	<a href="#" class="deslike">
-					       <button type="submit" value="excluir" class="curtir" title="Curtir" 
+				    <a href="#" class="deslike">
+						<button type="submit" value="excluir" class="curtir" title="Curtir" 
 							style="background: transparent; border: none; float: right;">
-								<img alt="curtir" src="../static/imagens/pingo.png" width="10" height="13" style="margin-top: 3px;">
-							</button>
-							<input type="hidden" id="hide" name="cID_post" value="{{e.id}}">   
-						</a>	
+							<img alt="curtir" src="../static/imagens/pingo.png" width="10" height="13" style="margin-top: 3px;">
+						</button>
+						<input type="hidden" id="hide" name="cID_post" value="{{e.id}}">   
+					</a>	
 					   
-				      {% elif e.curtiu == False %}
+				    {% elif e.curtiu == False %}
 					
-					  	<a href="#" class="like">
-					       <button type="submit" value="excluir" class="curtir" title="Curtir" 
+					<a href="#" class="like">
+						<button type="submit" value="excluir" class="curtir" title="Curtir" 
 							style="background: transparent; border: none; float: right;">
-								<img alt="curtir" src="../static/imagens/despingo.png" width="10" height="13" style="margin-top: 3px;">
-							</button>
-							<input type="hidden" id="hide" name="cID_post" value="{{e.id}}">   
-						</a>	
-						
-				   	</td>
-				   	
-		 			{% endif %}
-		 			
-					<td style="background:  ;">
-						<form action="usuarios_curtiram" id="form-u-curtiu" method="post"> {% csrf_token %} 
-							<input type="submit" id="id{{e.id}}" value="({{e.qtd_pingo}})" class="u-curtidas">
-							<input type="hidden" id="hide-u-curtiu" name="cID_post" value="{{e.id}}">
-						</form>
-					</td>
-	
-					<td style="background: ;">
-						<form action="visualizarComentarios" id="form-comentarios" method="post">
-						{% csrf_token %} 
-							<input type="hidden" id="hide-comentarios" name="cPost" value="{{e.id}}">
-							<input type="submit" name="comentarios" value="Comentários ({{e.qtd_coments}})" class="linkPostagem">
-						</form>
-					</td>
-				</tr>
-			</table>
+							<img alt="curtir" src="../static/imagens/despingo.png" width="10" height="13" style="margin-top: 3px;">
+						</button>
+						<input type="hidden" id="hide" name="cID_post" value="{{e.id}}">   
+					</a>	
+				</td>
 
-		<form action="postarComentarios" id="postar-comentario" method="post">
-			{% csrf_token %}
-			<hr
-				style="margin: 5px 15px 0px 15px; border: 0; height: 0; border-top: 1px solid rgba(0, 0, 0, 0.1); border-bottom: 1px solid rgba(255, 255, 255, 0.3);">
+				{% endif %}
+				
+				<td style="background:  ;">
+					<!-- código modal -->
+					<form action="usuarios_curtiram" id="abrir-modal" method="post"> {% csrf_token %} 
+						<input type="submit" id="id{{e.id}}" value="({{e.qtd_pingo}})" class="u-curtidas">
+						<input type="hidden" id="hide-u-curtiu" name="cID_post" value="{{e.id}}">
+					</form><!-- FIM código modal -->
+				</td>
 
-			<div id="enviarPost">
-				<table>
-					<tr>
-						<td style="background: ; width: 100%; height: 0px ">
-			
-				<textarea name="cComentario" class="formTextAreaTimeLine"
-					placeholder="Escreva um comentário..."></textarea>		
-
-						</td>
-						
-						<td style="margin-left: 10px; background: ; width: 50px;">
-						
-							<input type="hidden" id="comentario-id" name="cId" value="{{e.id}}" /> 
-							<button style="float: right;" class="btn btn-enviaComent">
-								<span class="glyphicon glyphicon-share-alt"></span>
-							</button>
-							
-						</td>
-					</tr>
-				</table>
+				<td style="background: ;">
+					<form action="visualizarComentarios" id="form-comentarios" method="post">
+					{% csrf_token %} 
+						<input type="hidden" id="hide-comentarios" name="cPost" value="{{e.id}}">
+						<input type="submit" name="comentarios" value="Comentários ({{e.qtd_coments}})" class="linkPostagem">
+					</form>
+				</td>
+			</tr>
+		</table>
+			<div class="footer-postagem">
+				<div class="comentario-postagem">
+					<form action="postarComentarios" id="postar-comentario" method="post">
+					{% csrf_token %}
+						<input type="text" class="input-comentario" placeholder="Deixe seu comentário.." required/><button class="button-comentario"><span class="glyphicon glyphicon-send"></span></button>
+						<input type="hidden" id="comentario-id" name="cId" value="{{e.id}}"/> 
+					</form>				
+				</div>
 			</div>
-		</form>
-		
 	</div>
 
-<!-- ############################ Fim - Postagem normal ############################### -->
-
+<!-- ############################ Fim - Postagem normal #################################### -->
 	{% elif e.desafio == True %}
 	
 <!-- ############################ Postagem desafio #################################### -->
@@ -210,7 +187,7 @@
 
     {% endif %}
 
-       <form name="form" action="buscaPerfilUsuario{{e.usuario.id}}" method="post" style="margin-top: 2px;">
+       <form name="form" action="buscaPerfilUsuario{{e.usuario.id}}"  id="form-busca-usuario-desafio" method="post" style="margin-top: 2px;">
             {% csrf_token %} <input type="submit" value="{{e.usuario.nome}}"
                 class="meulink"> <input type="hidden" name="cUsuario"
                 value="{{e.usuario.id}}"> 
@@ -219,7 +196,7 @@
                     {{e.date|date:"D d M Y"}}
                     
                     {% if e.nome_desafio != None %}
-                        <font class="meulink" style="margin-left: 55px;"><span class="form-class-nome">Desafio: </span>{{e.nome_desafio}}</font>
+                        <font style="float: right; margin-right: 35px; margin-top: 6px;">{{e.nome_desafio}}</font>
                     {% endif %}
                 </font>
         </form>
@@ -259,10 +236,11 @@
             {% endif %}
             
             <td style="background:  ;">
-				<form action="usuarios_curtiram" id="form-u-curtiu-desafio" method="post"> {% csrf_token %} 
+				<!-- código modal -->
+				<form action="usuarios_curtiram" id="abrir-modal-desafio" method="post"> {% csrf_token %} 
 					<input type="submit" id="id{{e.id}}" value="({{e.qtd_pingo}})" class="u-curtidas">
 					<input type="hidden" id="hide-u-curtiu" name="cID_post" value="{{e.id}}">
-				</form>
+				</form><!-- FIM código modal -->
 			</td>
 
 			<td style="background: ;">
@@ -273,32 +251,17 @@
 				</form>
 			</td>
           </tr>
-      </table>
-
-        <form action="postarComentarios" id="postar-comentario-desafio" method="post">
-          {% csrf_token %}
-          <hr style="margin: 5px 15px 0px 15px; border: 0; height: 0; border-top: 1px solid rgba(0, 0, 0, 0.1); border-bottom: 1px solid rgba(255, 255, 255, 0.3);">
-
-          <div id="enviarPost">
-            <table>
-              <tr>
-                <td style="background: ; width: 100%; height: 0px ">
-                  <textarea name="cComentario" class="formTextAreaTimeLine"
-                    placeholder="Escreva um comentário..."></textarea>    
-                </td>
-                
-                <td style="margin-left: 10px; background: ; width: 50px;">
-                  <input type="hidden" id="comentario-id" name="cId" value="{{e.id}}" /> 
-                  <button style="float: right;" class="btn btn-enviaComent">
-                    <span class="glyphicon glyphicon-share-alt"></span>
-                  </button>
-                </td>
-              </tr>
-            </table>
-          </div>
-        </form>
+      </table>			
+			<div class="footer-postagem">
+				<div class="comentario-postagem">
+					<form action="postarComentarios" id="postar-comentario-desafio" method="post">
+					{% csrf_token %}
+						<input type="text" class="input-comentario" placeholder="Deixe seu comentário.." required/><button class="button-comentario"><span class="glyphicon glyphicon-send"></span></button>
+						<input type="hidden" id="comentario-id" name="cId" value="{{e.id}}"/> 
+					</form>				
+				</div>
+			</div>
     </div>
-    
 <!-- ############################ Fim - Postagem desafio #################################### -->
 
     {% endif %} 

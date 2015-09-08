@@ -962,9 +962,7 @@ def Pesquisa (request):
     #Quantidade de Mensagens
     msgs = Mensagens.objects.filter(usuario = u)
     qtd_msgs = len(msgs)
-    #{"desafios_cumpridos": qtd_d_cumpridos,"soli_desafios":qtd_soli_desafios, "d_ativos_desafiado":d_ativos_desafiado,"Usuario":u, "qtd_solicitacoes": qtd_solicitacoes}
-    #----------------------------------------------------------------------------------------------
-    
+    #ranking
     qtd_d_ativos_desafiado = len(d_ativos_desafiado)
     ranking_geral = Usuario.objects.all().order_by('-pontos')
     lista_geral = list(ranking_geral)
@@ -973,7 +971,7 @@ def Pesquisa (request):
     ranking_turma = Usuario.objects.filter(turma = u.turma).order_by('-pontos')
     lista_turma = list(ranking_turma)
     pos_turma = lista_turma.index(u) + 1
-    #"qtd_d_ativos_desafiado": qtd_d_ativos_desafiado,"pos_turma": pos_turma, "pos_geral": pos_geral,"qtd_msgs": qtd_msgs, "desafios_cumpridos": qtd_d_cumpridos,"soli_desafios":qtd_soli_desafios, "d_ativos_desafiado":d_ativos_desafiado, "qtd_solicitacoes": qtd_solicitacoes
+    #----------------------------------------------------------------------------------------------
     
     
     pesquisa_amigos = Amigos.objects.filter(dono=u)
@@ -994,8 +992,13 @@ def Pesquisa (request):
     
     elif(todos == 'True' and amigos == 'False'):
         
-        return render(request, 'en/public/Pesquisa.HTML', {"meus_amigos": meus_amigos,"Pesquisa_Concluida": pesquisa, "qtd_msgs": qtd_msgs,"msg_erro": mensagem_erro, "Minhas_Solicitacoes": minhas_Solicitacoes, "desafios_cumpridos": qtd_d_cumpridos,"soli_desafios":qtd_soli_desafios, "d_ativos_desafiado":d_ativos_desafiado,"Usuario":u, "qtd_solicitacoes": qtd_solicitacoes, "qtd_d_ativos_desafiado": qtd_d_ativos_desafiado,"pos_turma": pos_turma, "pos_geral": pos_geral,"qtd_msgs": qtd_msgs, "desafios_cumpridos": qtd_d_cumpridos,"soli_desafios":qtd_soli_desafios, "d_ativos_desafiado":d_ativos_desafiado, "qtd_solicitacoes": qtd_solicitacoes})
-        #return HttpResponse(lista3)
+        pessoas_solicitadas = []
+        minhas_solicitadas = Solicitacao.objects.filter(usuario = u)
+        
+        for e in minhas_solicitadas:
+            pessoas_solicitadas.append(e.amigo)
+        
+        return render(request, 'en/public/Pesquisa.HTML', {"pessoas_solicitadas": pessoas_solicitadas, "meus_amigos": meus_amigos,"Pesquisa_Concluida": pesquisa, "qtd_msgs": qtd_msgs,"msg_erro": mensagem_erro, "Minhas_Solicitacoes": minhas_Solicitacoes, "desafios_cumpridos": qtd_d_cumpridos,"soli_desafios":qtd_soli_desafios, "d_ativos_desafiado":d_ativos_desafiado,"Usuario":u, "qtd_solicitacoes": qtd_solicitacoes, "qtd_d_ativos_desafiado": qtd_d_ativos_desafiado,"pos_turma": pos_turma, "pos_geral": pos_geral,"qtd_msgs": qtd_msgs, "desafios_cumpridos": qtd_d_cumpridos,"soli_desafios":qtd_soli_desafios, "d_ativos_desafiado":d_ativos_desafiado, "qtd_solicitacoes": qtd_solicitacoes})
         
     
     elif(todos == 'False' and amigos == 'True'):
@@ -1048,13 +1051,11 @@ def Fazer_Amizade (request):
         
         if(verificar_solicitacao_usuario_amigo != solicitacao_usuario_amigo):
             mensagem_erro = "Já existe uma solicitação!"
-            #return HttpResponse(mensagem_erro)
-            return render(request, 'en/public/Pesquisa.HTML' ,{"qtd_msgs": qtd_msgs,"msg_erro": mensagem_erro, "desafios_cumpridos": qtd_d_cumpridos,"soli_desafios":qtd_soli_desafios, "d_ativos_desafiado":d_ativos_desafiado,"Usuario":u, "qtd_solicitacoes": qtd_solicitacoes})
+            return HttpResponse(mensagem_erro)
         else:
             solicitacao_usuario_amigo.save()
-            mensagem_erro = "Solicitação Concluida!"
-            #return HttpResponse(mensagem_erro)
-            return render(request, 'en/public/Pesquisa.HTML' ,{"qtd_msgs": qtd_msgs,"msg_erro": mensagem_erro, "desafios_cumpridos": qtd_d_cumpridos,"soli_desafios":qtd_soli_desafios, "d_ativos_desafiado":d_ativos_desafiado,"Usuario":u, "qtd_solicitacoes": qtd_solicitacoes })
+            mensagem_erro = "Solicitação Enviada!"
+            return HttpResponse(mensagem_erro)
         
     except:
         
@@ -1064,35 +1065,30 @@ def Fazer_Amizade (request):
         
             if(verificar_solicitacao_amigo_usuario != solicitacao_amigo_usuario):
                 mensagem_erro = "Já existe uma solicitação!"
-                #return HttpResponse(mensagem_erro)
-                return render(request, 'en/public/Pesquisa.HTML' ,{"qtd_msgs": qtd_msgs,"msg_erro": mensagem_erro, "desafios_cumpridos": qtd_d_cumpridos,"soli_desafios":qtd_soli_desafios, "d_ativos_desafiado":d_ativos_desafiado,"Usuario":u, "qtd_solicitacoes": qtd_solicitacoes})
+                return HttpResponse(mensagem_erro)
         
             else:
                 solicitacao_usuario_amigo.save()
-                mensagem_erro = "Solicitação Concluida!"
-                #return HttpResponse(mensagem_erro)
-                return render(request, 'en/public/Pesquisa.HTML' ,{"qtd_msgs": qtd_msgs,"msg_erro": mensagem_erro, "desafios_cumpridos": qtd_d_cumpridos,"soli_desafios":qtd_soli_desafios, "d_ativos_desafiado":d_ativos_desafiado,"Usuario":u, "qtd_solicitacoes": qtd_solicitacoes})
+                mensagem_erro = "Solicitação Enviada!"
+                return HttpResponse(mensagem_erro)
             
         except:
             
             try:
                 verificar_amigo = Amigos.objects.filter(dono = u, amigo = amigo_solicitado).get()
                 mensagem_erro = "Vocês já são amigos!"
-                #return HttpResponse(mensagem_erro)
-                return render(request, 'en/public/Pesquisa.HTML' ,{"qtd_msgs": qtd_msgs,"msg_erro": mensagem_erro, "desafios_cumpridos": qtd_d_cumpridos,"soli_desafios":qtd_soli_desafios, "d_ativos_desafiado":d_ativos_desafiado,"Usuario":u, "qtd_solicitacoes": qtd_solicitacoes })
+                return HttpResponse(mensagem_erro)
                 
                                 
             except:
                 if(u == amigo_solicitado):
                     mensagem_erro = "Vocês já são amigos!"
-                    #return HttpResponse(mensagem_erro)
-                    return render(request, 'en/public/Pesquisa.HTML' ,{"qtd_msgs": qtd_msgs,"msg_erro": mensagem_erro, "desafios_cumpridos": qtd_d_cumpridos,"soli_desafios":qtd_soli_desafios, "d_ativos_desafiado":d_ativos_desafiado,"Usuario":u, "qtd_solicitacoes": qtd_solicitacoes })
+                    return HttpResponse(mensagem_erro)
                 
                 else:
                     solicitacao_usuario_amigo.save()
-                    mensagem_erro = "Solicitação Concluida!"
-                    #return HttpResponse(mensagem_erro)
-                    return render(request, 'en/public/Pesquisa.HTML' ,{"qtd_msgs": qtd_msgs,"msg_erro": mensagem_erro, "desafios_cumpridos": qtd_d_cumpridos,"soli_desafios":qtd_soli_desafios, "d_ativos_desafiado":d_ativos_desafiado,"Usuario":u, "qtd_solicitacoes": qtd_solicitacoes})
+                    mensagem_erro = "Solicitação Enviada!"
+                    return HttpResponse(mensagem_erro)
        
             
 @csrf_exempt
@@ -1147,7 +1143,7 @@ def Pedido_Solicitacao (request):
                 time = TimeLine(text=msg2, usuario=u, foto = i.Imagem, competicao = competicao_atual, desafio = True)
                 time.save() # Fim 8
                 
-        return HttpResponse(mensagem_erro)    
+        return Tela_Amigos(request)
     
     elif(pedido == 'False'):         
         
@@ -1160,7 +1156,7 @@ def Pedido_Solicitacao (request):
         not_msg = Mensagens(usuario = amigo_pesquisado, mensagem = msg1)
         not_msg.save()
         
-        return HttpResponse(mensagem_erro)
+        return Tela_Amigos(request)
 
 def Desafiar (request):
     
@@ -1897,9 +1893,7 @@ def Rankings (request):
     #Quantidade de Mensagens
     msgs = Mensagens.objects.filter(usuario = u)
     qtd_msgs = len(msgs)
-    #{"desafios_cumpridos": qtd_d_cumpridos,"soli_desafios":qtd_soli_desafios, "d_ativos_desafiado":d_ativos_desafiado,"Usuario":u, "qtd_solicitacoes": qtd_solicitacoes}
-    #----------------------------------------------------------------------------------------------
-    
+
     qtd_d_ativos_desafiado = len(d_ativos_desafiado)
     ranking_geral = Usuario.objects.all().order_by('-pontos')
     lista_geral = list(ranking_geral)
@@ -1908,7 +1902,7 @@ def Rankings (request):
     ranking_turma = Usuario.objects.filter(turma = u.turma).order_by('-pontos')
     lista_turma = list(ranking_turma)
     pos_turma = lista_turma.index(u) + 1
-    #"qtd_d_ativos_desafiado": qtd_d_ativos_desafiado,"pos_turma": pos_turma, "pos_geral": pos_geral,"qtd_msgs": qtd_msgs, "desafios_cumpridos": qtd_d_cumpridos,"soli_desafios":qtd_soli_desafios, "d_ativos_desafiado":d_ativos_desafiado, "qtd_solicitacoes": qtd_solicitacoes
+    #----------------------------------------------------------------------------------------------
     
     #ranking geral
     ranking = Usuario.objects.all().order_by('-pontos')
@@ -1920,7 +1914,7 @@ def Rankings_Geral (request):
     #ranking geral
     ranking = Usuario.objects.all().order_by('-pontos')
     
-    return render(request, 'en/public/Ranks.HTML' , {"ranking": ranking})
+    return render(request, 'en/public/Rankings.HTML' , {"ranking": ranking})
 
 def Rankings_Turma (request):
     u = Usuario.objects.filter(login=request.session['id']).get()
@@ -1928,22 +1922,85 @@ def Rankings_Turma (request):
     #ranking por turma
     ranking = Usuario.objects.filter(turma = u.turma).order_by('-pontos')
     
+    #---------------------------Notificações-----------------------------------------------------
+    #Sessão do usuario
+    u = Usuario.objects.filter(login=request.session['id']).get()
+    #Quantidade de solicitações de amizade
+    slct = Solicitacao.objects.filter(amigo=u)
+    qtd_solicitacoes = len(slct)
+    #Solicitações de desafios
+    soli_desafios = Solicitacao_Desafio.objects.filter(usuario_desafiado = u)
+    qtd_soli_desafios = len(soli_desafios)
+    #Desafios Ativos
+    d_ativos_desafiado = Desafio_Ativo.objects.filter(usuario_desafiado = u, enviado = False)
+    #Desafios Cumpridos
+    d_ativos_desafiante = Desafio_Ativo.objects.filter(usuario_desafiante = u, cumprido = True)
+    qtd_d_cumpridos = len(d_ativos_desafiante)
+    #Quantidade de Mensagens
+    msgs = Mensagens.objects.filter(usuario = u)
+    qtd_msgs = len(msgs)
+
+    qtd_d_ativos_desafiado = len(d_ativos_desafiado)
+    ranking_geral = Usuario.objects.all().order_by('-pontos')
+    lista_geral = list(ranking_geral)
+    pos_geral = lista_geral.index(u) + 1
     
-    return render(request, 'en/public/Ranks.HTML' , {"ranking": ranking})
+    ranking_turma = Usuario.objects.filter(turma = u.turma).order_by('-pontos')
+    lista_turma = list(ranking_turma)
+    pos_turma = lista_turma.index(u) + 1
+    #----------------------------------------------------------------------------------------------
+    
+    
+    return render(request, 'en/public/Rankings.HTML' , {"ranking": ranking, "qtd_msgs":qtd_msgs,"desafios_cumpridos": qtd_d_cumpridos,"soli_desafios":qtd_soli_desafios, "d_ativos_desafiado":d_ativos_desafiado,"Usuario":u, "qtd_solicitacoes": qtd_solicitacoes, "qtd_d_ativos_desafiado": qtd_d_ativos_desafiado,"pos_turma": pos_turma, "pos_geral": pos_geral,"qtd_msgs": qtd_msgs, "desafios_cumpridos": qtd_d_cumpridos,"soli_desafios":qtd_soli_desafios, "d_ativos_desafiado":d_ativos_desafiado, "qtd_solicitacoes": qtd_solicitacoes})
 
 def Rankings_Amigos (request):
     
     u = Usuario.objects.filter(login=request.session['id']).get()
+    
     #ranking por amigos
+    ranking = Usuario.objects.all().order_by('-pontos')
+    
     meus_amigos = Amigos.objects.filter(dono = u)
-    amigos = [] 
+    amigos = []
+    rank = [] 
     
     for a in meus_amigos:
         amigos.append(a.amigo)
     
-    ranking = amigos
-        
-    return render(request, 'en/public/Ranks.HTML' , {"ranking": ranking})
+    for a in ranking:
+        if a in amigos:
+            rank.append(a) 
+            
+    #---------------------------Notificações-----------------------------------------------------
+    #Sessão do usuario
+    u = Usuario.objects.filter(login=request.session['id']).get()
+    #Quantidade de solicitações de amizade
+    slct = Solicitacao.objects.filter(amigo=u)
+    qtd_solicitacoes = len(slct)
+    #Solicitações de desafios
+    soli_desafios = Solicitacao_Desafio.objects.filter(usuario_desafiado = u)
+    qtd_soli_desafios = len(soli_desafios)
+    #Desafios Ativos
+    d_ativos_desafiado = Desafio_Ativo.objects.filter(usuario_desafiado = u, enviado = False)
+    #Desafios Cumpridos
+    d_ativos_desafiante = Desafio_Ativo.objects.filter(usuario_desafiante = u, cumprido = True)
+    qtd_d_cumpridos = len(d_ativos_desafiante)
+    #Quantidade de Mensagens
+    msgs = Mensagens.objects.filter(usuario = u)
+    qtd_msgs = len(msgs)
+
+    qtd_d_ativos_desafiado = len(d_ativos_desafiado)
+    ranking_geral = Usuario.objects.all().order_by('-pontos')
+    lista_geral = list(ranking_geral)
+    pos_geral = lista_geral.index(u) + 1
+    
+    ranking_turma = Usuario.objects.filter(turma = u.turma).order_by('-pontos')
+    lista_turma = list(ranking_turma)
+    pos_turma = lista_turma.index(u) + 1
+    #----------------------------------------------------------------------------------------------
+    
+    
+    return render(request, 'en/public/Rankings.HTML' , {"ranking": rank, "qtd_msgs":qtd_msgs,"desafios_cumpridos": qtd_d_cumpridos,"soli_desafios":qtd_soli_desafios, "d_ativos_desafiado":d_ativos_desafiado,"Usuario":u, "qtd_solicitacoes": qtd_solicitacoes, "qtd_d_ativos_desafiado": qtd_d_ativos_desafiado,"pos_turma": pos_turma, "pos_geral": pos_geral,"qtd_msgs": qtd_msgs, "desafios_cumpridos": qtd_d_cumpridos,"soli_desafios":qtd_soli_desafios, "d_ativos_desafiado":d_ativos_desafiado, "qtd_solicitacoes": qtd_solicitacoes})
 
 @csrf_exempt
 def Desafiar_Amigo (request):
@@ -2388,7 +2445,7 @@ def Mais_Pingos (request):
         qtd_pingo.append(pingo[a]) 
         i = i + 1
         
-        if(i == 10):
+        if(i == 3):
             break
     
     return render(request, 'en/public/U_Curtiu.HTML', {"pingo": qtd_pingo,"id_postagem": id_postagem})

@@ -1,28 +1,28 @@
 {% extends "en/public/Base.HTML" %} {% block contents %}
-<script type="text/javascript">
-	$(document).ready(function(){
-		$("table #ranking:odd").css("background", "green");
-	});
-</script>
-<meta charset="utf-8">
-<center style="margin-top: 30px;">
-	<nav class="menuHeaderDesafio menuHeader-fixo-Desafio">
-		<div id="formNavDesafio">
-			<ul>
-				<li class="nomesNavDesafio"><a href="#" id="geral">Geral</a></li>
-				<li class="nomesNavDesafio"><a href="#" id="amigos">Amigos</a></li>
-				<li class="nomesNavDesafio"><a href="#" id="turma">Turma</a></li>				
-			</ul>
-		</div>
-	</nav>
-</center>
 
-<div id="containerAmigos">
+<meta charset="utf-8">
+
+<div id="containerAmigos" style="margin-top: 30px">
 <!-- <script type="text/javascript" src="../static/js/menuNavRanks.js"></script> -->
 	<div id="containerSolicitacao">
-		<fieldset>
-			<legend>Ranking Geral</legend>
-
+		<legend>Ranking:</legend>
+		<hr class="form-hr">
+	</div>
+</div>
+	
+<nav class="nav-ranks">
+	<ul>
+		<li class="li-geral" id="li-geral"><a href="rankings" id="geral">Geral</a></li>
+			
+		<li class="li-amigos"><a href="rankings_amigos"id="amigos">Amigos</a></li>
+						
+		<li class="li-turma"><a href="rankings_turma" id="turma">Turma</a></li>
+	</ul>
+</nav>	
+		
+<div id="containerAmigos">	
+	<div id="containerSolicitacao">	
+		<div id="wrap-ranking">
 			<table width="100%" border="0" cellpadding="4" cellspacing="1">
 				<tbody>
 					<tr bgcolor="#004080" class="form-ranking">
@@ -34,13 +34,13 @@
 					{% for e in ranking %}
 
 
-					<tr bgcolor="#F0FFFF" id="ranking">
+					<tr bgcolor="" id="ranking">
 						<td align="center" class="form-ranking-td">
 							{{ forloop.counter }}
 						</td>
 
 						<td style="font-size: 10pt;">
-							<form name="form" action="buscaPerfilUsuario{{e.id}}" method="post">
+							<form name="form" action="buscaPerfilUsuario{{e.id}}" id="form-busca-usuario-rank" method="post">
 								{% csrf_token %} <input type="submit" value="{{e.nome}}"
 									class="meulink"> <input type="hidden" name="cUsuario"
 									value="{{e.id}}">
@@ -56,7 +56,7 @@
 
 				</tbody>
 			</table>
-		</fieldset>
+		</div>
 	</div>
 </div>
 {% endblock contents %}

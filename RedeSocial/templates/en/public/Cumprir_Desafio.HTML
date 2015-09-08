@@ -8,27 +8,35 @@
 					<textarea id="text-post" name="mensagem" placeholder=" Digite sua mensagem."></textarea>
 				</center>
 				
-				<hr style="margin: -2px 15px; border: 0; height: 0; border-top: 1px solid rgba(0, 0, 0, 0.1); border-bottom: 1px solid rgba(255, 255, 255, 0.3);">
+				<div id="preview">
+					<span title="Remover" class="btn-preview">
+						<span class="glyphicon glyphicon-remove remove-preview"></span>
+					</span> 
+					<img class="img-preview" style="width: 100px; height: 100px;" />
+				</div>
 				
-				<div id="ferramentaFeed">
-					<table>
-						<tr>
-							<td width="499">
-								<div class="inputFile btn btn-primary">
-									<span><img src="../static/imagens/iconCamera.png" width="28" /></span> <input type="file" name="arquivo" id="arquivo" onchange="PreviewImage();"/>
-								</div>
-							</td>
-	
-							<td>
-								<button id="btn-publicar" type="submit" name="Enviar" value="Publicar"
-								class="btn btn-primary disabled" disabled="disabled"><span class="glyphicon glyphicon-pencil"></span> Publicar
-								</button>
-								
-								<input type="hidden" name="cDesafio_Ativo" value="{{desafio_atual.id}}"/>
-						        <input type="hidden" name="enviar" value="send"/>
-							</td>
-						</tr>	
-					</table>
+				<div class="footer-postagem footer-postar">
+					<div id="ferramentaFeed">
+						<table>
+							<tr>
+								<td width="499">
+									<div class="fileUpload btn btn-primary">
+										<span><img src="../static/imagens/iconCamera.png" width="25" /></span> 
+										<input type="file" name="arquivo" class="upload" id="arquivo"/>
+									</div>
+								</td>
+			
+								<td>
+									<input type="hidden" name="cDesafio_Ativo" value="{{desafio_atual.id}}"/>
+						        	<input type="hidden" name="enviar" value="send"/>
+									
+									<button id="btn-publicar" type="submit" name="Enviar" value="Publicar"
+									class="btn btn-primary disabled" disabled="disabled"><span class="glyphicon glyphicon-pencil"></span> Publicar
+									</button>
+								</td>
+							</tr>
+						</table>
+					</div>
 				</div>
 			</form>
 		</div>

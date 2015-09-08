@@ -2,39 +2,41 @@
 <meta charset="utf-8">
 <div id="containerFeed1">
 	<div id="containerAmigos">
-		<fieldset>
-			<legend>Mensagens {{teste}}</legend>
+			<legend>Mensagens:</legend>
+			<hr class="form-hr">
 			<ul id="ul-mensagens">
 
 			{% for a in msg_usuario %}
 					<li class="li-mensagens">
-						<div id="mensagem" class="form-mensagem" style="width: 90%; height: 1px; float: left; background: ; margin-top: 3px;">
-							{{a.mensagem}}
-						</div>
-		
-						<div style="left:; background:; margin-left: 35px;">
+					
+						<div id="wrap-btn-mensagens">	
 							<form action="apagar_mensagem" id="form-remove-msg" method="post">	{% csrf_token %} 
-								<input type="hidden" id="hide-msg" name="cMensagem" value="{{a.id}}" />
-								
-								<button type="submit" id="btn-remove-msg" value="excluir" title="Excluir" style="background: transparent; border: none; float: right;">
-									<span class="glyphicon glyphicon-remove remove-feed" style="top: 2px;"></span>
+								<input type="hidden" id="hide-msg" name="cMensagem" value="{{a.id}}"/>
+									
+								<button type="submit" id="btn-remove-msg" value="excluir" title="Excluir">
+									<span class="glyphicon glyphicon-remove remove-feed"></span>
 								</button>
 							</form>
 						</div>
+						
+						<div id="mensagem" class="form-mensagem">
+							{{a.mensagem}}
+						</div>
+						
 					</li>
-			{% if forloop.last %}
-			    
-					<form action="mais_mensagens" method ="post" id="ver-mais-msg"> {% csrf_token %}
-				    	<input type ="hidden" name = "id_ultimo" value = "{{a.id}}">
-				    	<button type="submit" id="btnVerMais" class="btn-primary">Ver mais</button>
-					</form>
+					
+						{% if forloop.last %}
+			    	
+						<form action="mais_mensagens" method ="post" id="ver-mais-msg"> {% csrf_token %}
+					    	<input type ="hidden" name = "id_ultimo" value = "{{a.id}}">
+					    	<button type="submit" id="btn-ver-mais-comentario" class="btn-primary">Ver mais</button>
+						</form>
+					
 				{% endif %}
 				
 			{% endfor %}
 			</ul>
-			
-			
-		</fieldset>
+			<div class="clear"> </div>
 	</div>
 	
 	<div class="sk-circle" style="display: none;">

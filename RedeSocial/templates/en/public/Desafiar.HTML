@@ -6,68 +6,64 @@
 			
 			<legend>Desafiar</legend>
 			<hr class="form-hr">
-
-			<form action="lancar_desafios" id="form-desafiar-amigos" method="post">
-				{% csrf_token %}
-				<table style="margin-left: 23%;">
-					<tr>
-						<td width="70">
-							<div>
-								<label for="cTurma"><font id="formatacaoForm">Desafios:</font></label>
-							</div>
-						</td>
-
-						<td>
-							<select class="form-control-cadastro" name="cDesafios">
-								<optgroup label="Desafios">
-
-									{% for a in desafios %}
-										<option id="options-desafios" value="{{a.id}}">{{a.nome}}:  		{{a.pontuacao}} pontos</option>
-									{% endfor %}
-									
-								</optgroup>
-							</select>
-						</td>
-					</tr>
-				</table>
-
-				<table style="margin-left: 23%;">
-					<tr>
-						<td width="70">
-							<div>
-								<label for="cTurma"><font id="formatacaoForm">Amigos:</font></label>
-							</div>
-						</td>
-
-						<td>
-							<select class="form-control-cadastro" name="cAmigos">
-								<optgroup label="Amigos">
-									{% for a in meus_amigos %}
-									
-									<option id="options-amigos" value="{{a.amigo.id}}">{{a.amigo.nome}}</option>
-
-									{% endfor %}
-
-								</optgroup>
-							</select>
-						</td>
-					</tr>
-				</table>
-
-				<center>
-					<input type="submit" id="btn-amigos-lancar" value="Lançar Desafio"
-						class="btn btn-primary btn-second">
-				</center>
-				
-			</form>
-			
+			<div id="container-desafiar">
+				<form action="lancar_desafios" id="form-desafiar-amigos" method="post">
+					{% csrf_token %}
+					<table>
+						<tr>
+							<td width="70">
+								<div>
+									<label for="cTurma"><font id="formatacaoForm">Desafios:</font></label>
+								</div>
+							</td>
+	
+							<td>
+								<select class="form-control-cadastro" name="cDesafios">
+									<optgroup label="">
+	
+										{% for a in desafios %}
+											<option id="options-desafios" value="{{a.id}}">{{a.nome}}:  		{{a.pontuacao}} pontos</option>
+										{% endfor %}
+										
+									</optgroup>
+								</select>
+							</td>
+						</tr>
+					</table>
+	
+					<table>
+						<tr>
+							<td width="70">
+								<div>
+									<label for="cTurma"><font id="formatacaoForm">Amigos:</font></label>
+								</div>
+							</td>
+	
+							<td>
+								<select class="form-control-cadastro" name="cAmigos">
+									<optgroup label="">
+										{% for a in meus_amigos %}
+										
+										<option id="options-amigos" value="{{a.amigo.id}}">{{a.amigo.nome}}</option>
+	
+										{% endfor %}
+	
+									</optgroup>
+								</select>
+							</td>
+						</tr>
+					</table>
+						<input type="submit" id="btn-amigos-lancar" value="Lançar Desafio"
+							class="btn btn-primary btn-second">
+				</form>
+			</div>
 		</div>
 </div>
 
+{% if Usuario.professor == True %}
 <div id="containerAmigos" style="margin-top: 10px;">
 		
 	<div id="containerSolicitacao">
-{% if Usuario.professor == True %}
 		
 			<legend>Desafios por Turma </legend>
 			<hr class="form-hr">
@@ -130,10 +126,9 @@
 						class="btn btn-primary btn-second">
 				</center>
 			</form>
-		
-		{% endif %}	
 	</div>	
-</div>		
+</div>
+{% endif %}			
 		<div id="containerAmigos" style="margin-top: 10px;">
 		
 		<div id="containerSolicitacao">

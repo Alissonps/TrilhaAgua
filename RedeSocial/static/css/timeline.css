@@ -1,4 +1,117 @@
-.nav-times{
+.window{
+    display:none;
+    position:absolute;
+    left:0;
+    top:0;
+    background:#FFF;
+    z-index:9900;
+	word-wrap: break-word;
+	line-height: 1.45;
+	background-color: #f7f7f7;
+	-moz-border-radius: 2px;
+	-webkit-border-radius: 2px;
+	border-radius: 2px;
+	-moz-box-shadow: 0px 0px 2px rgba(0, 0, 0, 0.3);
+	-webkit-box-shadow: 0px 0px 2px rgba(0, 0, 0, 0.3);
+	box-shadow: 0px 0px 2px rgba(0, 0, 0, 0.3);
+	width: 30%;
+}
+
+#recebe-modal #btn-ver-mais-comentario{
+	width: 97.5%;	
+}
+
+#mascara{
+    display:none;
+    position:absolute;
+    left:0;
+    top:0;
+    z-index:9000;
+    background-color:#000;
+    opacity: 0.5;
+}
+ 
+.close {
+	display: block;
+	text-align: right;
+	color: #000;
+}
+
+.close:hover {
+	display: block;
+	text-align: right;
+	color: #000;
+}
+
+.header-modal {
+	width: 100%;
+	height: 30px; /* .push must be the same height as .footer */
+	background: rgb(240, 240, 240);
+	border-top: 1px solid #E0E0E0;
+	border-bottom: 1px solid #E0E0E0;
+}
+
+.header-modal span{
+	margin-right: 1.5%;
+	margin-top: 1.5%;
+}
+
+.name-modal{
+	font-size: 15pt;
+	font-family: Berlin Sans FB;
+	margin-left: 2%;
+}
+
+.ul-curtiram {
+	margin: 0;
+	padding: 0;
+	list-style: none;
+	max-height: 500px;
+	overflow: auto;
+}
+
+.ul-curtiram li {
+	background:;
+	margin: 3px 0px;
+	padding-top: 5px;
+	word-wrap: break-word;
+	line-height: 1.45;
+	border-bottom: 1px solid #e0e0e0;
+}
+
+#img-curtiram {
+	background: ;
+	margin-left: 3%;
+}
+
+#img-curtiram img {
+	width: 50px;
+	height: 50px;
+	border-radius: 50%;
+	background: ;
+}
+
+.ano-curtiram {
+	background: ;
+	width: 50%;
+	height: 10%;
+}
+
+#buscado-curtiram {
+	background: ;
+	height: 20%;
+	width: 80%;
+}
+
+#wrap-buscado-curtiram{
+	float: right;
+	background: ;
+	width: 25%;
+	height: 10%;
+	margin-right: 57%;
+}
+
+.nav-times {
 	width: 91.5%;
 	height: 20px;
 	margin: 10px 27px;
@@ -8,35 +121,35 @@
 	clear: both;
 }
 
-.nav-times ul{
+.nav-times ul {
 	list-style: none;
 	margin: 0;
 	padding: 0;
 }
 
-.nav-times ul li{
+.nav-times ul li {
 	float: left;
 	background: #fff;
 	width: 33.221%;
 }
 
-.li-geral a{
+.li-geral a {
 	border-bottom: 3px solid #ff8901 !important;
 }
 
-.li-amigos{
+.li-amigos {
 	border-left: 1px solid #DCDCDC;
 	border-right: 1px solid #DCDCDC;
 }
 
-.nav-times ul li a:hover{
+.nav-times ul li a:hover {
 	border-bottom: 3px solid #ff8901;
 }
 
-.nav-times ul li a{
+.nav-times ul li a {
 	color: gray;
-  	font-size: 13px;
-  	text-decoration: none;
-  	display: block;
-  	border-bottom: 3px solid #337ab7;
+	font-size: 13px;
+	text-decoration: none;
+	display: block;
+	border-bottom: 3px solid #337ab7;
 }

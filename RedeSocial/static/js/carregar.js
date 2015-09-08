@@ -1,4 +1,133 @@
 $(document).ready(function() {
+//  -------------- Modal usuarios curtiram Postagem Normal ----------------	
+	$(document).on("click", "#abrir-modal", function(){
+		var li = $(this).closest(".containerPostagem");
+		
+		var action = $(this).attr("action");
+		   
+		var modal = $("#wrap-modal");
+		   
+		var alturaTela = $(document).height();
+	    var larguraTela = $(window).width();
+	     
+	       //colocando o fundo preto
+	    $('#mascara').css({'width':larguraTela,'height':alturaTela});
+	    $('#mascara').fadeIn(300); 
+	    $('#mascara').fadeTo("slow",0.5);
+	    
+	    var scroll = $(document).scrollTop() + 150;
+	    
+	    var left = ($(window).width() /2) - ( $(modal).width() / 2 );
+	    var top = ($(window).height() / 2) - ( $(modal).height() / 2 );
+	     
+	    $(modal).css({'top':scroll,'left':left});
+		$(modal).show();
+		
+		$("#loader-curtiram").show();
+		
+		$("body").css("overflow", "hidden");
+		
+		var content = $("#recebe-modal");
+		
+		window.setTimeout( function(){   
+		$.ajax({
+			url: action,
+			type : "POST",
+			data : $("#abrir-modal", li).serialize(),
+			cache: false,
+			success: function( response ){
+				var data = $( '<div>'+response+'</div>' ).find('#wrap-modal-curtiram').html();
+				$("#loader-curtiram").hide();	
+				content.html( data ).hide();
+				content.html( data ).show();
+				   
+			}
+	   });
+		}, 1000);
+	   return false;
+	});
+	   
+	   $(document).on("click", "#mascara", function(){
+		   $(this).hide();
+	       $("#wrap-modal").hide();
+	       $("#recebe-modal").empty();
+	       $("body").css("overflow", "auto");
+	   });
+	   
+	   $(document).on("click", ".close", function(){
+		   $("#wrap-modal").hide();
+		   $('#mascara').hide();
+		   $("#recebe-modal").empty();
+		   $("body").css("overflow", "auto");
+	   });
+	   
+//FIM:  -------------- Modal usuarios curtiram Postagem Normal ----------------
+	   
+	   
+//  -------------- Modal usuarios curtiram Postagem Desafio ----------------	
+	$(document).on("click", "#abrir-modal-desafio", function(){
+		var li = $(this).closest(".containerPostagemDesafio");
+			
+		var action = $(this).attr("action");
+			   
+		var modal = $("#wrap-modal");
+			   
+		var alturaTela = $(document).height();
+		var larguraTela = $(window).width();
+		     
+		       //colocando o fundo preto
+	    $('#mascara').css({'width':larguraTela,'height':alturaTela});
+	    $('#mascara').fadeIn(300); 
+	    $('#mascara').fadeTo("slow",0.5);
+		    
+		var scroll = $(document).scrollTop() + 150;
+		    
+		var left = ($(window).width() /2) - ( $(modal).width() / 2 );
+		var top = ($(window).height() / 2) - ( $(modal).height() / 2 );
+		     
+		$(modal).css({'top':scroll,'left':left});
+		$(modal).show();
+			
+		$("#loader-curtiram").show();
+			
+		$("body").css("overflow", "hidden");
+			
+		var content = $("#recebe-modal");
+			
+		window.setTimeout( function(){   
+		$.ajax({
+			url: action,
+			type : "POST",
+			data : $("#abrir-modal-desafio", li).serialize(),
+			cache: false,
+			success: function( response ){
+				var data = $( '<div>'+response+'</div>' ).find('#wrap-modal-curtiram').html();
+				$("#loader-curtiram").hide();	
+				content.html( data ).hide();
+				content.html( data ).show();
+				   
+			}
+		  });
+		}, 1000);
+		return false;
+	});
+		   
+	   $(document).on("click", "#mascara", function(){
+		   $(this).hide();
+	       $("#wrap-modal").hide();
+	       $("#recebe-modal").empty();
+	       $("body").css("overflow", "auto");
+	   });
+		   
+	   $(document).on("click", ".close", function(){
+		   $("#wrap-modal").hide();
+		   $('#mascara').hide();
+		   $("#recebe-modal").empty();
+		   $("body").css("overflow", "auto");
+	   });
+		   
+//FIM:  -------------- Modal usuarios curtiram Postagem Desafio ----------------
+	
 // 1: -------------- Ver mais feeds ----------------
 	$(document).on('submit', "#verMais", function() {
 		$("#verMais").hide();
@@ -54,10 +183,11 @@ $(document).ready(function() {
 	$(document).on('submit', "#ver-mais-curtidas", function() {
 		
 		$("#ver-mais-curtidas").hide();
-		$(".sk-circle").show();
+		$(".load-mais-curtidas").show();
 		
-		var content = $("#ul-curtiram");
-
+		var content = $(".ul-curtiram");
+		
+		window.setTimeout( function(){
 		$.ajax({
 			type : "POST",
 			url : "mais_pingo",
@@ -65,17 +195,19 @@ $(document).ready(function() {
 			success : function( response ) {
 				//$("#containerFeed2").append(data);
 				
-				var data = $( '<div>'+response+'</div>' ).find('#ul-curtiram').html();
+				var data = $( '<div>'+response+'</div>' ).find('.ul-curtiram').html();
 				// entra no conteudo da href procurando pela div #containerFeedGeral.
 				
-				content.append( data );
+					content.append( data );
+				
 				
 			},
 			complete: function () {
-		          $(".sk-circle").hide();
+		          $(".load-mais-curtidas").hide();
 		          $("#ver-mais-curtidas").remove();
 			}
 		});
+		}, 500 );
 		return false;
 	});// 1.2: fim
 	
@@ -144,11 +276,13 @@ $(document).ready(function() {
 		$(".sk-circle").show();
 		
 		var content = $("#ul-mensagens");
-
+		
+		//window.setTimeout( function(){
 		$.ajax({
 			type : "POST",
 			url : "mais_mensagens",
 			data : $("#ver-mais-msg").serialize(),
+			
 			success : function( response ) {
 				//$("#containerFeed2").append(data);
 				
@@ -158,21 +292,44 @@ $(document).ready(function() {
 				content.append( data );
 				
 			},
+			
 			complete: function () {
 		          $(".sk-circle").hide();
 		          $("#ver-mais-msg").remove();
 			}
 		});
+		//}, 500 );
 		return false;
 	});// 1.5: fim
-// -------------- 2: se o input file do post mudar -----------
+// -------------- 2: faz o preview da imagem pra postar -----------
+	function readURL(input) {
+
+	    if (input.files && input.files[0]) {
+	        var reader = new FileReader();
+
+	        reader.onload = function (e) {
+	            $('.img-preview').attr('src', e.target.result);
+	        }
+
+	        reader.readAsDataURL(input.files[0]);
+	    }
+	}// fim 2;
+// -------------- 2.1: se o input file do post mudar -----------
 	$(document).on("change", "#arquivo", function(){
-	
+		
 		$("#btn-publicar").removeClass("disabled");
 		$("#btn-publicar").removeAttr("disabled", "disabled");
 		
-	}); // 2: fim
+		$("#preview").show();
+		readURL(this);
+		
+	}); // 2.1: fim
 	
+	$(document).on("click", ".btn-preview", function(){
+		$("#arquivo").val('');
+		$("#preview").hide();
+	});
+
 // -------------- 3: se digitar alguma coisa no campo de texto do post ---------
 	$(document).on("keyup", "#text-post", function(){
 		
@@ -205,6 +362,12 @@ $(document).ready(function() {
 				$("#arquivo").val('');
 				$("#btn-publicar").addClass("disabled");
 				$("#btn-publicar").attr("disabled", "disabled");
+				
+				$("#preview").hide();
+				
+				$('.nav-times a').css("border-bottom","3px solid #337ab7");
+				$("#li-geral").addClass("li-geral");
+
 			}
 		});
 		
@@ -214,7 +377,7 @@ $(document).ready(function() {
 
 // ------------ 5: quando clica em desafiar amigo direciona pra tela desafiar -------
 $(document).on("click", "#btn-desafiar", function(){
-	var ul = $(this).closest("#ul-amigos");
+	var ul = $(this).closest("#li-amigos");
 	var id = $("#hide-desafio", ul).val();
 	
 	$.ajax({
@@ -233,6 +396,74 @@ $(document).on("click", "#btn-desafiar", function(){
 	});
 	return false;
 });// 5: fim
+
+//------------ 5.1: quando clica em desafiar amigo pela pesquisa direciona pra tela desafiar -------
+$(document).on("click", ".btn-desafiar", function(){
+	var ul = $(this).closest("#li-pesquisa");
+	var id = $("#hide-desafio-pesquisa", ul).val();
+	
+	$.ajax({
+		url: 'desafiar_amigo',
+		data : {
+			'id_usuario' : id,
+		},
+		type: "post",
+		cache : false,
+		success: function(data){
+			
+			$("#containerFeedGeral").empty();
+			$("#containerFeedGeral").append(data);
+		}
+		
+	});
+	return false;
+});// 5.1: fim
+
+//------------ 5.2: quando clica em desafiar amigo pela pesquisa amigos direciona pra tela desafiar -------
+$(document).on("click", ".btn-desafiar-amigo", function(){
+	var ul = $(this).closest("#li-pesquisa-amigos");
+	var id = $("#hide-desafio-pesquisa", ul).val();
+	
+	$.ajax({
+		url: 'desafiar_amigo',
+		data : {
+			'id_usuario' : id,
+		},
+		type: "post",
+		cache : false,
+		success: function(data){
+			
+			$("#containerFeedGeral").empty();
+			$("#containerFeedGeral").append(data);
+		}
+		
+	});
+	return false;
+});// 5.2: fim
+
+//------------ 5.3: envia solicitacao de amizade pelo resultado da pesquisa -------
+$(document).on("click", ".btn-fazer-amizade", function(){
+	var ul = $(this).closest("#li-pesquisa");
+	var id = $("#hide-fazer-amizade", ul).val();
+	
+	$.ajax({
+		url: 'fazer_amizade',
+		data : {
+			'cFazer_amizade' : id,
+		},
+		type: "post",
+		cache : false,
+		success: function(data){
+			$("#btn-fazer-amizade", ul).attr("disabled", "disabled");
+			$("#btn-fazer-amizade", ul).removeAttr("title");
+			$("#btn-fazer-amizade", ul).removeClass("btn-primary btn-lg btn-fazer-amizade");
+			$("#btn-fazer-amizade", ul).addClass("btn-solicitacao");
+			$("#btn-fazer-amizade", ul).text("Solicitação Enviada");
+		}
+		
+	});
+	return false;
+});// 5.3: fim
 
 //--------------- 6: lança um desafio ao amigo -------------//
 $(document).on("click", "#btn-lancar", function(){
@@ -258,7 +489,7 @@ $(document).on("click", "#btn-lancar", function(){
 
 //-------------- 7: aceita os desafios pendentes ------------------
 $(document).on("click", ".btn-aceitar", function(){
-	var ul = $(this).closest(".pendentes");
+	var ul = $(this).closest("#li-pendentes");
 
 	var id_usuario = $("#hide-id-usuario", ul).val();
 	var id_desafio = $("#hide-id-desafio", ul).val();
@@ -276,9 +507,9 @@ $(document).on("click", ".btn-aceitar", function(){
 		},
 		success: function(data){
 	
-			$(ul).hide('slide', {direction: 'left'}, 250, function(){
-				$(ul).remove(); 
-			});
+			$(ul).fadeOut(200, function(){
+				$(ul).remove();
+	        });
 			
 			$(".notificacoes-desafios").load("timeline .ul-desafios");
 
@@ -289,7 +520,7 @@ $(document).on("click", ".btn-aceitar", function(){
 
 // --------------- 8: recusa desafio pendente -----------------
 $(document).on("click", ".btn-recusar", function(){
-	var ul = $(this).closest(".pendentes");
+	var ul = $(this).closest("#li-pendentes");
 
 	var id_usuario = $("#hide-id-usuario-recusar", ul).val();
 	var id_desafio = $("#hide-id-desafio-recusar", ul).val();
@@ -307,9 +538,9 @@ $(document).on("click", ".btn-recusar", function(){
 		},
 		success: function(data){
 
-			$(ul).hide('slide', {direction: 'left'}, 250, function(){
-				$(ul).remove(); 
-			});
+			$(ul).fadeOut(200, function(){
+				$(ul).remove();
+	        });
 			
 			$(".notificacoes-desafios").load("timeline .ul-desafios");
 		
@@ -331,10 +562,10 @@ $(document).on("click", "#btn-remove-msg", function(){
 			'cMensagem' : hide_msg,
 		},
 		success: function(data){
-	
-			$(container).hide('slide', {direction: 'left'}, 500, function(){
-				$(container).remove(); 
-			});
+
+			$(container).fadeOut(200, function(){
+         	   $(container).remove();
+            });
 			
 			$(".notificacoes-msg").load("timeline .ul-msg");
 		
@@ -346,12 +577,15 @@ $(document).on("click", "#btn-remove-msg", function(){
 //--------------- 10: aceita solicitacao de amizade -----------------
 $(document).on("click", "#btn-aceitar-solicitacao", function(){
 	
-	var ul = $(this).closest("#ul-solicitacoes");
+	var ul = $(this).closest("#li-solicitacoes");
 	//$("#ul-amigos").empty();
 	var pedido_usuario_id = $("#pedido-usuario-id", ul).val();
 	var pedido_solicitacao = $("#pedido-solicitacao", ul).val();
 	var pedido_solicitacao_id = $("#pedido-solicitacao-id", ul).val();
-			
+	
+	var content = $("#container-meus-amigos");
+	var content_2 = $("#li-qtd-solicitacoes");
+	
 	$.ajax({
 		url: "pedido_Solicitacao",
 		type: "post",
@@ -360,14 +594,27 @@ $(document).on("click", "#btn-aceitar-solicitacao", function(){
 			'cPedido_solicitacao' : pedido_solicitacao,
 			'cPedido_solicitacao_id' : pedido_solicitacao_id,
 		},
-		success: function(data){
+		success: function(response){
 			
-			$("#container-meus-amigos").load("amigos #container-meus-amigos");
+			//$("#container-meus-amigos").load("amigos #container-meus-amigos");
 			
-			$(ul).hide('slide', {direction: 'left'}, 500, function(){
-				$(ul).remove(); 
-			});
-		
+			$(ul).fadeOut(300, function(){
+         	   $(ul).remove();
+            });
+			
+			var data = $( '<div>'+response+'</div>' ).find('#container-meus-amigos').html();
+			
+			var data_2 = $( '<div>'+response+'</div>' ).find('#li-qtd-solicitacoes').html();
+			
+			// entra no conteudo da href procurando pela div #containerFeedGeral.
+			 
+			content.html( data ).hide();
+				
+			content_2.html( data_2 ).hide();
+				
+			content_2.html( data_2 ).show();
+			    
+			content.html( data ).show();
 		}
 	});
 	return false;
@@ -376,12 +623,14 @@ $(document).on("click", "#btn-aceitar-solicitacao", function(){
 //--------------- 11: recusa solicitacao de amizade -----------------
 $(document).on("click", "#btn-recusar-solicitacao", function(){
 	
-	var ul = $(this).closest("#ul-solicitacoes");
+	var ul = $(this).closest("#li-solicitacoes");
 
 	var recusar_usuario_id = $("#recusar-usuario-id", ul).val();
 	var recusar_solicitacao = $("#recusar-solicitacao", ul).val();
 	var recusar_solicitacao_id = $("#recusar-solicitacao-id", ul).val();
-			
+	
+	var content_2 = $("#li-qtd-solicitacoes");
+	
 	$.ajax({
 		url: "pedido_Solicitacao",
 		type: "post",
@@ -390,12 +639,18 @@ $(document).on("click", "#btn-recusar-solicitacao", function(){
 			'cPedido_solicitacao' : recusar_solicitacao,
 			'cPedido_solicitacao_id' : recusar_solicitacao_id,
 		},
-		success: function(data){
+		success: function(response){
 			
-			$(ul).hide('slide', {direction: 'left'}, 500, function(){
-				$(ul).remove(); 
-			});
+			$(ul).fadeOut(300, function(){
+	         	   $(ul).remove();
+	        });
 		
+			var data_2 = $( '<div>'+response+'</div>' ).find('#li-qtd-solicitacoes').html();
+			
+			content_2.html( data_2 ).hide();
+				
+			content_2.html( data_2 ).show();
+			
 		}
 	});
 	return false;
@@ -404,7 +659,7 @@ $(document).on("click", "#btn-recusar-solicitacao", function(){
 //--------------- 12: direciona pra tela cumprir desafio -----------------
 $(document).on("click", "#btn-cumprir-desafio", function(){
 	
-	var ul = $(this).closest("#ul-cumprir");
+	var ul = $(this).closest("#li-cumprir");
 	
 	var content = $("#containerFeedGeral");
 	var hide_desafio_cumprir = $("#hide-desafio-cumprir", ul).val();
@@ -516,7 +771,7 @@ $(document).on("submit", "#form-lancar-desafio", function(){
 //--------------- 15: verifica desafio cumprido -----------------
 $(document).on("click", "#btn-verificar-desafio", function(){
 	
-	var ul = $(this).closest("#ul-verificar");
+	var ul = $(this).closest("#li-verificar");
 	var content = $("#containerFeedGeral");
 	
 	var hide_verificar_desafio = $("#hide-verificar-desafio", ul).val();
@@ -595,7 +850,7 @@ $(document).on("submit", "#form-recusar-desafio", function(){
 	
 	var usuario = $("#usuario-cumprido").val();
 	
-	$("#btn-recusar-desafio").val("recusando..");
+	$("#btn-recusar-desafio").val("Recusando..");
 	
 	$.ajax({
 		url: "atribuir_desafio",
@@ -675,3 +930,105 @@ $(document).on("submit", "#postar-comentario-2", function(){
 	});
 	return false;
 });// 18: fim -------- posta comentario2 em uma publicacao -----------------
+
+//----------------- 19: direciona para tela editar perfil ------------------
+$(document).on("submit", "#editar-perfil", function(){
+	
+	var content = $("#containerFeedGeral");	
+	var url = "editarPerfil";
+	
+	//content.html($(".loader").show());
+	
+	$.ajax({
+		url: "editarPerfil",
+		type: "post",
+		data: $("#editar-perfil").serialize(),
+		success: function(response){
+			var data = $( '<div>'+response+'</div>' ).find('#container-editar-perfil').html();
+			// entra no conteudo da href procurando pela div #containerFeedGeral.
+			 
+			
+			window.setTimeout( function(){ //atrasando para verificar o load.
+				content.html( data ).hide();
+			    
+				content.html( data ).show('slide', {direction: 'up'}, 300, function(){
+			    // a div que declarei vai receber o valor do sucesso do ajax.
+			});
+		    
+		    history.pushState('', 'New URL: ', url);  
+			}, 0 );
+		}
+	});
+	return false;
+});// fim: ----------------- 20: atualiza informações do perfil ------------------
+
+$(document).on("submit", "#atualizar-informacoes", function(){
+	
+	var content = $("#containerFeedGeral");	
+	var content_2 = $("#containerPerfil");
+	var url = "perfil";
+	
+	//content.html($(".loader").show());
+	
+	$.ajax({
+		url: "atualizarInformacoes",
+		type: "post",
+		data : new FormData(this),
+		processData : false,
+		contentType : false,
+		success: function(response){
+			var data = $( '<div>'+response+'</div>' ).find('#containerFeedGeral').html();
+			
+			var data_2 = $( '<div>'+response+'</div>' ).find('#containerPerfil').html();
+			
+			// entra no conteudo da href procurando pela div #containerFeedGeral.
+			 
+			
+			window.setTimeout( function(){ //atrasando para verificar o load.
+				
+				content.html( data ).hide();
+				
+				content_2.html( data_2 ).hide();
+				
+				content_2.html( data_2 ).show();
+			    
+				content.html( data ).show('slide', {direction: 'up'}, 300, function(){
+			    // a div que declarei vai receber o valor do sucesso do ajax.
+			});
+		    
+		    history.pushState('', 'New URL: ', url);  
+			}, 0 );
+		}
+	});
+	return false;
+});// fim: ----------------- 20: atualiza informações do perfil ------------------
+
+// 21 ----------------- pesquisa geral -------------------------------------------
+
+$(document).on("submit", "#form-pesquisa", function(){
+	
+	var content = $("#wrap-container-amigos");
+	content.html($(".loader").show());
+	
+	$.ajax({
+		url: "pesquisa",
+		type: "post",
+		data: $("#form-pesquisa").serialize(),
+		success: function(response){
+			var data = $( '<div>'+response+'</div>' ).find('#wrap-resultado-pesquisa').html();
+			// entra no conteudo da href procurando pela div #containerFeedGeral.
+			 
+			
+			window.setTimeout( function(){ //atrasando para verificar o load.
+				content.html( data ).hide();
+			    
+				content.html( data ).show('slide', {direction: 'up'}, 300, function(){
+			    // a div que declarei vai receber o valor do sucesso do ajax.
+			});
+		    
+		    //history.pushState('', 'New URL: ', url);  
+			}, 0 );
+		}
+	});
+	return false;
+});// 21 fim ----------------- pesquisa geral -----------------------------------

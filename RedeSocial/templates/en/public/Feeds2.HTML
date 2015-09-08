@@ -58,10 +58,11 @@
 		 			{% endif %}
 		 			
 					<td style="background:  ;">
-						<form action="usuarios_curtiram" id="form-u-curtiu" method="post"> {% csrf_token %} 
+						<!-- código modal -->
+						<form action="usuarios_curtiram" id="abrir-modal" method="post"> {% csrf_token %} 
 							<input type="submit" id="id{{e.id}}" value="({{e.qtd_pingo}})" class="u-curtidas">
 							<input type="hidden" id="hide-u-curtiu" name="cID_post" value="{{e.id}}">
-						</form>
+						</form><!-- FIM código modal -->
 					</td>
 	
 					<td style="background: ;">
@@ -74,16 +75,15 @@
 				</tr>
 			</table>
 
-		<hr
-				style="margin: 5px 15px 0px 15px; border: 0; height: 0; border-top: 1px solid rgba(0, 0, 0, 0.1); border-bottom: 1px solid rgba(255, 255, 255, 0.3);">
-
+		<div class="footer-postagem">
 			<div class="comentario-postagem">
 				<form action="postarComentarios" id="postar-comentario" method="post">
-				{% csrf_token %}
+					{% csrf_token %}
 					<input type="text" class="input-comentario" placeholder="Deixe seu comentário.." required/><button class="button-comentario"><span class="glyphicon glyphicon-send"></span></button>
-					<input type="hidden" id="comentario-id" name="cId" value="{{e.id}}" /> 
+					<input type="hidden" id="comentario-id" name="cId" value="{{e.id}}"/> 
 				</form>				
 			</div>
+		</div>
 	</div>
 
 <!-- ############################ Fim - Postagem normal ############################### -->
@@ -154,10 +154,11 @@
             {% endif %}
             
             <td style="background:  ;">
-				<form action="usuarios_curtiram" id="form-u-curtiu-desafio" method="post"> {% csrf_token %} 
+				<!-- código modal -->
+				<form action="usuarios_curtiram" id="abrir-modal-desafio" method="post"> {% csrf_token %} 
 					<input type="submit" id="id{{e.id}}" value="({{e.qtd_pingo}})" class="u-curtidas">
 					<input type="hidden" id="hide-u-curtiu" name="cID_post" value="{{e.id}}">
-				</form>
+				</form><!-- FIM código modal -->
 			</td>
 
 			<td style="background: ;">
@@ -170,16 +171,15 @@
           </tr>
       </table>
 
-       <hr
-				style="margin: 5px 15px 0px 15px; border: 0; height: 0; border-top: 1px solid rgba(0, 0, 0, 0.1); border-bottom: 1px solid rgba(255, 255, 255, 0.3);">
-
+       <div class="footer-postagem">
 			<div class="comentario-postagem">
 				<form action="postarComentarios" id="postar-comentario-desafio" method="post">
-				{% csrf_token %}
+					{% csrf_token %}
 					<input type="text" class="input-comentario" placeholder="Deixe seu comentário.." required/><button class="button-comentario"><span class="glyphicon glyphicon-send"></span></button>
-					<input type="hidden" id="comentario-id" name="cId" value="{{e.id}}" /> 
+					<input type="hidden" id="comentario-id" name="cId" value="{{e.id}}"/> 
 				</form>				
 			</div>
+		</div>
     </div>
     
 <!-- ############################ Fim - Postagem desafio #################################### -->

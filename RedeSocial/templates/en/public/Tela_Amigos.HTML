@@ -1,120 +1,135 @@
 {% extends "en/public/Base.HTML" %} {% block contents %}
 <meta charset="utf-8">
-<div id="containerPesquisa">
-	<form action="pesquisa" method="post">
+<div id="container-pesquisa">
+	<form action="pesquisa" id="form-pesquisa" method="post">
 		{% csrf_token %}
-		<div id="containerCheckbox">
-			<ul>
-				<li class="checkboxPesquisa"><label> <input
-						type="checkbox" name="checkbox_Todos" value="True"> Todos
-				</label></li>
-
-				<li class="checkboxPesquisa"><label> <input
-						type="checkbox" name="checkbox_Amigos" value="True">
-						Amigos
-				</label></li>
-			</ul>
-		</div>
-		<div class="col-xs-6">
-			<div class="input-group">
-				<input type="text" class="form-control" id="pesquisa" size="69%" name="cPesquisar"
-					placeholder="Procure seus amigos.."> <span
-					class="input-group-addon">
-					<button type="submit"
-						style="background: transparent; border: none; cursor: pointer; outline: none;">
-						<span class="glyphicon glyphicon-search"></span>
-					</button>
-				</span>
-			</div>
-		</div>
+	<div id="containerCheckbox">
+		<ul>
+			<li class="checkboxPesquisa">
+				<label><input type="checkbox" name="checkbox_Todos" value="True" checked="checked"> Todos</label>
+			</li>
+	
+			<li class="checkboxPesquisa">
+				<label><input type="checkbox" name="checkbox_Amigos" value="True"> Amigos</label>
+			</li>
+		</ul>
+	</div>
+			
+	<div class="wrap-pesquisa">
+		<input type="text" class="input-pesquisa" name="cPesquisar" placeholder="Procure seus amigos.."/><button class="button-pesquisa"><span class="glyphicon glyphicon-search"></span></button>
+	</div>
 	</form>
 </div>
 
 
-<div id="containerAmigos">
-	<div id="containerSolicitacao">
-
-		<!-- {% if msg_erro != " " %} -->
-		<!--	<div class="alert alert-danger" role="alert">{{msg_erro}}</div> -->
-		<!-- {% endif %} -->
-
-		{% if qtd_solicitacoes > 0 %}
-		<fieldset>
+<div id="wrap-container-amigos">
+{% if qtd_solicitacoes > 0 %}
+	<div id="containerAmigos">
+		<div id="containerSolicitacao">
 			<legend>Soliticações</legend>
-
-			{% for b in Minhas_Solicitacoes %}
-			<ul id="ul-solicitacoes">
-
-				<li><img src="{{b.usuario.foto.url}}" id="imgAmigos"></li>
-
-				<li style="margin: 7px 15px 15px 15px;">
-					<form name="form" action="buscaPerfilUsuario{{b.usuario.id}}" method="post">
-						{% csrf_token %} <input type="submit" value="{{b.usuario.nome}}"
-							class="meulink"> <input type="hidden" name="cUsuario"
-							value="{{b.usuario.id}}">
-					</form>
-					<div class="form-ano">{{b.usuario.turma}}</div>
-				</li>
-					
-				<input type="hidden" id="recusar-usuario-id" name="cPedido_usuario_id" value="{{b.usuario.id}}"/> 
-				<input type="hidden" id="recusar-solicitacao" name="cPedido_solicitacao" value="{{False}}"/>
-				<input type="hidden" id="recusar-solicitacao-id" name="cPedido_solicitacao_id" value="{{b.id}}"/>
-
-				<button type="submit" value="recusar" id="btn-recusar-solicitacao" class="btn btn-danger btn-lg"
-					title="Recusar solicitação">
-					<span class="glyphicon glyphicon-remove"></span>
-				</button>
-
-				<input type="hidden" id="pedido-usuario-id" name="cPedido_usuario_id" value="{{b.usuario.id}}"/> 
-				<input type="hidden" id="pedido-solicitacao" name="cPedido_solicitacao" value="{{True}}"/> 
-				<input type="hidden" id="pedido-solicitacao-id" name="cPedido_solicitacao_id" value="{{b.id}}"/>
-
-				<button type="submit" id="btn-aceitar-solicitacao" value="aceitar"
-					class="btn btn-success btn-lg" title="Aceitar solicitação">
-					<span class="glyphicon glyphicon-ok"></span>
-				</button>
-			</ul>
-			{% endfor %}
-
-		</fieldset>
-		{% endif %}
+			<hr class="form-hr">
+			<ul class="ul-pendentes">
+				{% for b in Minhas_Solicitacoes %}
+				<li id="li-solicitacoes">
+				
+					<div class="wrap-btn-pendentes wrap-btn-cumprir">
+						<input type="hidden" id="pedido-usuario-id" name="cPedido_usuario_id" value="{{b.usuario.id}}"/> 
+						<input type="hidden" id="pedido-solicitacao" name="cPedido_solicitacao" value="{{True}}"/> 
+						<input type="hidden" id="pedido-solicitacao-id" name="cPedido_solicitacao_id" value="{{b.id}}"/>
 		
-		<fieldset id="fieldset-amigos">
-			<legend>Meus amigos</legend>
-			<div id="container-meus-amigos">
-			{% for e in Meus %}
-				<ul id="ul-amigos">
-					<div style="background:; width: 79%; float: left;">
-						<li><img src="{{e.amigo.foto.url}}" id="imgAmigos"/></li>
-	
-						<li style="margin: 7px 15px 15px 15px;">
-							<form name="form" action="buscaPerfilUsuario{{e.amigo.id}}" method="post">
-								{% csrf_token %} <input type="submit" value="{{e.amigo.nome}} "
-									class="meulink"> <input type="hidden" name="cUsuario"
-									value="{{e.amigo.id}}">
-							</form>
-							<div class="form-ano">{{e.amigo.turma}}</div>
-						</li>
-	
-						<li style="margin: 19px 35px 0px 0px; float: right;"
-							class="form-ano">{{e.amigo.pontos}} pontos</li>
-					</div>
-	
-					<div style="background:; float: right;">
-					
-					<form action="desafiar_amigo" id="desafiar-amigo" method = "post" > {% csrf_token %}
-						<input type ="hidden" id="hide-desafio" name ="id_usuario" value={{e.amigo.id}}>
-						<button type="submit" value="desafiar" id="btn-desafiar" class="btn btn-primary btn-lg" >
-							<span class="glyphicon glyphicon-tint"></span> Desafiar
+						<button type="submit" id="btn-aceitar-solicitacao" value="aceitar"
+							class="btn btn-success btn-lg" title="Aceitar solicitação">
+							<span class="glyphicon glyphicon-ok"></span>
 						</button>
-					</form>
-					
+						
+						<input type="hidden" id="recusar-usuario-id" name="cPedido_usuario_id" value="{{b.usuario.id}}"/> 
+						<input type="hidden" id="recusar-solicitacao" name="cPedido_solicitacao" value="{{False}}"/>
+						<input type="hidden" id="recusar-solicitacao-id" name="cPedido_solicitacao_id" value="{{b.id}}"/>
+		
+						<button type="submit" value="recusar" id="btn-recusar-solicitacao" class="btn btn-danger btn-lg"
+							title="Recusar solicitação">
+							<span class="glyphicon glyphicon-remove"></span>
+						</button>
 					</div>
-				</ul>
-				<!-- <hr style="margin-bottom:0px; border: 1; height: 0; border-top: 1px solid rgba(0, 0, 0, 0.1); border-bottom: 1px solid rgba(255, 255, 255, 0.3);"> -->
+					
+					<div class="wrap-desafio-pontos">
+			        	<div class="form-ano">
+			            	{{b.amigo.pontos}} pontos 
+			          	</div>
+		          	</div>
+		          	
+					<div id="wrap-buscado-cumprir">
+						<div id="buscado-pendentes">
+							<form name="form" action="buscaPerfilUsuario{{b.usuario.id}}" id="form-busca-usuario-solicitacoes" method="post">
+								{% csrf_token %} 
+								<input type="submit" value="{{b.usuario.nome}}"	class="meulink"> 
+								<input type="hidden" name="cUsuario" value="{{b.usuario.id}}">
+							</form>
+						</div>	
+							
+						<div class="form-ano ano-pendentes">
+							{{b.usuario.turma}}
+						</div>
+					</div>
+						
+					<div id="img-desafio-pendentes">	
+						<img src="{{b.usuario.foto.url}}">
+					</div>
+				</li>
+			{% endfor %}
+		</ul>
+	</div><!-- Fim container solicitação de amizade -->	
+</div>
+	{% endif %}
+		
+<div id="containerAmigos"> <!-- inicio container amigos -->
+	<div id="containerSolicitacao">	
+		<div id="container-meus-amigos">	
+				<legend>Meus amigos:</legend> 
+				<hr class="form-hr">
+				
+				<ul class="ul-pendentes">
+				{% for e in Meus %}
+					<li id="li-amigos">
+						<div style="margin-right: 5px;">
+							<div class="wrap-btn-pendentes wrap-btn-cumprir" >
+								<form action="desafiar_amigo" id="desafiar-amigo" method = "post" > {% csrf_token %}
+									<input type ="hidden" id="hide-desafio" name ="id_usuario" value={{e.amigo.id}}>
+									<button type="submit" value="desafiar" id="btn-desafiar" class="btn btn-primary btn-lg" >
+										<span class="glyphicon glyphicon-tint"></span> Desafiar
+									</button>
+								</form>
+							</div>
+							
+							<div class="wrap-desafio-pontos">
+								<div class="form-ano">
+									{{e.amigo.pontos}} pontos
+								</div>
+							</div>
+							
+							<div id="wrap-buscado-cumprir">
+								<div id="buscado-pendentes">
+									<form name="form" action="buscaPerfilUsuario{{e.amigo.id}}" id="form-busca-usuario-amigos" method="post">
+										{% csrf_token %} 
+										<input type="submit" value="{{e.amigo.nome}} " class="meulink"> 
+										<input type="hidden" name="cUsuario" value="{{e.amigo.id}}">
+									</form>
+								</div>	
+								
+								<div class="form-ano ano-pendentes">
+									{{e.amigo.turma}}
+								</div>
+							</div>
+							
+							<div id="img-desafio-pendentes">	
+								<img src="{{e.amigo.foto.url}}" />
+							</div>
+						</div>
+					</li>
 				{% endfor %}
+				</ul>
 			</div>
-		</fieldset>
+		</div>
 	</div>
 </div>
 {% endblock contents %}

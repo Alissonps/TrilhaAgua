@@ -26,6 +26,7 @@
 <title>Trilha da Água</title>
 </head>
 <body>
+<div id="mascara"></div>
 	<header>
 		<nav class="menuHeader menuHeader-fixo">
 			
@@ -47,11 +48,11 @@
 			<div id="containerNotificacao" class="notificacoes-msg" style="margin-top: 60px">
 				<ul id="notificacao-ul" class="ul-msg">
 					<li><div class="tituloMenu">Notificações</div></li>
-					<li><span class="badge">{{qtd_solicitacoes}}</span><a href="amigos" class="form-notificacao">Solicitações de amizade</a></li>
+					<li id="li-qtd-solicitacoes"><span class="badge">{{qtd_solicitacoes}}</span><a href="amigos" title="Amigos" class="form-notificacao">Solicitações de amizade</a></li>
 					
 					<hr style="margin: 8px 0px 8px 0px; border: 0; height: 0; border-top: 1px solid rgba(0, 0, 0, 0.1); border-bottom: 1px solid rgba(255, 255, 255, 0.3);">
 					
-					<li><span class="badge">{{qtd_msgs}}</span><a href="mensagens" class="form-notificacao">Mensagens</a></li>
+					<li><span class="badge">{{qtd_msgs}}</span><a href="mensagens" title="Mensagens" class="form-notificacao">Mensagens</a></li>
 					
 				</ul>
 			</div>
@@ -61,16 +62,16 @@
 					<li><div class="tituloMenu">Desafios</div></li>
 					
 					
-					<li id="li-pendentes"><span class="badge" id="badge-pendentes">{{soli_desafios}}</span><a href="pendentes" id="href-id" class="form-notificacao">Pendentes</a></li>
+					<li id="li-pendentes"><span class="badge" id="badge-pendentes">{{soli_desafios}}</span><a href="pendentes" title="Desafios pendentes" id="href-id" class="form-notificacao">Pendentes</a></li>
 					
 					<hr style="margin: 8px 0px 8px 0px; border: 0; height: 0; border-top: 1px solid rgba(0, 0, 0, 0.1); border-bottom: 1px solid rgba(255, 255, 255, 0.3);">
 					
-					<li id="li-ativos"><span id="wrap-badge-ativos"><span class="badge" id="badge-ativos">{{qtd_d_ativos_desafiado}}</span><a href="ativos" class="form-notificacao">Ativos</a></span></li>
+					<li id="li-ativos"><span id="wrap-badge-ativos"><span class="badge" id="badge-ativos">{{qtd_d_ativos_desafiado}}</span><a href="ativos" title="Desafios ativos" class="form-notificacao">Ativos</a></span></li>
 					
 					
 					<hr style="margin: 8px 0px 8px 0px; border: 0; height: 0; border-top: 1px solid rgba(0, 0, 0, 0.1); border-bottom: 1px solid rgba(255, 255, 255, 0.3);">
 					
-					<li id="li-cumpridos"><span id="wrap-badge-cumpridos"><span id="badge-cumpridos" class="badge">{{desafios_cumpridos}}</span><a href="cumpridos" class="form-notificacao">Cumpridos</a></span></li>
+					<li id="li-cumpridos"><span id="wrap-badge-cumpridos"><span id="badge-cumpridos" class="badge">{{desafios_cumpridos}}</span><a href="cumpridos" title="Desafios cumpridos" class="form-notificacao">Cumpridos</a></span></li>
 					
 				</ul>
 			</div>
@@ -95,6 +96,25 @@
 			
 			<div id="containerFeedGeral">
 				<div class="loader" style="display: none; margin-top: 35%;"></div>
+				
+				<div id="wrap-modal" class="window">
+					<div class="header-modal">
+						<div class="close">
+							<span class="glyphicon glyphicon-remove remove-feed"></span>
+						</div>
+						
+						<div class="name-modal">
+							<font>Curtiram:</font>
+						</div>
+					</div>
+					
+					<div>
+						<div id="loader-curtiram" style="display: none;">
+							<div class="loader-curtiram"></div>
+						</div>
+						<div id="recebe-modal"></div>
+					</div>
+				</div>
 				{% block contents %}
 				
 				{% endblock contents %}
@@ -116,33 +136,28 @@
 					</div>
 				</center>
 					<div id="containerMenu1">
-					<!-- <script type="text/javascript">
-						$(document).on(function(){
-							$("#menu-ul li a[href='"+location.href.substring(location.href.lastIndexOf("/")+1,255)+"']").css("border-left","4px solid #F8C51B");
-						});
-					</script> -->
 						<ul id="menu-ul">
 							<div class="tituloMenu">Principal</div>
-							<li><span class="feed"></span><a href="timeline"><font id="nomeMenu">Feed</font></a></li>	
-							<li><span class="perfil"></span><a href="perfil"><font id="nomeMenu">Perfil</font></a></li>
-							<li><span class="amigos"></span><a href="amigos"><font id="nomeMenu">Amigos</font></a></li>
+							<li><span class="feed"></span><a href="timeline" title="Timeline"><font id="nomeMenu">Feed</font></a></li>	
+							<li><span class="perfil"></span><a href="perfil" title="Perfil"><font id="nomeMenu">Perfil</font></a></li>
+							<li><span class="amigos"></span><a href="amigos" title="Amigos"><font id="nomeMenu">Amigos</font></a></li>
 						</ul>
 					</div>
 					<div id="containerMenu2">
 						<div class="tituloMenu">Menu</div>
 						<ul id="menu-ul">							
 							<li id="desa">
-								<span class="desafio"></span><a href="desafiar"><font id="nomeMenu2">Desafios</font></a>
+								<span class="desafio"></span><a href="desafiar" title="Desafiar"><font id="nomeMenu2">Desafios</font></a>
 								<ul id="des">
-									<li style="margin-top: 2px;"><a href="desafiar"><font id="nomeSubMenu">Desafiar</font></a></li>
-									<li><a href="pendentes"><font id="nomeSubMenu">Pendentes</font></a></li>
-									<li><a href="ativos"><font id="nomeSubMenu">Ativos</font></a></li>
-									<li style="margin-bottom: 2px;"><a href="cumpridos"><font id="nomeSubMenu">Cumpridos</font></a></li>
+									<li style="margin-top: 2px;"><a href="desafiar" title="Desafiar"><font id="nomeSubMenu">Desafiar</font></a></li>
+									<li><a href="pendentes" title="Desafios pendentes"><font id="nomeSubMenu">Pendentes</font></a></li>
+									<li><a href="ativos" title="Desafios ativos"><font id="nomeSubMenu">Ativos</font></a></li>
+									<li style="margin-bottom: 2px;"><a href="cumpridos" title="Desafios cumpridos"><font id="nomeSubMenu">Cumpridos</font></a></li>
 								</ul>	
 							</li>
-							<li><span class="rank"></span><a href="rankings"><font id="nomeMenu2">Rankings</font></a></li>
-							<li><span class="campeoes"></span><a href="campeoes"><font id="nomeMenu2">Campeões</font></a></li>
-							<li><span class="badge"></span><a href="conquistas"><font id="nomeMenu2">Conquistas</font></a></li>
+							<li><span class="rank"></span><a href="rankings" title="Rankings"><font id="nomeMenu2">Rankings</font></a></li>
+							<li><span class="campeoes"></span><a href="campeoes" title="Campeões"><font id="nomeMenu2">Campeões</font></a></li>
+							<li><span class="badge"></span><a href="conquistas" title="Conquistas"><font id="nomeMenu2">Conquistas</font></a></li>
 						</ul>
 					</div>				
 			</div>

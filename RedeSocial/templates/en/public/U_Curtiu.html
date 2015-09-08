@@ -3,59 +3,60 @@
 {% block contents %}
 
 <div id="containerAmigos" style="margin-top: 30px;">
-	<div id="containerConquistas">
-		<fieldset>
-			<legend>Curtiram</legend>
-				<ul id="ul-curtiram">
-					{% for e in pingo %}
+	<legend>Curtiram:</legend>
+		<hr class="form-hr">
+		<div id="wrap-modal-curtiram">
+			<ul class="ul-curtiram">
+				{% for e in pingo %}
 					
-					<li id="li-curtiram">
-						<div id="imgConquistas">
-							<img src="{{e.usuario.foto.url}}" width="100" height="100"/>
+				<li id="li-curtiram">
+				
+					<div id="wrap-buscado-curtiram">
+						<div id="buscado-curtiram">
+							<form name="form" action="buscaPerfilUsuario{{e.usuario.id}}" method="post" style="margin-top: 2px;"> {% csrf_token %} 
+								<input type="submit" value="{{e.usuario.nome}}" class="meulink"> 
+								<input type="hidden" name="cUsuario" value="{{e.usuario.id}}">  
+							</form>
 						</div>
 						
-						<div id="nomeConquistas">
-								<form name="form" action="buscaPerfilUsuario{{e.usuario.id}}" method="post" style="margin-top: 2px;"> {% csrf_token %} 
-										<input type="submit" value="{{e.usuario.nome}}" class="meulink"> 
-										<input type="hidden" name="cUsuario" value="{{e.usuario.id}}">  
-								</form>
-						</div>
-						
-						<div id="descricaoConquistas">
+						<div class="form-ano ano-curtiram">
 							{{e.usuario.turma}}
 						</div>
-					</li>
-						{% if forloop.last %}
-			    
-						     <form action="mais_pingo" method ="post" id="ver-mais-curtidas"> {% csrf_token %}
-						    
-						    	<input type ="hidden" name = "id_ultimo" value = "{{e.id}}">
-						    	<input type ="hidden" name = "id_postagem" value = "{{id_postagem}}">
-						    	
-						    	<button type="submit" id="btnVerMais" class="btn-primary">Ver mais</button>
-							
-							</form>
+					</div>
 					
-						{% endif %}
-		
-					{% endfor %}					
-				</ul>
+					<div id="img-curtiram">
+						<img src="{{e.usuario.foto.url}}"/>
+					</div>
+				</li>
 				
-				<div class="sk-circle" style="display: none;">
-					<div class="sk-circle1 sk-child"></div>
-					<div class="sk-circle2 sk-child"></div>
-					<div class="sk-circle3 sk-child"></div>
-					<div class="sk-circle4 sk-child"></div>
-					<div class="sk-circle5 sk-child"></div>
-					<div class="sk-circle6 sk-child"></div>
-					<div class="sk-circle7 sk-child"></div>
-					<div class="sk-circle8 sk-child"></div>
-					<div class="sk-circle9 sk-child"></div>
-					<div class="sk-circle10 sk-child"></div>
-					<div class="sk-circle11 sk-child"></div>
-					<div class="sk-circle12 sk-child"></div>
-				</div>
-		</fieldset>
+				{% if forloop.last %}
+			    
+				<form action="mais_pingo" method ="post" id="ver-mais-curtidas"> {% csrf_token %}
+					<input type ="hidden" name = "id_ultimo" value = "{{e.id}}">
+					<input type ="hidden" name = "id_postagem" value = "{{id_postagem}}">
+					<button type="submit" id="btn-ver-mais-comentario" class="btn-primary">Ver mais</button>
+				</form>
+					
+				{% endif %}
+		
+				{% endfor %}					
+			</ul>
+		<div class="load-mais-curtidas" style="display: none;">
+			<div class="sk-circle">
+				<div class="sk-circle1 sk-child"></div>
+				<div class="sk-circle2 sk-child"></div>
+				<div class="sk-circle3 sk-child"></div>
+				<div class="sk-circle4 sk-child"></div>
+				<div class="sk-circle5 sk-child"></div>
+				<div class="sk-circle6 sk-child"></div>
+				<div class="sk-circle7 sk-child"></div>
+				<div class="sk-circle8 sk-child"></div>
+				<div class="sk-circle9 sk-child"></div>
+				<div class="sk-circle10 sk-child"></div>
+				<div class="sk-circle11 sk-child"></div>
+				<div class="sk-circle12 sk-child"></div>
+			</div>
+		</div>
 	</div>
 </div>
 {% endblock contents %}

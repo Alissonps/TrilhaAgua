@@ -27,16 +27,16 @@
           </center>
           {% endif %}
         </div>
-      
-       <hr style="margin: 5px 5px; border: 0; height: 0; border-top: 1px solid rgba(0, 0, 0, 0.1); border-bottom: 1px solid rgba(255, 255, 255, 0.3);">
 		
-		<div class="comentario-postagem">
-			<form action="postarComentarios2" id="postar-comentario-2"  method="post">
-				{% csrf_token %}
-				<input type="text" class="input-comentario" name="cComentario" placeholder="Deixe seu comentário.." required/><button class="button-comentario"><span class="glyphicon glyphicon-send"></span></button>
-				<input type="hidden" id="comentario-id" name="cId" value="{{Postagem.id}}" /> 
-			</form>				
-		</div>
+		<div class="footer-postagem">
+				<div class="comentario-postagem">
+					<form action="postarComentarios2" id="postar-comentario-2"  method="post">
+					{% csrf_token %}
+						<input type="text" name="cComentario" class="input-comentario" placeholder="Deixe seu comentário.." required/><button class="button-comentario"><span class="glyphicon glyphicon-send"></span></button>
+						<input type="hidden" id="comentario-id" name="cId" value="{{Postagem.id}}" /> 
+					</form>				
+				</div>
+			</div>
 	</div>
 </div>
 
@@ -57,7 +57,7 @@
 				
 				<form name="form" action="buscaPerfilUsuario{{e.usuario.id}}" method="post" style="margin-top: 2px;">
 		      		{% csrf_token %} 
-			     	<input type="submit" value="{{e.usuario.nome}}/{{e.usuario.id}}" class="meulink"> 
+			     	<input type="submit" value="{{e.usuario.nome}}" class="meulink"> 
 			      	<input type="hidden" name="cUsuario" value="{{e.usuario.id}}"> 
 			      	<font id="containerData">{{e.date|date:"D d M Y"}}</font> 
 			    </form>
@@ -70,7 +70,7 @@
 				<form action="mais_comentarios" method ="post" id="ver-mais-comentario"> {% csrf_token %}
 					<input type ="hidden" name = "id_ultimo" value = "{{e.pk}}">
 					<input type ="hidden" name = "id_postagem" value = "{{Postagem.id}}">
-					<button type="submit" id="btnVerMais" class="btn-primary">Ver mais</button>
+					<button type="submit" id="btn-ver-mais-comentario" class="btn-primary">Ver mais</button>
 				</form>
 						
 			{% endif %}

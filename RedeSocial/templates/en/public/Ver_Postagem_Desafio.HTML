@@ -4,14 +4,16 @@
 
 		{% block content %}
 		
-		<div class="containerPostagem" style="padding-bottom: 30px;">
-
-			<form name="form" action="buscaPerfilUsuario{{entries.usuario.id}}" method="post" style="margin-top: 2px;">
-				{% csrf_token %} 
-				<input type="submit" value="{{entries.usuario.nome}}" class="meulink"> 
-				<input type="hidden" name="cUsuario" value="{{entries.usuario.id}}"> 
-				<font id="containerData">{{entries.date|date:"D d M Y"}}</font> 
-			</form>
+		<div class="containerPostagem">
+		
+			<div id="cabecalho-lancar">	
+				<form name="form" action="buscaPerfilUsuario{{entries.usuario.id}}" method="post" style="margin-top: 2px;">
+					{% csrf_token %} 
+					<input type="submit" value="{{entries.usuario.nome}}" class="meulink"> 
+					<input type="hidden" name="cUsuario" value="{{entries.usuario.id}}"> 
+					<font id="containerData">{{entries.date|date:"D d M Y"}}</font> 
+				</form>
+			</div>
 
 			<div id="containerTextoPostagem">
 				{{entries.text}} {% if entries.foto != False %}
@@ -21,18 +23,18 @@
 				{% endif %}
 			</div>
 			
-			<hr style="margin: 0px 15px 5px 15px; border: 0; height: 0; border-top: 1px solid rgba(0, 0, 0, 0.1); border-bottom: 1px solid rgba(255, 255, 255, 0.3);">	
-				
-			<div id="enviarPost">
-				<form action="lancar_desafio" id="form-lancar-desafio" method="post">
-					{% csrf_token %} 
-					<input type="hidden" name="cId" value={{entries.id}} /> 
-					<input type="hidden" name="cId_desafio"	value={{id_desafio}} /> 
-					<input type="submit" name="Enviar" value="Lançar" 
-						id="btn-lancar-desafio" class="btn btn-primary"/>
-				</form>
-			</div>			
+			<div class="footer-lancar">
+				<div class="wrap-btn-lancar">
+					<form action="lancar_desafio" id="form-lancar-desafio" method="post">
+							{% csrf_token %} 
+						<input type="hidden" name="cId" value={{entries.id}} /> 
+						<input type="hidden" name="cId_desafio"	value={{id_desafio}} /> 
+						<input type="submit" name="Enviar" value="Lançar" 
+							id="btn-lancar-desafio" class="btn btn-primary"/>
+					</form>
+				</div>
+			</div>
 		</div>
-		{% endblock %}
 	</div>
+		{% endblock %}
 {% endblock contents %}
