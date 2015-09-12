@@ -13,6 +13,5 @@
 
 <pydev_pathproperty name="org.python.pydev.PROJECT_EXTERNAL_SOURCE_PATH">
 <path>C:\Python34\Lib\site-packages\PIL</path>
-<path>C:\Python34\Lib\site-packages\Pillow-2.7.0.dist-info</path>
 </pydev_pathproperty>
 </pydev_project>

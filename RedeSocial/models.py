@@ -11,7 +11,6 @@ class Competicao(models.Model):
 
    
 class Usuario (models.Model):
-    id = models.IntegerField(primary_key=True)
     login = models.CharField(max_length=40)
     senha = models.CharField(max_length=40)
     nome = models.CharField(max_length=40)
@@ -79,7 +78,6 @@ class Comentarios (models.Model):
         return "Usuario: %s - Postagem: %s" % (self.usuario, self.postagem)
         
 class Solicitacao(models.Model):
-    id = models.IntegerField(primary_key = True)
     usuario = models.ForeignKey(Usuario, related_name="Remetente", null=True, default=None)
     amigo = models.ForeignKey(Usuario, related_name="Destinatario", null=True, default=None)
     resposta = models.BooleanField(default=None)
@@ -88,7 +86,6 @@ class Solicitacao(models.Model):
         return "O remetente: %s solicitou o Amigo: %s" % (self.usuario.nome, self.amigo.nome)
     
 class Amigos(models.Model):
-    id = models.IntegerField(primary_key = True)
     dono = models.ForeignKey(Usuario, null=True, default=None)
     amigo = models.ForeignKey(Usuario, related_name="Amigo", null=True, default=None)
     
@@ -97,7 +94,6 @@ class Amigos(models.Model):
 
 class Desafio(models.Model):
     
-    id = models.IntegerField(primary_key = True)
     nome = models.CharField(max_length = 30)
     descricao = models.TextField()
     pontuacao = models.IntegerField(max_length = 3)
@@ -107,7 +103,6 @@ class Desafio(models.Model):
     
 class Solicitacao_Desafio(models.Model):
     
-    id = models.IntegerField(primary_key = True)
     usuario_desafiante = models.ForeignKey(Usuario, related_name = "desafiante", null=True, default=None)
     usuario_desafiado = models.ForeignKey(Usuario, related_name = "desafiado", null=True, default=None)
     desafio = models.ForeignKey(Desafio, related_name = "desafio", null=True, default=None)
@@ -119,7 +114,6 @@ class Solicitacao_Desafio(models.Model):
 
 class Desafio_Ativo(models.Model):
     
-    id = models.IntegerField(primary_key = True)
     usuario_desafiante = models.ForeignKey(Usuario, related_name = "TDesafio_desafiante", null=True, default=None, blank = True)
     usuario_desafiado = models.ForeignKey(Usuario, related_name = "TDesafio_desafiado", null=True, default=None, blank = True)
     postagem = models.ForeignKey(TimeLine, related_name = "TDesafio_postagem", null = True, blank = True)
@@ -131,7 +125,6 @@ class Desafio_Ativo(models.Model):
         return "%s - %s - %s to %s" % (self.id, self.usuario_desafiante, self.desafio, self.usuario_desafiado)
     
 class Mensagens(models.Model):
-    id = models.IntegerField(primary_key = True)
     usuario = models.ForeignKey(Usuario) 
     mensagem = models.CharField(max_length = 100)
     
@@ -139,7 +132,6 @@ class Mensagens(models.Model):
         return "%s" % (self.usuario)
         
 class Campeao(models.Model):
-    id = models.IntegerField(primary_key = True)
     mes = models.IntegerField()
     usuario = models.ForeignKey(Usuario)
     pontuacao = models.IntegerField(max_length = 10)
