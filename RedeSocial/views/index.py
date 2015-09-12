@@ -69,9 +69,16 @@ def Login (request):
 def Postar (request):
     Texto = request.POST.get('mensagem', False)
     Foto = request.FILES.get('arquivo', False)
+    
+    try:
+        competicao_atual = Competicao.objects.filter(ativo = True).get()
+    except:
         
-    competicao_atual = Competicao.objects.filter(ativo = True).get()
-        
+        data_atual = timezone.now()
+        dt_fim = data_atual + timedelta(days = 30) 
+        competicao_atual = Competicao(id = 1, data_inicio = data_atual, data_fim = dt_fim,  ativo = True)
+        competicao_atual.save()  
+    
     u = Usuario.objects.filter(login=request.session['id']).get()
 
     passar = False
