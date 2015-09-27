@@ -3,11 +3,9 @@
 <div id="containerAmigos" style="margin-top: 30px;">
 	<div id="containerSolicitacao">
 		<ul class="ul-pendentes">
-		{% if qtd_d_ativos_desafiados > 0 %}
 			<legend>Desafios Ativos:</legend>
-			
 			<hr class="form-hr">
-			
+			{% if qtd_d_ativos_desafiados > 0 %}
 			{% for a in d_ativos_desafiado %}
 			<li id="li-cumprir">
 				<div class="wrap-btn-pendentes wrap-btn-cumprir">
